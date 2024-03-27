@@ -1,0 +1,3128 @@
+openapi: 3.0.3
+info:
+  title: Waylay rules engine
+  version: 6.5.0
+  description: The REST api to manage rule tasks and rule templates in the Waylay
+    platform.
+externalDocs:
+  url: https://docs.waylay.io/#/api/rules/
+  description: Waylay Documentation
+tags:
+- name: Tasks
+  description: Manage Waylay Tasks
+  externalDocs:
+    url: https://docs.waylay.io/#/features/rules/?id=task
+    description: Waylay Documentation
+- name: Task Nodes
+  externalDocs:
+    url: https://docs.waylay.io/#/api/rules/?id=node-related-calls
+    description: Waylay Documentation
+- name: Templates
+  description: Manage Waylay Rule Templates
+  externalDocs:
+    url: https://docs.waylay.io/#/features/rules/?id=templates
+    description: Waylay Documentation
+- name: Template Runs
+  description: Running a template over a data set or once (with 1 tick)
+  externalDocs:
+    url: https://docs.waylay.io/#/features/rules/?id=bulk-data-processing
+    description: Waylay Documentation
+- name: Tasks Batch Operations
+  description: "Batch operations on multiple Tasks. Batch operations are executed\
+    \ asynchronously. \nCreating a batch operation will return an url which you can\
+    \ use to retrieve the status and the results of the operation."
+  externalDocs:
+    url: https://docs.waylay.io/#/api/rules/?id=batch-tasks-operations
+    description: Waylay Documentation
+- name: Version
+- name: Plugs Execution
+- name: Push Data
+  description: Inject streaming data in tasks
+  externalDocs:
+    url: https://docs.waylay.io/#/api/rules/?id=streaming-real-time-data
+    description: Waylay Documentation
+paths:
+  /rules/v1:
+    get:
+      summary: Get Version
+      operationId: get_version
+      tags:
+      - Version
+      description: Get the status and version of the service.
+      responses:
+        '200':
+          $ref: '#/components/responses/VersionResponse'
+      security: &id001
+      - waylayApiKeySecret: []
+  /rules/v1/tasks:
+    post:
+      tags:
+      - Tasks
+      operationId: create_task
+      summary: Create Task
+      description: Create a new task.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=create-a-task
+      requestBody:
+        $ref: '#/components/requestBodies/TaskSpecification'
+      parameters:
+      - name: failOnWarning
+        in: query
+        description: If `true` and there are task warnings, the response will be a
+          `400 Validation failed`
+        schema:
+          type: boolean
+          default: false
+      - name: returnWarnings
+        in: query
+        description: If `true`, result body will contain a list of task warnings that
+          where detected
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '201':
+          $ref: '#/components/responses/TaskCreatedResponse'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: 'Binding error at SensorLocation(debugDialog_1)/message/binding
+                  ''${nodes.dice_1.rawData.status}'' : rawData has no field status'
+                code: VALIDATION
+                details:
+                - type: BINDING
+                  message: rawData has no field status
+                  severity: WARNING
+                  details:
+                    nodeId: debugDialog_1
+                    property: message
+                    binding: ${nodes.dice_1.rawData.status}
+                  suggestion: 'maybe you are looking for one of these: state, randomValue'
+      security: *id001
+    get:
+      tags:
+      - Tasks
+      operationId: list_tasks
+      summary: Query Multiple Tasks
+      description: Query multiple tasks.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=query-multiple-tasks
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/PagingHits'
+      - $ref: '#/components/parameters/PagingStart'
+      - $ref: '#/components/parameters/Format'
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: resource
+        in: query
+        schema:
+          $ref: '#/components/schemas/ResourceId'
+      - name: resourceType
+        in: query
+        schema:
+          $ref: '#/components/schemas/ResourceTypeId'
+      - name: type
+        in: query
+        schema:
+          $ref: '#/components/schemas/TaskScenarioType'
+      - name: status
+        in: query
+        schema:
+          $ref: '#/components/schemas/TaskStatus'
+      - name: ids
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskId'
+        explode: false
+      - name: id
+        in: query
+        schema:
+          $ref: '#/components/schemas/TaskId'
+      - name: plugin
+        in: query
+        schema:
+          type: string
+      - name: template
+        in: query
+        schema:
+          type: string
+          nullable: true
+      - name: filter
+        in: query
+        schema:
+          type: string
+        description: fuzzy search on multiple properties
+      - name: tags.key
+        in: query
+        style: form
+        explode: true
+        allowEmptyValue: true
+        schema:
+          oneOf:
+          - type: string
+          - type: number
+          - type: boolean
+        description: 'Parameter is `form` style serialized, with explode: true
+
+
+          See [Query multiple tasks tag examples](/#/api/rules/?id=queryTagExamples)
+
+
+          You can add the same tag query parameter multiple times with different values,
+
+          which will be applied with a logical OR.
+
+
+          You can specify the `tags.<key>` query parameter without a value, tasks
+          which have a value for tag `<key>` will be returned'
+        example: 3904859080956
+      - name: finishedBefore
+        in: query
+        description: Tasks stopped before provided time will be returned.
+        schema:
+          $ref: '#/components/schemas/UnixEpochMillis'
+      - name: createdAfter
+        in: query
+        description: Tasks created after provided time will be returned.
+        schema:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        example: 1661990400000
+      - name: createdBefore
+        in: query
+        description: Tasks created before provided time will be returned
+        schema:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        example: 1662768000000
+      responses:
+        '200':
+          description: Successful Response
+          headers:
+            X-Count:
+              description: Total number of tasks that fulfill the query.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                title: Task listing
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskEntity'
+            application/vnd.waylay.paged+json:
+              schema:
+                type: object
+                allOf:
+                - properties:
+                    values:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TaskEntity'
+                - $ref: '#/components/schemas/PagingResult'
+      security: *id001
+  /rules/v1/tasks/{taskId}:
+    get:
+      tags:
+      - Tasks
+      operationId: get_task
+      summary: Retrieve Task Details
+      description: Retrieve the details of a task.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=getting-a-single-task-by-id
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Task Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskEntity'
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+    put:
+      tags:
+      - Tasks
+      operationId: replace_task
+      summary: Update Task
+      description: "Update a task. \n\nRemark that the full specification of the task\
+        \ must be given"
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=update-a-task
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        $ref: '#/components/requestBodies/TaskSpecification'
+      responses:
+        '200':
+          description: Task Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskEntity'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: Plugin dbDialog:1.2.3 not found
+                code: TRANSFORMATION
+                details:
+                - type: PLUGIN
+                  message: Plugin dbDialog:1.2.3 not found
+                  severity: ERROR
+                  details:
+                    nodeId: debugDialog_1
+                    plugin:
+                      name: dbDialog
+                      version: 1.2.3
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+    delete:
+      tags:
+      - Tasks
+      operationId: delete_task
+      summary: Delete Task
+      description: Delete a task.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=delete-a-task
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      responses:
+        '204':
+          description: Task Deleted
+        '400':
+          description: Error Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: Not possible to remove task in status running
+      security: *id001
+  /rules/v1/tasks/{taskId}/conf:
+    get:
+      tags:
+      - Tasks
+      operationId: getConfiguration_task
+      summary: Get Task Configuration
+      description: Getting the configuration of an existing task.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=getting-the-configuration-of-an-existing-task
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Task Configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskSpecification'
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+  /rules/v1/tasks/{taskId}/command/start:
+    post:
+      tags:
+      - Tasks
+      operationId: start_task
+      summary: Start Task
+      description: Start a task.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=start-a-task
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task Started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskEntity'
+        '400':
+          description: Task Cannot Be Started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: Not possible to apply action start, for the task in status
+                  running
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+  /rules/v1/tasks/{taskId}/command/stop:
+    post:
+      tags:
+      - Tasks
+      operationId: stop_task
+      summary: Stop Task
+      description: Stop a task.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=stop-a-task
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: Task Stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskEntity'
+        '400':
+          description: Task Cannot Be Stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: Not possible to apply action stop, for the task in status stopped
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+  /rules/v1/tasks/{taskId}/nodes/{nodeId}:
+    get:
+      tags:
+      - Task Nodes
+      operationId: get_task_node
+      x-visibility: deprecated
+      summary: Get Current States
+      description: 'Get current states (posteriors) and raw data of the node.
+
+
+        #### visibility
+
+        This definition has visibility status `deprecated`.
+
+        '
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=node-related-calls
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+    patch:
+      tags:
+      - Task Nodes
+      operationId: patch_task_node
+      summary: Set Node State
+      description: Set the current state and rawData for the node. This can only be
+        done for a running task
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/NodeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                  description: State to set. Should be one of the supported states
+                    of the sensor
+                rawData:
+                  type: object
+                  description: rawData to set
+            example:
+              state: THREE
+              rawData:
+                randomValue: 0.3458795
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: State FVE is invalid for node dice_1 on task 808aec38-3fb3-4163-a45e-1890e94081ea
+        '404':
+          $ref: '#/components/responses/TaskNotFoundResponse'
+      security: *id001
+    post:
+      tags:
+      - Task Nodes
+      operationId: update_task_node_state
+      x-visibility: deprecated
+      summary: Set Current State
+      description: 'Set the current state of the node.
+
+
+        This call is deprecated. Please use `PATCH /rules/v1/tasks/{taskId}/nodes/{nodeId}`
+
+
+        #### visibility
+
+        This definition has visibility status `deprecated`.
+
+        '
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=set-the-state
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/NodeId'
+      requestBody:
+        $ref: '#/components/requestBodies/NodeCallsSpecification'
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+      security: *id001
+  /rules/v1/tasks/{taskId}/nodes/{nodeId}/states:
+    get:
+      tags:
+      - Task Nodes
+      operationId: getStates_task_node
+      x-visibility: deprecated
+      summary: Get Supported States
+      description: 'Get the supported states of a node.
+
+
+        #### visibility
+
+        This definition has visibility status `deprecated`.
+
+        '
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=get-supported-states
+      parameters:
+      - $ref: '#/components/parameters/TaskId'
+      - $ref: '#/components/parameters/NodeId'
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+      security: *id001
+  /rules/v1/templates:
+    post:
+      tags:
+      - Templates
+      operationId: create_template
+      summary: Create Template
+      description: Create a template.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=create-a-new-template
+      requestBody:
+        $ref: '#/components/requestBodies/TemplatesSpecification'
+      responses:
+        '201':
+          $ref: '#/components/responses/TemplateCreatedResponse'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              examples:
+                Duplicate name:
+                  value:
+                    statusCode: 400
+                    error: A template with name 'internet.json' already exists
+                    code: ERR_DUPLICATE_TEMPLATE_NAME
+                Plugin not found:
+                  value:
+                    statusCode: 400
+                    error: Plugin dbDialog:1.2.3 not found
+                    code: TRANSFORMATION
+                    details:
+                    - type: PLUGIN
+                      message: Plugin dbDialog:1.2.3 not found
+                      severity: ERROR
+                      details:
+                        nodeId: debugDialog_1
+                        plugin:
+                          name: dbDialog
+                          version: 1.2.3
+      security: *id001
+    get:
+      tags:
+      - Templates
+      operationId: list_templates
+      summary: List Templates
+      description: Query templates.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=list-all-templates
+      parameters:
+      - $ref: '#/components/parameters/PagingHits'
+      - $ref: '#/components/parameters/PagingStart'
+      - name: filter
+        description: fuzzy search on multiple properties
+        in: query
+        schema:
+          type: string
+      - name: ids
+        description: comma separated string of template names
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateId'
+        explode: false
+      - name: id
+        description: filter on template name
+        in: query
+        schema:
+          $ref: '#/components/schemas/TemplateId'
+      - name: plugin
+        in: query
+        description: either name of a plugin (e.g. `mySensor`), or full version specification
+          of the plug (e.g `mySensor:1.0.3`)
+        schema:
+          type: string
+          example: mySensor:1.0.3
+      - name: tags.X
+        in: query
+        schema:
+          type: string
+          description: 'String of form "tags.<myTagKey>: <myTagValue>".'
+          example: 'tags.myref: 3904859080956'
+      responses:
+        '200':
+          description: Successful Response
+          headers:
+            X-Count:
+              description: Total number of templates that fulfill the query.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateEntityMetadata'
+      security: *id001
+    patch:
+      tags:
+      - Templates
+      operationId: upgradePlugins_templates
+      summary: Upgrade Plugins
+      description: 'Upgrade plugins on multiple templates.
+
+
+        The plugin upgrades specified in the body will be applied to all template
+        that fullfil the query expresses by the query parameters.
+
+        At least one of the query parameters must be specified.'
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=modifying-existing-templates-batch
+        description: Waylay Documentation
+      parameters:
+      - name: ids
+        in: query
+        description: comma separated string of template names
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemplateId'
+        explode: false
+      - name: id
+        in: query
+        description: filter on template name
+        schema:
+          $ref: '#/components/schemas/TemplateId'
+      - name: plugin
+        in: query
+        description: either name of a plugin (e.g. `mySensor`), or full version specification
+          of the plug (e.g `mySensor:1.0.3`)
+        schema:
+          type: string
+          example:
+            plugin: mySensor:1.0.3
+      - name: tags.X
+        in: query
+        schema:
+          type: string
+          description: 'String of form "tags.<myTagKey>: <myTagValue>".'
+          example: null
+      requestBody:
+        required: true
+        description: Plugin Update Specifications
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateModification'
+      responses:
+        '200':
+          description: Successfully Updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  successful:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TemplateId'
+        '400':
+          description: Unsuccessful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                Partially applied:
+                  value:
+                    statusCode: 400
+                    error: Operation only partially applied
+                    successful:
+                    - internet.json
+                    failed:
+                    - templateName: fastInternet.json
+                      error: Node checkState_1 has timeout state ERRORED but it's
+                        sensor mySensor:2.4.13 has states [OK, NOK]
+                Plugin version does not exist:
+                  value:
+                    statusCode: 400
+                    error: mySensor:2.4.13 does not exist
+      security: *id001
+  /rules/v1/templates/{name}:
+    get:
+      tags:
+      - Templates
+      operationId: get_template
+      summary: Retrieve Template Details
+      description: Retrieve the details of a template.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=get-a-template
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TemplateId'
+      - $ref: '#/components/parameters/Format'
+      responses:
+        '200':
+          description: Template Details
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/TemplateEntityMetadata'
+                - $ref: '#/components/schemas/GraphDefinition'
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security: *id001
+    put:
+      tags:
+      - Templates
+      operationId: replace_template
+      summary: Update Template
+      description: Update a template. Note that this will not update any tasks using
+        the template. You will need to do a batch reload operation on the tasks to
+        accomplish that.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=update-a-template
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TemplateId'
+      requestBody:
+        $ref: '#/components/requestBodies/TemplatesSpecification'
+      responses:
+        '200':
+          description: Template Updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/TemplateEntityMetadata'
+                - $ref: '#/components/schemas/SimplifiedGraph'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              examples:
+                Changed name:
+                  value:
+                    statusCode: 400
+                    error: Path name and submitted template name don't match
+                Plugin not found:
+                  value:
+                    statusCode: 400
+                    error: Plugin dbDialog:1.2.3 not found
+                    code: TRANSFORMATION
+                    details:
+                    - type: PLUGIN
+                      message: Plugin dbDialog:1.2.3 not found
+                      severity: ERROR
+                      details:
+                        nodeId: debugDialog_1
+                        plugin:
+                          name: dbDialog
+                          version: 1.2.3
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security: *id001
+    delete:
+      tags:
+      - Templates
+      operationId: delete_template
+      summary: Delete Template
+      description: Delete a template.
+      externalDocs:
+        url: https://docs.waylay.io/#/api/rules/?id=delete-template
+        description: Waylay Documentation
+      parameters:
+      - $ref: '#/components/parameters/TemplateId'
+      responses:
+        '204':
+          description: Template Deleted
+        '400':
+          description: Template Still In Use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: Template with name internet.json in use by 6 task(s)
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security: *id001
+  /rules/v1/templates/{name}/run:
+    post:
+      tags:
+      - Template Runs
+      operationId: run_template
+      summary: Run Template
+      description: "Run a template.\nIf `data` is specified, template will be run\
+        \ as reactive template. \nIf `data` is not specified, template will be run\
+        \ as a one-time template (1 tick)"
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=running-a-template
+      parameters:
+      - $ref: '#/components/parameters/TemplateId'
+      - $ref: '#/components/parameters/LogLevel'
+      - $ref: '#/components/parameters/TargetNode'
+      requestBody:
+        $ref: '#/components/requestBodies/RunTemplateSpecification'
+      responses:
+        '200':
+          description: Stream Of Invocation Results
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/TemplateRunInvocation'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: Variable 'threshold' not found
+                code: VALIDATION
+                details:
+                - type: VARIABLE
+                  message: Variable 'threshold' not found
+                  severity: ERROR
+                  details:
+                    variable: threshold
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security: *id001
+  /rules/v1/templates/run:
+    post:
+      tags:
+      - Template Runs
+      operationId: runGraph
+      summary: Run Graph Or Bayesian Network
+      description: "Run a graph or Bayesian Network.\nIf `data` is specified, template\
+        \ will be run as reactive template. \nIf `data` is not specified, template\
+        \ will be run as a one-time template (1 tick)"
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=running-a-batch-dataset-through-a-graphbns
+      parameters:
+      - $ref: '#/components/parameters/LogLevel'
+      - $ref: '#/components/parameters/TargetNode'
+      requestBody:
+        $ref: '#/components/requestBodies/RunTemplateSpecificationGraph'
+      responses:
+        '200':
+          description: Stream Of Invocation Results
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/TemplateRunInvocation'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: Plugin dbDialog:1.2.3 not found
+                code: TRANSFORMATION
+                details:
+                - type: PLUGIN
+                  message: Plugin dbDialog:1.2.3 not found
+                  severity: ERROR
+                  details:
+                    nodeId: debugDialog_1
+                    plugin:
+                      name: dbDialog
+                      version: 1.2.3
+      security: *id001
+  /rules/v1/discoveryTemplate:
+    get:
+      tags:
+      - Templates
+      operationId: getDiscovery_template
+      summary: Retrieve Discovery Template
+      description: Get the discovery template.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=discovery-template
+      responses:
+        '200':
+          description: Discovery Template Details
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/TemplateEntityMetadata'
+                - $ref: '#/components/schemas/GraphDefinition'
+                - type: object
+                  properties:
+                    discoveryTemplate:
+                      type: boolean
+                      example: true
+        '204':
+          description: No Discovery Template
+      security: *id001
+    put:
+      tags:
+      - Templates
+      operationId: set_discovery_template
+      summary: Set Discovery Template
+      description: Set the discovery template.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=set-the-discovery-template
+      parameters:
+      - name: name
+        in: query
+        schema:
+          $ref: '#/components/schemas/TemplateId'
+        example: discoverResourceType
+        required: false
+        description: The template to set as discovery template. If you do not specify
+          this parameter, the current discovery template will be cleared.
+      responses:
+        '200':
+          description: Discovery Template Set
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/TemplateEntityMetadata'
+                - $ref: '#/components/schemas/GraphDefinition'
+                - type: object
+                  properties:
+                    name:
+                      type: string
+                      example: discoverResourceType
+                    discoveryTemplate:
+                      type: boolean
+                      example: true
+        '204':
+          description: Discovery Template Cleared
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security: *id001
+  /rules/v1/batch:
+    post:
+      tags:
+      - Tasks Batch Operations
+      operationId: start_batch_operation
+      summary: Start Batch Operations
+      description: Start a batch operation.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=batch-tasks-operations
+      requestBody:
+        $ref: '#/components/requestBodies/BatchTasksSpecification'
+      responses:
+        '202':
+          $ref: '#/components/responses/BatchStartResponse'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: /action <- unknown action strt, we support updatePlugins, delete,
+                  start, restart, stop, reload
+      security: *id001
+  /rules/v1/batch/{batchId}:
+    get:
+      tags:
+      - Tasks Batch Operations
+      operationId: get_batch_operation
+      summary: Get Tasks Batch Operation Status
+      description: Get the results of the Tasks Batch Operation.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=batch-tasks-operations
+      parameters:
+      - $ref: '#/components/parameters/BatchId'
+      responses:
+        '200':
+          description: Get Batch Operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/BatchOperationResult'
+                - allOf:
+                  - $ref: '#/components/schemas/BatchOperation'
+                  - title: Result of a running Batch Operation
+              examples:
+                Batch Operation still running:
+                  value:
+                    id: afcea5a1-81df-44f6-bd34-e0b602a2cf3d
+                    user: user/22f6dfdf-a50c-4eab-953e-8d2e56891dbe
+                    operation:
+                      entity: task
+                      action: delete
+                      description: Remove tasks filtered by type=onetime AND status=stopped
+                        AND finishedBefore=1648738809733
+                    queueTime: 1663269720694
+                Result of a finished Batch Operation:
+                  value:
+                    id: afcea5a1-81df-44f6-bd34-e0b602a2cf3d
+                    user: user/22f6dfdf-a50c-4eab-953e-8d2e56891dbe
+                    operation:
+                      entity: task
+                      action: delete
+                      description: Remove tasks filtered by type=onetime AND status=stopped
+                        AND finishedBefore=1648738809733
+                    queueTime: 1663269720694
+                    finishedTime: 1663269725784
+                    results:
+                      success:
+                        4bbec310-4b8a-4f82-954d-f6268e7736a3:
+                          statusCode: 200
+                        b637dc9c-b8fc-4d1e-8743-b1456364e559:
+                          statusCode: 200
+                      failure:
+                        0cf62e41-be40-42bf-a88f-6fc803bcb957:
+                          statusCode: 404
+                          error: No task with id 0cf62e41-be40-42bf-a88f-6fc803bcb957
+        '404':
+          $ref: '#/components/responses/BatchNotFoundResponse'
+      security: *id001
+  /rules/v1/sensors/{name}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeSensor
+      summary: Execute Latest Sensor Version
+      description: Execute latest version of a sensor.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-sensor
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorExecutionResult'
+              example:
+                result: true
+                state: ABOVE
+                rawData:
+                  parameter: temperature
+                  threshold: 13
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorExecutionResult'
+              example:
+                result: false
+                error: 'ReferenceError: callbackUrdl is not defined'
+        '404':
+          description: Sensor Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Sensor mySensor not found
+      security: *id001
+  /rules/v1/sensors/{name}/versions/{version}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeSensorVersion
+      summary: Execute Specified Sensor Version
+      description: Execute the specified version of a sensor.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-sensor
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      - $ref: '#/components/parameters/VersionId'
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorExecutionResult'
+              example:
+                result: true
+                state: ABOVE
+                rawData:
+                  parameter: temperature
+                  threshold: 13
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SensorExecutionResult'
+              example:
+                result: false
+                error: 'ReferenceError: callbackUrdl is not defined'
+        '404':
+          description: Sensor Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Sensor mySensor:3.14.5 not found
+      security: *id001
+  /rules/v1/actions/{name}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeActuator
+      summary: Execute Latest Actuator Version
+      description: Execute latest version of an actuator.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-actuator
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActuatorExecutionResult'
+              example:
+                result: true
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActuatorExecutionResult'
+              example:
+                result: false
+                error: Missing properties
+        '404':
+          description: Actuator Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Actuator myActuator not found
+      security: *id001
+  /rules/v1/actions/{name}/versions/{version}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeActuatorVersion
+      summary: Execute Specified Actuator Version
+      description: Execute specified version of an actuator.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-actuator
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      - $ref: '#/components/parameters/VersionId'
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActuatorExecutionResult'
+              example:
+                result: true
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActuatorExecutionResult'
+              example:
+                result: false
+                error: Missing properties
+        '404':
+          description: Actuator Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Actuator myActuator:4.12.0 not found
+      security: *id001
+  /rules/v1/transformers/{name}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeTransformer
+      summary: Execute Latest Transformer Version
+      description: Execute the latest transformer version.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-the-latest-transformer-version
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransformerExecutionResult'
+              example:
+                result: true
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransformerExecutionResult'
+              example:
+                result: false
+                error: Missing properties
+        '404':
+          description: Transformer Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Transformer myTransformer not found
+      security: *id001
+  /rules/v1/transformers/{name}/versions/{version}:
+    post:
+      tags:
+      - Plugs Execution
+      operationId: executeTransformerVersion
+      summary: Execute Specified Transformer Version
+      description: Execute specified version of a transformer.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=execute-a-specific-transformer-version
+      parameters:
+      - name: name
+        in: path
+        schema:
+          type: string
+        required: true
+      - $ref: '#/components/parameters/VersionId'
+      requestBody:
+        $ref: '#/components/requestBodies/ExecutePlugsSpecification'
+      responses:
+        '200':
+          description: Successfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransformerExecutionResult'
+              example:
+                result: true
+                log: []
+        '400':
+          description: Unsuccessfully Executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransformerExecutionResult'
+              example:
+                result: false
+                error: Missing properties
+        '404':
+          description: Transformer Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 404
+                error: Transformer myTransformer:2.47.2 not found
+      security: *id001
+  /rules/v1/data:
+    post:
+      tags:
+      - Push Data
+      operationId: push_data
+      summary: Push Streaming Data
+      description: Push (real-time) streaming data.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=streaming-real-time-data
+      requestBody:
+        $ref: '#/components/requestBodies/StreamData'
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 400
+                error: Expecting json array or object
+      security: *id001
+components:
+  schemas:
+    TaskId:
+      title: Task identifier
+      description: Unique task identifier
+      type: string
+      example: 808aec38-3fb3-4163-a45e-1890e94081ea
+    InvocationId:
+      title: Invocation identifier
+      description: Unique invocation identifier
+      type: string
+      example: 45a85360-fe8a-4978-9636-90d741806033
+    TemplateId:
+      title: Template identifier
+      description: Unique template identifier
+      type: string
+      example: internet.json
+    LogLevel:
+      title: Log Level
+      type: string
+      enum:
+      - DEBUG
+      - INFO
+      - WARN
+      - ERROR
+      - NONE
+      example: INFO
+    ResourceId:
+      title: Resource identifier
+      description: Unique resource identifier
+      type: string
+      example: resource1
+    ResourceTypeId:
+      title: Resource Type identifier
+      description: Unique resource type identifier
+      type: string
+      example: resourcetype1
+    NodeId:
+      title: Node label
+      description: Unique node label
+      type: string
+      example: dice_1
+    BatchId:
+      title: Batch Operation id
+      type: string
+      example: afcea5a1-81df-44f6-bd34-e0b602a2cf3d
+    UnixEpochMillis:
+      type: integer
+      title: Unix Epoch Milliseconds
+      description: "Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January\
+        \ 1970, \nnot counting leap seconds."
+      example: 1663269720694
+    ISO8601Timestamp:
+      title: ISO8601 timestamp
+      type: string
+      format: date-time
+      example: '2011-09-06T12:03:27.845Z'
+    VersionResponse:
+      type: object
+      properties:
+        version:
+          type: string
+          example: 5.12.1
+        name:
+          type: string
+          example: waylay-engine
+        startTime:
+          type: string
+          format: date-time
+          example: '2011-09-06T12:03:27.845Z'
+        uptime:
+          type: integer
+          format: int64
+          example: 12703737
+        status:
+          type: string
+          enum:
+          - STARTING
+          - STARTED
+          - FAILED
+          example: STARTED
+      required:
+      - name
+      - version
+      - status
+    Position:
+      title: Position ([X, Y] coordinates)
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        type: integer
+      example:
+      - 223
+      - 213
+    Version:
+      title: Semantic version of a plug
+      type: string
+      pattern: \d+\.\d+\.\d+
+      example: 2.4.13
+    PluginUpdateSpec:
+      title: Plugin Update Spec
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the plugin to update
+          example: mySensor
+        fromVersion:
+          description: plugin version selection to upgrade
+          oneOf:
+          - $ref: '#/components/schemas/Version'
+          - type: string
+            title: Any Version
+            enum:
+            - any
+          example: any
+        toVersion:
+          description: Plugin version to upgrade to
+          allOf:
+          - $ref: '#/components/schemas/Version'
+      required:
+      - name
+      - fromVersion
+      - toVersion
+    PropertyUpdatesSpec:
+      title: Task properties Update Spec
+      type: object
+      properties:
+        variables:
+          type: object
+          description: "Set of variables to update. \nWill be merged with the current\
+            \ variables. \nTo delete any of the current variables (and fall back to\
+            \ the default value from the template) set the value to `null`"
+        tags:
+          type: object
+          description: "Key-value pairs. \nWill be merged with the current tags. \n\
+            To delete any of the current tags set the value to `null`"
+      anyOf:
+      - required:
+        - variables
+      - required:
+        - tags
+    TemplateModification:
+      title: Templates Modification Specification
+      type: object
+      properties:
+        operation:
+          type: string
+          enum:
+          - updatePlugins
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginUpdateSpec'
+        reloadTasks:
+          type: boolean
+          description: Should all tasks created from the template be reloaded
+          default: false
+          example: true
+      required:
+      - operation
+      - updates
+    TemplateTags:
+      type: object
+      description: Key-value pairs on which you can filter to finding templates back
+      example:
+        useCase: UC13.5
+    TemplateEntityCommonAttributes:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TemplateId'
+        discoveryTemplate:
+          type: boolean
+          description: flag to indicate if the template is the discovery template
+          example: false
+        tags:
+          $ref: '#/components/schemas/TemplateTags'
+        variables:
+          description: Variable declarations
+          type: array
+          items:
+            $ref: '#/components/schemas/VariableDeclaration'
+        taskDefaults:
+          $ref: '#/components/schemas/TaskDefaultsElement'
+        notes:
+          description: List of notes as explanation for users
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteElement'
+      required:
+      - name
+    TemplateEntity:
+      title: Waylay Rule Template Specification
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TemplateEntityCommonAttributes'
+      - $ref: '#/components/schemas/SimplifiedGraph'
+    TemplateEntityMetadata:
+      title: Waylay Template
+      allOf:
+      - $ref: '#/components/schemas/TemplateEntityCommonAttributes'
+      - type: object
+        properties:
+          user:
+            $ref: '#/components/schemas/TemplateUser'
+          createTime:
+            $ref: '#/components/schemas/UnixEpochMillis'
+          lastUpdateTime:
+            $ref: '#/components/schemas/UnixEpochMillis'
+        required:
+        - name
+        - user
+        - createTime
+        - lastUpdateTime
+        - discoveryTemplate
+    SensorNode:
+      title: Sensor node
+      required:
+      - label
+      - name
+      - version
+      type: object
+      properties:
+        label:
+          $ref: '#/components/schemas/NodeId'
+        name:
+          title: Name of sensor
+          type: string
+        version:
+          $ref: '#/components/schemas/Version'
+        properties:
+          title: Key-value object of required properties
+          type: object
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        sequence:
+          title: Sequence number if omitted default is 1
+          type: integer
+          default: 1
+        position:
+          $ref: '#/components/schemas/Position'
+        dataTrigger:
+          title: Boolean to indicate if sensor needs to be executed if data for `resource`
+            is received
+          type: boolean
+          default: true
+        tickTrigger:
+          title: Boolean to indicate if sensor needs to be executed on task tick
+          type: boolean
+          default: true
+        evictionTime:
+          title: Time (in milliseconds) after which sensor goes back to default state
+          type: integer
+          minimum: 0
+        pollingPeriod:
+          title: "Time (in milliseconds) to give sensor it\u2019s own tick"
+          type: integer
+          minimum: 1
+        schedule:
+          title: Schedule
+          type: string
+          description: Either a valid cron or RRule expression to set the sensor's
+            own tick
+        timeout:
+          title: Time (in ISO 8601 duration format) before the plugin times out, defaults
+            to PT50S (50 seconds)
+          type: string
+          default: PT50S
+        timeoutState:
+          title: State that will be returned as result if plug execution times out
+          type: string
+        loopDef:
+          title: Loop definition
+          type: string
+          minimum: 0
+          example: '[{"name": "alpha"}, {"name": "beta"}]'
+          description: "A loop definition is a string that defines items over which\
+            \ node will be iterated multiple times. \nThe string is an JSON array\
+            \ of JSON objects.During template execution the sensor node with such\
+            \ \na defined loop definition will be invoked for every JSON Object in\
+            \ the JSON array.\nParameter is optional. Node will be executed only once\
+            \ if loop definition is not defined."
+      additionalProperties: false
+      description: Representation of a sensor in a Rule Template.
+      example:
+        label: dice_1
+        name: dice
+        version: 1.0.9
+        position:
+        - 100
+        - 150
+        dataTrigger: false
+        tickTrigger: true
+        timeout: PT5S
+    ActuatorNode:
+      title: Actuator node
+      required:
+      - label
+      - name
+      - version
+      type: object
+      properties:
+        label:
+          $ref: '#/components/schemas/NodeId'
+        name:
+          title: Name of actuator
+          type: string
+        version:
+          $ref: '#/components/schemas/Version'
+        properties:
+          title: Key-value object of required properties
+          type: object
+        sequence:
+          title: Sequence
+          type: integer
+        position:
+          $ref: '#/components/schemas/Position'
+        timeout:
+          title: Time (in ISO 8601 duration format) before the plugin times out, defaults
+            to PT50S (50 seconds)
+          type: string
+          default: PT50S
+      additionalProperties: false
+      description: Representation of an actuator in a Rule Template.
+      example:
+        label: debugDialog_1
+        name: debugDialog
+        version: 1.0.0
+        properties:
+          message: Dice 1 has value ONE
+        position:
+        - 827
+        - 323
+    RelationNode:
+      title: Gate node
+      required:
+      - label
+      - type
+      - parentLabels
+      - combinations
+      type: object
+      properties:
+        label:
+          allOf:
+          - $ref: '#/components/schemas/NodeId'
+          example: AND_1
+        type:
+          $ref: '#/components/schemas/GateType'
+        parentLabels:
+          title: Labels of the sensors that are attached to this gate
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeId'
+          example:
+          - dice_1
+          - dice_2
+        combinations:
+          title: Combinations of connected sensor's states
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+              description: State of one of the connected sensors
+            example:
+            - ONE
+            - TWO
+        position:
+          $ref: '#/components/schemas/Position'
+      additionalProperties: false
+      description: Representation of a gate in a Rule Template.
+    GateType:
+      title: Gate Type
+      enum:
+      - AND
+      - OR
+      - GENERAL
+      - NAND
+      type: string
+      description: Supported gate types.
+    GenericTrigger:
+      type: object
+      properties:
+        sourceLabel:
+          title: Label of source sensor or gate
+          allOf:
+          - $ref: '#/components/schemas/NodeId'
+        destinationLabel:
+          title: Label of the destination sensor or actuator
+          allOf:
+          - $ref: '#/components/schemas/NodeId'
+        invocationPolicy:
+          title: Time (in seconds) that defines how long to wait before firing the
+            same actuator again, even if the condition is met.
+          type: integer
+          minimum: 1
+    TriggerStateChange:
+      title: TriggerStateChange
+      required:
+      - stateFrom
+      - stateTo
+      type: object
+      properties:
+        stateFrom:
+          title: State from which to trigger, or '*'
+          type: string
+        stateTo:
+          title: State to, or '*'
+          type: string
+      description: State change specification under which to trigger the next node.
+    StateChangeTrigger:
+      title: State Change Trigger
+      description: A trigger that executes on state change.
+      allOf:
+      - $ref: '#/components/schemas/GenericTrigger'
+      - properties:
+          stateChangeTrigger:
+            $ref: '#/components/schemas/TriggerStateChange'
+        required:
+        - sourceLabel
+        - destinationLabel
+        - stateChangeTrigger
+      example:
+        sourceLabel: AND_1
+        destinationLabel: debugDialog_1
+        stateChangeTrigger:
+          stateFrom: 'FALSE'
+          stateTo: '*'
+    StatesTrigger:
+      title: States trigger
+      description: A trigger that is conditional on the states of the source.
+      allOf:
+      - $ref: '#/components/schemas/GenericTrigger'
+      - properties:
+          statesTrigger:
+            type: array
+            description: array of states of source node under which to fire
+            items:
+              type: string
+        required:
+        - sourceLabel
+        - destinationLabel
+        - statesTrigger
+      example:
+        sourceLabel: AND_1
+        destinationLabel: debugDialog_2
+        statesTrigger:
+        - 'TRUE'
+    ExecutionTrigger:
+      title: Execution Trigger
+      description: A trigger that always executes on successful execution of the source.
+      allOf:
+      - $ref: '#/components/schemas/GenericTrigger'
+      - type: object
+        required:
+        - sourceLabel
+        - destinationLabel
+      example:
+        sourceLabel: AND_1
+        destinationLabel: debugDialog_3
+    NoteElement:
+      title: User Note
+      required:
+      - text
+      - position
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Position'
+        text:
+          title: Text
+          type: string
+          example: Example template having some sensors and gates
+      additionalProperties: false
+      description: Representation of a note in a Rule Template.
+    VariableDeclaration:
+      title: Declaration of a variable
+      description: Variable declaration.
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          description: Variable Name
+          type: string
+        displayName:
+          description: Display name. Will default to the name if not specified
+          type: string
+        type:
+          $ref: '#/components/schemas/VariableType'
+        format:
+          $ref: '#/components/schemas/VariableFormat'
+        mandatory:
+          description: flag to indicate if value for variable is mandatory or not
+          type: boolean
+          default: false
+        defaultValue:
+          description: Default value for the variable
+          anyOf:
+          - type: string
+          - type: number
+          - type: boolean
+          - type: object
+      example:
+        name: city
+        displayName: City
+        type: string
+        mandatory: true
+    VariableFormat:
+      title: Variable format
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          title: Type
+          type: string
+          example: resource
+        values:
+          title: Possible values (enum declaration)
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: number
+            - type: object
+      description: Format for a variable definition.
+    VariableType:
+      title: VariableType
+      enum:
+      - string
+      - boolean
+      - integer
+      - double
+      - long
+      - float
+      - object
+      type: string
+      description: Value type for a template variable.
+    TaskDefaultsElement:
+      title: Task defaults
+      description: default task settings that will be applied when creating a task
+        from the template
+      type: object
+      properties:
+        tags:
+          $ref: '#/components/schemas/TagsTaskObject'
+        type:
+          $ref: '#/components/schemas/TaskScenarioType'
+        resetObservations:
+          type: boolean
+        parallel:
+          type: boolean
+        gatesNeedFullObservation:
+          type: boolean
+        cron:
+          $ref: '#/components/schemas/CronExpression'
+        rrule:
+          $ref: '#/components/schemas/RRuleExpression'
+        timeZone:
+          $ref: '#/components/schemas/TimeZoneId'
+        frequency:
+          description: polling frequency in milliseconds
+          type: integer
+      example:
+        type: periodic
+        frequency: 900000
+        resetObservations: false
+    TaskScenarioType:
+      title: TaskScenarioType
+      enum:
+      - scheduled
+      - periodic
+      - onetime
+      - reactive
+      type: string
+      description: Triggering deployment scenario for a task.
+    TaskStatus:
+      title: Task status
+      type: string
+      enum:
+      - running
+      - stopped
+      - failed
+      description: Status of a task
+    TemplateRunWithGraphSpecification:
+      title: Specification to run template specifying the actual graph
+      allOf:
+      - $ref: '#/components/schemas/TemplateRunSpecification'
+      - type: object
+        properties:
+          graph:
+            $ref: '#/components/schemas/GraphDefinition'
+        required:
+        - graph
+    ResourceDataInjection:
+      title: Resource Data Injection
+      type: object
+      description: data to inject per resource
+      properties:
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        timestamp:
+          $ref: '#/components/schemas/UnixEpochMillis'
+      additionalProperties: true
+      required:
+      - resource
+    TemplateRunConfiguration:
+      title: Template Run Configuration
+      type: object
+      description: Template run configurations
+      properties:
+        executeActuators:
+          type: boolean
+          description: Flag to trigger actual execution of actuators
+          default: false
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        resetObservations:
+          type: boolean
+          description: reset observations before injecting data
+          default: true
+        gatesNeedFullObservation:
+          type: boolean
+          description: Only evaluate gates when all inputs are observed
+          default: false
+    TemplateRunSpecification:
+      title: Specification to run template
+      type: object
+      properties:
+        data:
+          title: Data Set
+          description: The full dataset to process. If specified, template will be
+            run as reactive template
+          type: array
+          items:
+            type: array
+            title: Dataset For One Invocation
+            description: dataset that will be processed by one invocation
+            items:
+              $ref: '#/components/schemas/ResourceDataInjection'
+          example:
+          - - resource: resource1
+              temperature: 20
+            - resource: resource2
+              co2: 100
+              humidity: 0.4
+          - - resource: resource1
+              temperature: 21
+        conf:
+          $ref: '#/components/schemas/TemplateRunConfiguration'
+        variables:
+          title: Template variables
+          description: The values for the variables declared in the template
+          type: object
+          example:
+            threshold: 13
+        resourceMetaData:
+          title: Resource Metadata
+          description: 'Metadata for any of the resources used in the template.
+
+
+            The current metadata for all resources used in the template is fetched
+            at the start of the template run.
+
+            This provided metadata is used to overwrite this current metadata'
+          type: object
+          additionalProperties:
+            type: object
+          example:
+            resource1:
+              name: outside_temperature
+              inside_sensor:
+                $$ref: /resources/resource2
+    SensorExecutionResult:
+      title: Sensor execution result
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: flag indicating if the sensor was successfully executed
+        state:
+          type: string
+          description: observedState field returned by the sensor execution
+        error:
+          type: string
+          description: error message in case of failure
+        rawData:
+          type: object
+          description: the rawData returned by the sensor execution
+        log:
+          type: array
+          items:
+            type: object
+    TemplateRunSensorResult:
+      allOf:
+      - $ref: '#/components/schemas/SensorExecutionResult'
+      - type: object
+        properties:
+          executed:
+            type: boolean
+            description: flag indicating if the sensor was executed
+        required:
+        - executed
+    ActuatorExecutionResult:
+      title: Actuator execution result
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: flag indicating if the actuator was successfully executed
+        error:
+          type: string
+          description: error message in case of failure
+        rawData:
+          type: object
+        log:
+          type: array
+          items:
+            type: object
+    TemplateRunActuatorResult:
+      allOf:
+      - $ref: '#/components/schemas/ActuatorExecutionResult'
+      - type: object
+        properties:
+          executed:
+            type: boolean
+            description: flag indicating if the actuator was executed
+        required:
+        - executed
+    TemplateRunInvocation:
+      type: object
+      properties:
+        taskId:
+          $ref: '#/components/schemas/TaskId'
+        invocationId:
+          $ref: '#/components/schemas/InvocationId'
+        sensors:
+          title: Sensors Results
+          description: The execution result for each of the sensors of the template
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TemplateRunSensorResult'
+          example:
+            alarm:
+              executed: true
+              result: true
+              state: OK
+              rawData: {}
+              log: []
+            streamingDataSensor:
+              executed: true
+              result: true
+              state: ABOVE
+              rawData:
+                parameter: temperature
+                threshold: 20
+        actuators:
+          title: Actuator Results
+          description: The execution result for each of the actuators of the template
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/TemplateRunActuatorResult'
+          example:
+            send_sms:
+              executed: true
+              result: true
+              log: []
+        log:
+          title: Logs
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                $ref: '#/components/schemas/ISO8601Timestamp'
+              level:
+                type: string
+                enum:
+                - DEBUG
+                - INFO
+                - WARN
+                - ERROR
+                example: INFO
+              message:
+                type: string
+                example: SMS sent
+            additionalProperties: false
+            required:
+            - time
+            - level
+            - message
+      required:
+      - taskId
+      - invocationId
+      - sensors
+      - actuators
+      - log
+    TransformerExecutionResult:
+      title: Transformer execution result
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: flag indicating if the actuator was Successfully Executed
+        error:
+          type: string
+          description: error message in case of failure
+        data:
+          type: object
+        log:
+          type: array
+          items:
+            type: object
+    ExecutePlugsSpecification:
+      title: Specification to execute a plug
+      type: object
+      properties:
+        properties:
+          title: specific input parameters
+          type: object
+          example:
+            threshold: 20
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        streamData:
+          title: Stream data
+          type: object
+          example:
+            temperature: 21
+            timestamp: 1582988389
+    BatchIdQuery:
+      title: By Ids
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskId'
+      required:
+      - ids
+    BatchQuery:
+      title: By Query
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TaskName'
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        type:
+          $ref: '#/components/schemas/TaskScenarioType'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        template:
+          $ref: '#/components/schemas/TemplateId'
+        plugin:
+          description: either name of a plugin (e.g. `mySensor`), or full version
+            specification of the plug (e.g `mySensor:1.0.3`)
+          type: string
+          example: mySensor:1.0.3
+        user:
+          $ref: '#/components/schemas/TaskUser'
+        finishedBefore:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        createdAfter:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        createdBefore:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        tags:
+          $ref: '#/components/schemas/TagsTaskObject'
+    BatchTask:
+      type: object
+      properties:
+        entity:
+          type: string
+          enum:
+          - task
+        action:
+          type: string
+        query:
+          oneOf:
+          - $ref: '#/components/schemas/BatchIdQuery'
+          - $ref: '#/components/schemas/BatchQuery'
+    BatchTaskCommand:
+      title: Execute Command
+      description: Execute command on multiple task
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BatchTask'
+      - properties:
+          action:
+            enum:
+            - delete
+            - start
+            - restart
+            - stop
+            - reload
+            - stopAndDelete
+        required:
+        - entity
+        - action
+        - query
+    BatchUpdatePlugin:
+      title: Update plugins
+      description: Upgrade plugins on multiple tasks
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BatchTask'
+      - properties:
+          action:
+            type: string
+            enum:
+            - updatePlugins
+          actionParameters:
+            $ref: '#/components/schemas/PluginUpdateSpec'
+        required:
+        - entity
+        - action
+        - query
+        - actionParameters
+    BatchUpdateProperties:
+      title: Update task properties
+      description: Update variables and/or tags of multiple tasks
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/BatchTask'
+      - properties:
+          action:
+            type: string
+            enum:
+            - updateProperties
+          actionParameters:
+            $ref: '#/components/schemas/PropertyUpdatesSpec'
+        required:
+        - entity
+        - action
+        - query
+        - actionParameters
+    BatchOperation:
+      title: Batch Operation
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/BatchId'
+        user:
+          type: string
+          description: User id of the user who started the operation
+          example: user/22f6dfdf-a50c-4eab-953e-8d2e56891dbe
+        operation:
+          type: object
+          description: Summary of the batch operation
+          properties:
+            entity:
+              type: string
+              enum:
+              - task
+            action:
+              type: string
+              enum:
+              - updatePlugins
+              - delete
+              - start
+              - restart
+              - stop
+              - reload
+              - updateProperties
+              example: delete
+            description:
+              type: string
+              description: description of the operations
+              example: Remove tasks filtered by ids=808aec38-3fb3-4163-a45e-1890e94081ea
+          required:
+          - entity
+          - action
+          - description
+        queueTime:
+          $ref: '#/components/schemas/UnixEpochMillis'
+      required:
+      - id
+      - user
+      - operation
+      - queueTime
+    SuccessOperationResult:
+      type: object
+      description: "Object containing the successful operation results. \nThe keys\
+        \ will be task ids."
+      additionalProperties:
+        type: object
+        description: The keys will be task ids.
+        properties:
+          statusCode:
+            type: integer
+            description: The statusCode of the operation
+        required:
+        - statusCode
+    FailureOperationResult:
+      type: object
+      description: "Object containing the unsuccessful operation results. \nThe keys\
+        \ will be tasks ids."
+      additionalProperties:
+        type: object
+        description: The keys will be task ids.
+        properties:
+          statusCode:
+            type: integer
+            description: The statusCode of the operation
+          error:
+            type: string
+            description: Error description of what went wrong.
+        required:
+        - statusCode
+        - error
+    OperationResultObject:
+      description: Finished Batch Operation results
+      type: object
+      properties:
+        finishedTime:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        results:
+          type: object
+          properties:
+            success:
+              $ref: '#/components/schemas/SuccessOperationResult'
+            failure:
+              $ref: '#/components/schemas/FailureOperationResult'
+          required:
+          - success
+          - failure
+      required:
+      - finishedTime
+      - results
+    BatchOperationResult:
+      title: Result of a finished Batch Operation
+      allOf:
+      - $ref: '#/components/schemas/BatchOperation'
+      - $ref: '#/components/schemas/OperationResultObject'
+    TaskFromTemplate:
+      title: Task with rule defined in template
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/TaskSettings'
+      - properties:
+          start:
+            title: boolean to indicate whether task must be started after creation
+            type: boolean
+            default: true
+          template:
+            $ref: '#/components/schemas/TemplateId'
+        required:
+        - template
+        - name
+    SimplifiedGraph:
+      title: Simplified Graph
+      description: Graph in simplified format
+      type: object
+      properties:
+        sensors:
+          description: List of sensors with required properties
+          type: array
+          items:
+            $ref: '#/components/schemas/SensorNode'
+        actuators:
+          description: List of actuators with required properties
+          type: array
+          items:
+            $ref: '#/components/schemas/ActuatorNode'
+        relations:
+          description: List of relations (gates) between sensors
+          type: array
+          items:
+            $ref: '#/components/schemas/RelationNode'
+        triggers:
+          description: List of conditions under which actuators/sensors get executed.
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/StateChangeTrigger'
+            - $ref: '#/components/schemas/StatesTrigger'
+            - $ref: '#/components/schemas/ExecutionTrigger'
+    BayesianGraph:
+      title: Bayesian Network
+      description: Graph in BN format
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            type: object
+        posterior:
+          type: array
+          items:
+            type: object
+    GraphDefinition:
+      title: Graph
+      oneOf:
+      - $ref: '#/components/schemas/SimplifiedGraph'
+      - $ref: '#/components/schemas/BayesianGraph'
+    TaskWithRule:
+      title: Task with rule defined in request
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/SimplifiedGraph'
+      - properties:
+          notes:
+            title: List of notes as explanation for users
+            type: array
+            items:
+              $ref: '#/components/schemas/NoteElement'
+          task:
+            allOf:
+            - $ref: '#/components/schemas/TaskSettings'
+            - type: object
+              properties:
+                start:
+                  title: boolean to indicate whether task must be started after creation
+                  type: boolean
+                  default: true
+              required:
+              - name
+        required:
+        - task
+    PeriodicTaskSetting:
+      title: Task settings for periodic tasks
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - periodic
+        frequency:
+          type: integer
+          description: polling frequency in milliseconds
+          example: 900000
+      required:
+      - type
+      - frequency
+    TimeZoneId:
+      title: Timezone Id
+      type: string
+      description: Optional identifier of the time zone in which the schedule expression
+        is to be interpreted
+      example: Europe/Brussels
+    RRuleExpression:
+      type: string
+      title: RRule based
+      description: RRule expression as defined in [RFC5545 3.8.5.3](https://www.rfc-editor.org/rfc/rfc5545#section-3.8.5.3)
+      example: FREQ=MINUTELY;INTERVAL=15
+    CronExpression:
+      type: string
+      title: cron based
+      description: cron expression as defined in [Cron format](https://www.quartz-scheduler.org/documentation/quartz-1.8.6/tutorials/TutorialLesson06)
+      example: 15 * * * * ?
+    ScheduledTaskSetting:
+      title: Task settings for scheduled tasks
+      type: object
+      allOf:
+      - properties:
+          type:
+            type: string
+            enum:
+            - scheduled
+          timeZone:
+            $ref: '#/components/schemas/TimeZoneId'
+        required:
+        - type
+      - oneOf:
+        - properties:
+            rrule:
+              $ref: '#/components/schemas/RRuleExpression'
+          required:
+          - rrule
+        - properties:
+            cron:
+              $ref: '#/components/schemas/CronExpression'
+          required:
+          - cron
+    OneTimeTaskSetting:
+      title: Task settings for onetime tasks
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - onetime
+      required:
+      - type
+    ReactiveTaskSetting:
+      title: Task settings for reactive tasks
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - reactive
+      required:
+      - type
+    TaskTypeSettings:
+      title: Task type related settings
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/ScheduledTaskSetting'
+      - $ref: '#/components/schemas/PeriodicTaskSetting'
+      - $ref: '#/components/schemas/OneTimeTaskSetting'
+      - $ref: '#/components/schemas/ReactiveTaskSetting'
+    VariablesTaskObject:
+      type: object
+      description: set of variables which will be used when starting a task and will
+        automatically be injected in the template before starting a task.
+      example:
+        email: foo@gmail.com
+    TagsTaskObject:
+      type: object
+      description: Key-value pairs on which you can set at task creation and later
+        filter tasks
+      example:
+        myRef: d8933cd4-7c70-11e9-8f9e-2a86e4085a59
+    TaskName:
+      title: Task Name
+      type: string
+      example: Example task 1
+    GenericTaskSettings:
+      title: Task related settings
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TaskName'
+        resource:
+          $ref: '#/components/schemas/ResourceId'
+        resetObservations:
+          title: whether to clear observations before next invocation
+          type: boolean
+          default: true
+        parallel:
+          title: whether to run sensors in parallel or sequentially
+          type: boolean
+          default: true
+        gatesNeedFullObservation:
+          title: Only evaluate gates when all inputs are observed
+          type: boolean
+          default: false
+        tags:
+          $ref: '#/components/schemas/TagsTaskObject'
+        variables:
+          $ref: '#/components/schemas/VariablesTaskObject'
+    TaskSettings:
+      title: Task related settings
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/GenericTaskSettings'
+      - $ref: '#/components/schemas/TaskTypeSettings'
+    ValidationIssue:
+      title: Validation Issue
+      type: object
+      properties:
+        type:
+          type: string
+          description: Indication of "area" where validation issue is situated
+          example: BINDING
+        message:
+          description: Description of the issue
+          type: string
+          example: rawData fas no field status
+        severity:
+          type: string
+          description: Severity of the issue. ERROR means that object cannot be created
+            if the issue is not fixed. WARNING means that the object can be created,
+            but that errors might be encountered at runtime
+          enum:
+          - ERROR
+          - WARNING
+          example: WARNING
+        details:
+          type: object
+          description: Object containing identifying information on what gives the
+            issue
+          example:
+            nodeId: debugDialog_1
+            property: message
+            binding: ${nodes.dice_1.rawData.status}
+        suggestion:
+          type: string
+          description: Suggestion on how to change the object to get the issue fixed
+          example: 'maybe you are looking for one of these: state, randomValue'
+      required:
+      - type
+      - message
+      - severity
+    ErrorResponse:
+      title: Error Response
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+        code:
+          type: string
+          description: Optional error code
+      required:
+      - statusCode
+      - error
+    ErrorWithDetailsResponse:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      - properties:
+          details:
+            type: array
+            items:
+              $ref: '#/components/schemas/ValidationIssue'
+    PagingSkip:
+      type: integer
+      title: Skipped Count
+      description: Number of items skipped before this page of results.
+      default: 0
+      example: 85
+    PagingLimit:
+      type: integer
+      title: Limit Count
+      description: Size of one page of results.
+      example: 10
+      default: 10
+    PagingTotal:
+      type: integer
+      title: Total Count
+      description: Total number of items matching the query of which this is one page
+        of results.
+      example: 2398
+    PagingResult:
+      type: object
+      properties:
+        skip:
+          $ref: '#/components/schemas/PagingSkip'
+        limit:
+          $ref: '#/components/schemas/PagingLimit'
+        total:
+          $ref: '#/components/schemas/PagingTotal'
+      required:
+      - skip
+      - limit
+      - total
+    TaskUser:
+      type: string
+      description: Creation user mail address or 'system' for system generated tasks
+      example: user@waylay.io
+    TemplateUser:
+      type: string
+      description: Creation user mail address
+      example: user@waylay.io
+    TaskResourceIds:
+      description: List of resources that are used in the task
+      type: array
+      items:
+        $ref: '#/components/schemas/ResourceId'
+    TaskEntity:
+      type: object
+      properties:
+        ID:
+          $ref: '#/components/schemas/TaskId'
+        name:
+          $ref: '#/components/schemas/TaskName'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        user:
+          $ref: '#/components/schemas/TaskUser'
+        createTime:
+          $ref: '#/components/schemas/UnixEpochMillis'
+        template:
+          $ref: '#/components/schemas/TemplateId'
+        network:
+          description: The graph, either from the template or from the task definition.
+            Depending on the `format` query parameter either BN or simplified format
+          type: object
+        resourceIds:
+          $ref: '#/components/schemas/TaskResourceIds'
+      required:
+      - ID
+      - status
+      - user
+      - createTime
+      - name
+      - network
+    TaskSpecification:
+      title: a task specification
+      oneOf:
+      - $ref: '#/components/schemas/TaskFromTemplate'
+      - $ref: '#/components/schemas/TaskWithRule'
+  requestBodies:
+    TaskSpecification:
+      description: Task Specification
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TaskSpecification'
+      required: true
+    BatchTasksSpecification:
+      description: Tasks Batch Operation
+      required: true
+      content:
+        application/json:
+          schema:
+            title: a tasks batch operation specification
+            type: object
+            oneOf:
+            - $ref: '#/components/schemas/BatchUpdatePlugin'
+            - $ref: '#/components/schemas/BatchTaskCommand'
+            - $ref: '#/components/schemas/BatchUpdateProperties'
+          examples:
+            Delete multiple tasks by query:
+              value:
+                entity: task
+                action: delete
+                query:
+                  type: onetime
+                  status: stopped
+                  finishedBefore: 1648738809733
+            Delete multiple tasks by id:
+              value:
+                entity: task
+                action: delete
+                query:
+                  ids:
+                  - 4bbec310-4b8a-4f82-954d-f6268e7736a3
+                  - b637dc9c-b8fc-4d1e-8743-b1456364e559
+                  - 0cf62e41-be40-42bf-a88f-6fc803bcb957
+            Stop all task running for resource myResource:
+              value:
+                entity: task
+                action: stop
+                query:
+                  status: running
+                  resource: myResource
+            Plugin updates:
+              value:
+                entity: task
+                action: updatePlugins
+                query:
+                  ids:
+                  - 4bbec310-4b8a-4f82-954d-f6268e7736a3
+                  - b637dc9c-b8fc-4d1e-8743-b1456364e559
+                  - 0cf62e41-be40-42bf-a88f-6fc803bcb957
+                actionParameters:
+                  updates:
+                  - name: myActuator
+                    fromVersion: 1.0.1
+                    toVersion: 1.0.3
+                  - name: mySensor
+                    fromVersion: any
+                    toVersion: 2.3.4
+            Properties update:
+              value:
+                entity: task
+                action: updateProperties
+                query:
+                  status: running
+                  template: myChangedTemplate
+                  tags:
+                    revision: 57
+                actionParameters:
+                  variables:
+                    variableWithDefault: null
+                    newVariable: 13
+                  tags:
+                    revision: 58
+                    dummyTag: null
+                    newTag: released
+    TemplatesSpecification:
+      description: Template Specification
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TemplateEntity'
+      required: true
+    RunTemplateSpecification:
+      description: Specification to run template
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TemplateRunSpecification'
+    RunTemplateSpecificationGraph:
+      description: Specification to run template through graph/BN.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TemplateRunWithGraphSpecification'
+    ExecutePlugsSpecification:
+      description: Specification to execute a plug.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExecutePlugsSpecification'
+    NodeCallsSpecification:
+      description: Command string to apply to a node of a task.
+      required: true
+      content:
+        text/plain:
+          schema:
+            type: string
+            anyOf:
+            - pattern: ^state=
+              description: State update command
+            - pattern: ^operation=
+              description: Operation command
+          example: state=Alive
+    StreamData:
+      description: Push (real-time) Data Specification
+      required: true
+      content:
+        application/json:
+          schema:
+            title: stream data
+            type: object
+            properties:
+              resource:
+                $ref: '#/components/schemas/ResourceId'
+              data:
+                oneOf:
+                - type: object
+                  example:
+                    parameterName: temperature
+                    value: 23.0
+                    collectedTime: 1420629467
+                - type: array
+                  items:
+                    type: object
+                  example:
+                  - parameterName: latitude
+                    value: 51
+                  - parameterName: longitude
+                    value: 3.73
+            required:
+            - resource
+            - data
+  parameters:
+    TaskId:
+      name: taskId
+      in: path
+      description: Unique Task identifier
+      required: true
+      schema:
+        $ref: '#/components/schemas/TaskId'
+    TemplateId:
+      name: name
+      in: path
+      description: Unique Template identifier
+      required: true
+      schema:
+        $ref: '#/components/schemas/TemplateId'
+    LogLevel:
+      name: logLevel
+      in: query
+      description: 'sets the log level for filtering out logs to requested log level
+        or higher from the template run output.
+
+        Value `NONE` will disable all logs.
+
+        If not specified all logs will be returned.'
+      required: false
+      schema:
+        type: string
+        enum:
+        - DEBUG
+        - INFO
+        - WARN
+        - ERROR
+        default: DEBUG
+    TargetNode:
+      name: targetNode
+      in: query
+      description: "The sensors and actuators part of response will contain only elements\
+        \ related to the asked node of the graph. \nThe returned logs also will be\
+        \ filtered and contain only logs related to the asked node(s)."
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          example: myFirstNode
+    NodeId:
+      name: nodeId
+      in: path
+      description: Unique node label
+      required: true
+      schema:
+        $ref: '#/components/schemas/NodeId'
+    BatchId:
+      name: batchId
+      in: path
+      description: Unique Batch Operation identifier
+      required: true
+      schema:
+        $ref: '#/components/schemas/BatchId'
+    VersionId:
+      name: version
+      in: path
+      description: Version number of plugin
+      required: true
+      schema:
+        $ref: '#/components/schemas/Version'
+    PagingHits:
+      name: hits
+      in: query
+      description: (Paging) maximal number of items returned
+      schema:
+        $ref: '#/components/schemas/PagingLimit'
+    PagingStart:
+      name: startIndex
+      in: query
+      description: (Paging) items to skip in the listing
+      schema:
+        $ref: '#/components/schemas/PagingSkip'
+    Format:
+      name: format
+      in: query
+      description: Format of the graph definition
+      schema:
+        type: string
+        enum:
+        - bn
+        - simplified
+        default: bn
+  responses:
+    DefaultSuccessResponse:
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            type: object
+    VersionResponse:
+      description: Successful Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VersionResponse'
+    TaskCreatedResponse:
+      description: Task Created
+      headers:
+        Location:
+          description: URI where the created Task can be fetched
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              ID:
+                $ref: '#/components/schemas/TaskId'
+              warnings:
+                type: array
+                description: List of task warning issues. Will only be there if query
+                  parameter `returnWarnings` was set to `true`
+                items:
+                  $ref: '#/components/schemas/ValidationIssue'
+            required:
+            - ID
+    TaskNotFoundResponse:
+      description: Task Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 404
+            error: Task with id de1b26b1-31f0-4054-af44-da02331f06b5 not found
+    TemplateCreatedResponse:
+      description: Template Created
+      headers:
+        Location:
+          description: URI where the created Template can be fetched
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 201
+              uri:
+                type: string
+                format: uri
+                example: /rules/v1/templates/internet.json
+              entity:
+                $ref: '#/components/schemas/TemplateEntity'
+            required:
+            - statusCode
+            - uri
+            - entity
+    TemplateNotFoundResponse:
+      description: Template Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 404
+            error: No template with name theInternet.json
+    BatchStartResponse:
+      description: Batch Operation Started
+      content:
+        application/json:
+          schema:
+            title: Batch operation enqueued
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 202
+              uri:
+                type: string
+                description: URI where the batch operation status can be followed
+                format: uri
+                example: /rules/v1/batch/afcea5a1-81df-44f6-bd34-e0b602a2cf3d
+              entity:
+                $ref: '#/components/schemas/BatchOperation'
+            required:
+            - statusCode
+            - uri
+            - entity
+      headers:
+        Location:
+          description: URI where the batch operation status can be followed
+          example: /rules/v1/batch/afcea5a1-81df-44f6-bd34-e0b602a2cf3d
+          schema:
+            type: string
+            format: uri
+    BatchNotFoundResponse:
+      description: Batch Operation Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            statusCode: 404
+            error: No batch operation with id 'afcea5a1-81df-44f6-bd34-e0b602a2cf3d'
+  securitySchemes:
+    waylayApiKeySecret:
+      type: http
+      description: Waylay apiKey/apiSecret basic authentication. All endpoints support
+        also Waylay JWT Bearer authentication.
+      scheme: basic
+servers:
+- url: https://api.waylay.io
+  description: Waylay enterprise gateway
