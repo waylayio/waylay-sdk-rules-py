@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **type** | [**ReactiveTaskSettingType**](ReactiveTaskSettingType.md) |  | 
 **time_zone** | **str** | Optional identifier of the time zone in which the schedule expression is to be interpreted | [optional] 
-**frequency** | **int** | polling frequency in milliseconds | [optional] 
+**frequency** | **int** | polling frequency in milliseconds | 
 
 ## Example
 

@@ -27,6 +27,8 @@ from typing_extensions import (
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.retry_config import RetryConfig
+
 
 class SensorNode(WaylayBaseModel):
     """Representation of a sensor in a Rule Template.."""
@@ -61,6 +63,7 @@ class SensorNode(WaylayBaseModel):
         description="A loop definition is a string that defines items over which node will be iterated multiple times. The string is an JSON array of JSON objects.During template execution the sensor node with such a defined loop definition will be invoked for every JSON Object in the JSON array. Parameter is optional. Node will be executed only once if loop definition is not defined.",
         alias="loopDef",
     )
+    retry_config: RetryConfig | None = Field(default=None, alias="retryConfig")
 
     @field_validator("version")
     @classmethod

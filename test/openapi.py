@@ -1000,7 +1000,7 @@ MODEL_DEFINITIONS.update({"PagingResult": _paging_result_model_schema})
 
 _periodic_task_setting_model_schema = json.loads(
     r"""{
-  "required" : [ "type" ],
+  "required" : [ "frequency", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
@@ -1240,6 +1240,40 @@ MODEL_DEFINITIONS.update({
     "ResourceDataInjection": _resource_data_injection_model_schema
 })
 
+_retry_config_model_schema = json.loads(
+    r"""{
+  "required" : [ "maxBackoff", "maxRetries", "minBackoff" ],
+  "type" : "object",
+  "properties" : {
+    "maxRetries" : {
+      "minimum" : 0,
+      "type" : "integer",
+      "example" : 3
+    },
+    "minBackoff" : {
+      "type" : "string",
+      "format" : "duration",
+      "example" : "PT1S"
+    },
+    "maxBackoff" : {
+      "type" : "string",
+      "format" : "duration",
+      "example" : "PT10S"
+    },
+    "errorState" : {
+      "type" : "string",
+      "description" : "Optional sensor state which will be used to set the state of the node when the maxRetries is reached.",
+      "format" : "string",
+      "example" : "Error"
+    }
+  },
+  "description" : "Configuration for retrying a template node.\nThe node execution will be retried `maxRetries` times.\nThe delay between retries will be exponentially increased starting from `minBackoff` to `maxBackoff`.\nIf the node execution fails after `maxRetries` retries, the node state will be set to `errorState` if it that property is provided.\nOtherwise node execution will fail. Error state should be one of the possible states defined by the sensor node."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RetryConfig": _retry_config_model_schema})
+
 _run_template_log_level_parameter_model_schema = json.loads(
     r"""{
   "type" : "string",
@@ -1395,6 +1429,9 @@ _sensor_node_model_schema = json.loads(
       "type" : "string",
       "description" : "A loop definition is a string that defines items over which node will be iterated multiple times.\nThe string is an JSON array of JSON objects.During template execution the sensor node with such\na defined loop definition will be invoked for every JSON Object in the JSON array.\nParameter is optional. Node will be executed only once if loop definition is not defined.",
       "example" : "[{\"name\": \"alpha\"}, {\"name\": \"beta\"}]"
+    },
+    "retryConfig" : {
+      "$ref" : "#/components/schemas/RetryConfig"
     }
   },
   "additionalProperties" : false,
@@ -1712,8 +1749,7 @@ _task_from_template_model_schema = json.loads(
   "example" : {
     "name" : "myTask",
     "template" : "myTemplate",
-    "type" : "reactive",
-    "frequency" : 900000
+    "type" : "reactive"
   },
   "allOf" : [ {
     "$ref" : "#/components/schemas/TaskSettings"

@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **type** | [**PeriodicTaskSettingType**](PeriodicTaskSettingType.md) |  | 
-**frequency** | **int** | polling frequency in milliseconds | [optional] 
+**frequency** | **int** | polling frequency in milliseconds | 
 
 ## Example
 

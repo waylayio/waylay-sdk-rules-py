@@ -53,9 +53,7 @@ class TaskWithRuleAllOfTask(WaylayBaseModel):
         description="Optional identifier of the time zone in which the schedule expression is to be interpreted",
         alias="timeZone",
     )
-    frequency: StrictInt | None = Field(
-        default=None, description="polling frequency in milliseconds"
-    )
+    frequency: StrictInt = Field(description="polling frequency in milliseconds")
     start: StrictBool | None = True
 
     model_config = ConfigDict(

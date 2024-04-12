@@ -1,5 +1,4 @@
 LICENSE.txt
-README.md
 pyproject.toml
 src/waylay/services/rules/models/__init__.py
 src/waylay/services/rules/models/a_tasks_batch_operation_specification.py
@@ -59,6 +58,7 @@ src/waylay/services/rules/models/reactive_task_setting_type.py
 src/waylay/services/rules/models/relation_node.py
 src/waylay/services/rules/models/replace_template200_response.py
 src/waylay/services/rules/models/resource_data_injection.py
+src/waylay/services/rules/models/retry_config.py
 src/waylay/services/rules/models/run_template_log_level_parameter.py
 src/waylay/services/rules/models/scheduled_task_setting.py
 src/waylay/services/rules/models/scheduled_task_setting_all_of_type.py
@@ -106,6 +106,7 @@ src/waylay/services/rules/models/variable_type.py
 src/waylay/services/rules/models/version_response.py
 src/waylay/services/rules/models/version_response_status.py
 src/waylay/services/rules/queries/__init__.py
+src/waylay/services/rules/queries/about_api.py
 src/waylay/services/rules/queries/plugs_execution_api.py
 src/waylay/services/rules/queries/push_data_api.py
 src/waylay/services/rules/queries/py.typed
@@ -114,4 +115,3 @@ src/waylay/services/rules/queries/tasks_api.py
 src/waylay/services/rules/queries/tasks_batch_operations_api.py
 src/waylay/services/rules/queries/template_runs_api.py
 src/waylay/services/rules/queries/templates_api.py
-src/waylay/services/rules/queries/version_api.py

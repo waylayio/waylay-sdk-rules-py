@@ -25,7 +25,7 @@ except ImportError as exc:
 
 periodic_task_setting_model_schema = json.loads(
     r"""{
-  "required" : [ "type" ],
+  "required" : [ "frequency", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {

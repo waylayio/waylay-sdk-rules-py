@@ -1,7 +1,7 @@
 LICENSE.txt
-README.md
 pyproject.toml
 src/waylay/services/rules/api/__init__.py
+src/waylay/services/rules/api/about_api.py
 src/waylay/services/rules/api/plugs_execution_api.py
 src/waylay/services/rules/api/push_data_api.py
 src/waylay/services/rules/api/py.typed
@@ -10,7 +10,6 @@ src/waylay/services/rules/api/tasks_api.py
 src/waylay/services/rules/api/tasks_batch_operations_api.py
 src/waylay/services/rules/api/template_runs_api.py
 src/waylay/services/rules/api/templates_api.py
-src/waylay/services/rules/api/version_api.py
 src/waylay/services/rules/service/__init__.py
 src/waylay/services/rules/service/py.typed
 src/waylay/services/rules/service/service.py

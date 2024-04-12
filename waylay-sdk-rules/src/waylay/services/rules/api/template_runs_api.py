@@ -13,6 +13,7 @@ from __future__ import annotations  # for Python 3.7–3.9
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncIterator,
     Dict,
     Literal,
     TypeVar,
@@ -34,6 +35,7 @@ from waylay.sdk.api import (
     Response,
 )
 from waylay.sdk.api._models import Model
+from waylay.sdk.api.constants import STREAM_TIMEOUTS
 from waylay.sdk.plugin import WithApiClient
 
 if TYPE_CHECKING:
@@ -100,8 +102,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> TemplateRunInvocation: ...
+    ) -> AsyncIterator[TemplateRunInvocation]: ...
 
     @overload
     async def run_graph(
@@ -112,8 +116,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal[""] = "",
         response_type: T,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> T: ...
+    ) -> AsyncIterator[T]: ...
 
     @overload
     async def run_graph(
@@ -124,6 +130,8 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
     ) -> Response: ...
 
@@ -136,8 +144,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: str,
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> Model: ...
+    ) -> AsyncIterator[Model]: ...
 
     @overload
     async def run_graph(
@@ -148,8 +158,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: str,
         response_type: T,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> T: ...
+    ) -> AsyncIterator[T]: ...
 
     async def run_graph(
         self,
@@ -159,8 +171,15 @@ class TemplateRunsApi(WithApiClient):
         select_path: str = "",
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> TemplateRunInvocation | T | Response | Model:
+    ) -> (
+        AsyncIterator[TemplateRunInvocation]
+        | AsyncIterator[T]
+        | Response
+        | AsyncIterator[Model]
+    ):
         """Run Graph Or Bayesian Network.
 
         Run a graph or Bayesian Network. If `data` is specified, template will be run as reactive template. If `data` is not specified, template will be run as a one-time template (1 tick)
@@ -226,6 +245,8 @@ class TemplateRunsApi(WithApiClient):
             params=query,
             **body_args,
             headers=headers,
+            stream=stream,
+            timeout=timeout,
             **kwargs,
             response_type=response_types_map,
             select_path=select_path,
@@ -242,8 +263,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> TemplateRunInvocation: ...
+    ) -> AsyncIterator[TemplateRunInvocation]: ...
 
     @overload
     async def run(
@@ -255,8 +278,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal[""] = "",
         response_type: T,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> T: ...
+    ) -> AsyncIterator[T]: ...
 
     @overload
     async def run(
@@ -268,6 +293,8 @@ class TemplateRunsApi(WithApiClient):
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
     ) -> Response: ...
 
@@ -281,8 +308,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: str,
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> Model: ...
+    ) -> AsyncIterator[Model]: ...
 
     @overload
     async def run(
@@ -294,8 +323,10 @@ class TemplateRunsApi(WithApiClient):
         select_path: str,
         response_type: T,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> T: ...
+    ) -> AsyncIterator[T]: ...
 
     async def run(
         self,
@@ -306,8 +337,15 @@ class TemplateRunsApi(WithApiClient):
         select_path: str = "",
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
+        stream: bool = True,
+        timeout=STREAM_TIMEOUTS,
         **kwargs,
-    ) -> TemplateRunInvocation | T | Response | Model:
+    ) -> (
+        AsyncIterator[TemplateRunInvocation]
+        | AsyncIterator[T]
+        | Response
+        | AsyncIterator[Model]
+    ):
         """Run Template.
 
         Run a template. If `data` is specified, template will be run as reactive template. If `data` is not specified, template will be run as a one-time template (1 tick)
@@ -378,6 +416,8 @@ class TemplateRunsApi(WithApiClient):
             params=query,
             **body_args,
             headers=headers,
+            stream=stream,
+            timeout=timeout,
             **kwargs,
             response_type=response_types_map,
             select_path=select_path,

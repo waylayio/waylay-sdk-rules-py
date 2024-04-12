@@ -94,6 +94,9 @@ sensor_node_model_schema = json.loads(
       "type" : "string",
       "description" : "A loop definition is a string that defines items over which node will be iterated multiple times.\nThe string is an JSON array of JSON objects.During template execution the sensor node with such\na defined loop definition will be invoked for every JSON Object in the JSON array.\nParameter is optional. Node will be executed only once if loop definition is not defined.",
       "example" : "[{\"name\": \"alpha\"}, {\"name\": \"beta\"}]"
+    },
+    "retryConfig" : {
+      "$ref" : "#/components/schemas/RetryConfig"
     }
   },
   "additionalProperties" : false,

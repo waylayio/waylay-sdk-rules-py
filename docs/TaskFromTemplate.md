@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **variables** | **object** | set of variables which will be used when starting a task and will automatically be injected in the template before starting a task. | [optional] 
 **type** | [**ReactiveTaskSettingType**](ReactiveTaskSettingType.md) |  | 
 **time_zone** | **str** | Optional identifier of the time zone in which the schedule expression is to be interpreted | [optional] 
-**frequency** | **int** | polling frequency in milliseconds | [optional] 
+**frequency** | **int** | polling frequency in milliseconds | 
 **start** | **bool** |  | [optional] [default to True]
 **template** | **str** | Unique template identifier | 
 
