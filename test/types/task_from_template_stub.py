@@ -29,8 +29,7 @@ task_from_template_model_schema = json.loads(
   "example" : {
     "name" : "myTask",
     "template" : "myTemplate",
-    "type" : "reactive",
-    "frequency" : 900000
+    "type" : "reactive"
   },
   "allOf" : [ {
     "$ref" : "#/components/schemas/TaskSettings"

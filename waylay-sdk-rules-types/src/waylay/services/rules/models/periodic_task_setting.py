@@ -25,9 +25,7 @@ class PeriodicTaskSetting(WaylayBaseModel):
     """PeriodicTaskSetting."""
 
     type: PeriodicTaskSettingType
-    frequency: StrictInt | None = Field(
-        default=None, description="polling frequency in milliseconds"
-    )
+    frequency: StrictInt = Field(description="polling frequency in milliseconds")
 
     model_config = ConfigDict(
         populate_by_name=True,

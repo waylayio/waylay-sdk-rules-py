@@ -4,6 +4,7 @@ LICENSE.txt
 Makefile
 README.md
 docs/ATasksBatchOperationSpecification.md
+docs/AboutApi.md
 docs/ActuatorExecutionResult.md
 docs/ActuatorNode.md
 docs/BatchIdQuery.md
@@ -61,6 +62,7 @@ docs/ReactiveTaskSettingType.md
 docs/RelationNode.md
 docs/ReplaceTemplate200Response.md
 docs/ResourceDataInjection.md
+docs/RetryConfig.md
 docs/RunTemplateLogLevelParameter.md
 docs/ScheduledTaskSetting.md
 docs/ScheduledTaskSettingAllOfType.md
@@ -110,13 +112,13 @@ docs/VariableDeclaration.md
 docs/VariableDeclarationDefaultValue.md
 docs/VariableFormat.md
 docs/VariableType.md
-docs/VersionApi.md
 docs/VersionResponse.md
 docs/VersionResponseStatus.md
 pyproject.toml
 requirements.txt
 test/__init__.py
 test/api/__init__.py
+test/api/about_api_test.py
 test/api/plugs_execution_api_test.py
 test/api/push_data_api_test.py
 test/api/task_nodes_api_test.py
@@ -124,7 +126,6 @@ test/api/tasks_api_test.py
 test/api/tasks_batch_operations_api_test.py
 test/api/template_runs_api_test.py
 test/api/templates_api_test.py
-test/api/version_api_test.py
 test/conftest.py
 test/openapi.py
 test/types/__init__.py
@@ -183,6 +184,7 @@ test/types/reactive_task_setting_type_stub.py
 test/types/relation_node_stub.py
 test/types/replace_template200_response_stub.py
 test/types/resource_data_injection_stub.py
+test/types/retry_config_stub.py
 test/types/run_template_log_level_parameter_stub.py
 test/types/scheduled_task_setting_all_of_type_stub.py
 test/types/scheduled_task_setting_stub.py
@@ -229,3 +231,5 @@ test/types/variable_format_stub.py
 test/types/variable_type_stub.py
 test/types/version_response_status_stub.py
 test/types/version_response_stub.py
+waylay-sdk-rules-types/README.md
+waylay-sdk-rules/README.md

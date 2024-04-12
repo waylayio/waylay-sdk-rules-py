@@ -3,6 +3,7 @@ The REST api to manage rule tasks and rule templates in the Waylay platform.
 
 This Python package is automatically generated based on the 
 Waylay Rules OpenAPI specification (API version: 6.5.0)
+For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/rules.html).
 
 It is considered an extension of the waylay-sdk-rules package, and it consists of the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-rules`.
 
@@ -10,21 +11,20 @@ It is considered an extension of the waylay-sdk-rules package, and it consists o
 This package requires Python 3.9+.
 
 ## Installation
-Typically this package is installed when installing the [waylay-sdk](https://github.com/waylayio/waylay-sdk-py) package to enable the service's functionality.
+Typically this package is installed when installing the [waylay-sdk-core](https://pypi.org/project/waylay-sdk/) package to enable the service's functionality.
 When the service api methods are required, waylay-sdk-rules is included in:
-- ```pip install waylay-sdk[rules]``` to install `waylay-sdk` along with only this service, or
-- ```pip install waylay-sdk[services]``` to install `waylay-sdk` along with all services.
+- ```pip install waylay-sdk-core[rules]``` to install `waylay-sdk-core` along with only this service, or
+- ```pip install waylay-sdk-core[services]``` to install `waylay-sdk-core` along with all services.
 When the typed models are required, both waylay-sdk-rules and waylay-sdk-rules-types are included in:
-- ```pip install waylay-sdk[rules,rules-types]``` to install `waylay-sdk` along with only this service including the typed models, or
-- ```pip install waylay-sdk[services,services-types]``` to install `waylay-sdk` along with all services along with the typed models.
+- ```pip install waylay-sdk-core[rules,rules-types]``` to install `waylay-sdk-core` along with only this service including the typed models, or
+- ```pip install waylay-sdk-core[services,services-types]``` to install `waylay-sdk-core` along with all services along with the typed models.
 
 ## Usage
-
 
 ```python
 from pprint import pprint
 
-# Import the waylay-client from the waylay-sdk package
+# Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
 
@@ -32,19 +32,17 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from ..models.execute_plugs_specification import ExecutePlugsSpecification
-from ..models.transformer_execution_result import TransformerExecutionResult
+from waylay.services.rules.models.version_response import VersionResponse
 try:
-    # Execute Specified Transformer Version
-    # calls `POST /rules/v1/transformers/{name}/versions/{version}`
-    api_response = await waylay_client.rules.plugs_execution.execute_transformer_version(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+    # Get Service Information
+    # calls `GET /rules/v1`
+    api_response = await waylay_client.rules.about.get(
     )
-    print("The response of rules.plugs_execution.execute_transformer_version:\n")
+    print("The response of rules.about.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling rules.plugs_execution.execute_transformer_version: %s\n" % e)
+    print("Exception when calling rules.about.get: %s\n" % e)
 ```
 
 
+For more information, please visit the [Waylay API documentation](https://docs.waylay.io/#/api/?id=software-development-kits).

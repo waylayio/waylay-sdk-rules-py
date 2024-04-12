@@ -36,7 +36,7 @@ tags:
   externalDocs:
     url: https://docs.waylay.io/#/api/rules/?id=batch-tasks-operations
     description: Waylay Documentation
-- name: Version
+- name: About
 - name: Plugs Execution
 - name: Push Data
   description: Inject streaming data in tasks
@@ -46,11 +46,11 @@ tags:
 paths:
   /rules/v1:
     get:
-      summary: Get Version
-      operationId: get_version
+      summary: Get Service Information
+      operationId: get_about
       tags:
-      - Version
-      description: Get the status and version of the service.
+      - About
+      description: Get the name and version of the service.
       responses:
         '200':
           $ref: '#/components/responses/VersionResponse'
@@ -1442,6 +1442,44 @@ components:
       example:
       - 223
       - 213
+    RetryConfig:
+      title: Retry Configuration
+      description: 'Configuration for retrying a template node.
+
+        The node execution will be retried `maxRetries` times.
+
+        The delay between retries will be exponentially increased starting from `minBackoff`
+        to `maxBackoff`.
+
+        If the node execution fails after `maxRetries` retries, the node state will
+        be set to `errorState` if it that property is provided.
+
+        Otherwise node execution will fail. Error state should be one of the possible
+        states defined by the sensor node.'
+      type: object
+      properties:
+        maxRetries:
+          type: integer
+          minimum: 0
+          example: 3
+        minBackoff:
+          type: string
+          format: duration
+          example: PT1S
+        maxBackoff:
+          type: string
+          format: duration
+          example: PT10S
+        errorState:
+          type: string
+          description: Optional sensor state which will be used to set the state of
+            the node when the maxRetries is reached.
+          format: string
+          example: Error
+      required:
+      - maxRetries
+      - minBackoff
+      - maxBackoff
     Version:
       title: Semantic version of a plug
       type: string
@@ -1648,6 +1686,8 @@ components:
 
             Parameter is optional. Node will be executed only once if loop definition
             is not defined.'
+        retryConfig:
+          $ref: '#/components/schemas/RetryConfig'
       additionalProperties: false
       description: Representation of a sensor in a Rule Template.
       example:
@@ -2426,7 +2466,6 @@ components:
         name: myTask
         template: myTemplate
         type: reactive
-        frequency: 900000
     SimplifiedGraph:
       title: Simplified Graph
       description: Graph in simplified format
@@ -2518,6 +2557,7 @@ components:
           example: 900000
       required:
       - type
+      - frequency
     TimeZoneId:
       title: Timezone Id
       type: string
