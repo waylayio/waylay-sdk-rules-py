@@ -24,7 +24,6 @@ class ExecuteActuatorQuery(WaylayBaseModel):
     """Model for `execute_actuator` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_actuator_query_alias_for,
@@ -40,7 +39,6 @@ class ExecuteActuatorVersionQuery(WaylayBaseModel):
     """Model for `execute_actuator_version` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_actuator_version_query_alias_for,
@@ -56,7 +54,6 @@ class ExecuteSensorQuery(WaylayBaseModel):
     """Model for `execute_sensor` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_sensor_query_alias_for,
@@ -72,7 +69,6 @@ class ExecuteSensorVersionQuery(WaylayBaseModel):
     """Model for `execute_sensor_version` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_sensor_version_query_alias_for,
@@ -88,7 +84,6 @@ class ExecuteTransformerQuery(WaylayBaseModel):
     """Model for `execute_transformer` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_transformer_query_alias_for,
@@ -104,7 +99,6 @@ class ExecuteTransformerVersionQuery(WaylayBaseModel):
     """Model for `execute_transformer_version` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_execute_transformer_version_query_alias_for,

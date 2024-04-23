@@ -59,13 +59,23 @@ class TemplateRunWithGraphSpecificationStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return template_run_with_graph_specification_faker.generate()
+        return template_run_with_graph_specification_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "TemplateRunWithGraphSpecification":
         """Create TemplateRunWithGraphSpecification stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                TemplateRunWithGraphSpecificationAdapter.json_schema(),
+                allow_none_optionals=1,
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
         return TemplateRunWithGraphSpecificationAdapter.validate_python(
-            cls.create_json()
+            json, context={"skip_validation": True}
         )

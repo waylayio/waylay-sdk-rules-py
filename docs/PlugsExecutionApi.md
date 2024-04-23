@@ -41,6 +41,8 @@ try:
     # calls `POST /rules/v1/actions/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_actuator(
         'name_example', # name | path param "name"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_actuator:\n")
     pprint(api_response)
@@ -57,6 +59,7 @@ POST /rules/v1/actions/{name}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -114,6 +117,8 @@ try:
     api_response = await waylay_client.rules.plugs_execution.execute_actuator_version(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_actuator_version:\n")
     pprint(api_response)
@@ -131,6 +136,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
 **version** | **str** | path parameter `"version"` | Version number of plugin | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -186,6 +192,8 @@ try:
     # calls `POST /rules/v1/sensors/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_sensor(
         'name_example', # name | path param "name"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_sensor:\n")
     pprint(api_response)
@@ -202,6 +210,7 @@ POST /rules/v1/sensors/{name}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -259,6 +268,8 @@ try:
     api_response = await waylay_client.rules.plugs_execution.execute_sensor_version(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_sensor_version:\n")
     pprint(api_response)
@@ -276,6 +287,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
 **version** | **str** | path parameter `"version"` | Version number of plugin | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -331,6 +343,8 @@ try:
     # calls `POST /rules/v1/transformers/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_transformer(
         'name_example', # name | path param "name"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_transformer:\n")
     pprint(api_response)
@@ -347,6 +361,7 @@ POST /rules/v1/transformers/{name}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -404,6 +419,8 @@ try:
     api_response = await waylay_client.rules.plugs_execution.execute_transformer_version(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
     )
     print("The response of rules.plugs_execution.execute_transformer_version:\n")
     pprint(api_response)
@@ -421,6 +438,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` |  | 
 **version** | **str** | path parameter `"version"` | Version number of plugin | 
+**json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

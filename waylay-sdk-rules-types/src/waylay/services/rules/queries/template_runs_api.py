@@ -50,7 +50,6 @@ class RunGraphQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_run_graph_query_alias_for,
@@ -83,7 +82,6 @@ class RunQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_run_query_alias_for,

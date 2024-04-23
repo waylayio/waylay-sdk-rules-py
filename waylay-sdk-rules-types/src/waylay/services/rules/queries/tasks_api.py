@@ -54,7 +54,6 @@ class CreateQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_create_query_alias_for,
@@ -70,7 +69,6 @@ class DeleteQuery(WaylayBaseModel):
     """Model for `delete` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_delete_query_alias_for,
@@ -93,7 +91,6 @@ class GetConfigurationQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_configuration_query_alias_for,
@@ -116,7 +113,6 @@ class GetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,
@@ -207,7 +203,6 @@ class ListQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_query_alias_for,
@@ -223,7 +218,6 @@ class ReplaceQuery(WaylayBaseModel):
     """Model for `replace` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_replace_query_alias_for,
@@ -239,7 +233,6 @@ class StartQuery(WaylayBaseModel):
     """Model for `start` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_start_query_alias_for,
@@ -255,7 +248,6 @@ class StopQuery(WaylayBaseModel):
     """Model for `stop` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_stop_query_alias_for,

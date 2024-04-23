@@ -34,8 +34,5 @@ class BatchUpdateProperties(WaylayBaseModel):
     action_parameters: PropertyUpdatesSpec | None = Field(alias="actionParameters")
 
     model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="allow",
+        populate_by_name=True, protected_namespaces=(), extra="allow"
     )

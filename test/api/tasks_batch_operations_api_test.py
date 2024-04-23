@@ -22,6 +22,9 @@ from waylay.sdk.api._models import Model
 from waylay.services.rules.api import TasksBatchOperationsApi
 from waylay.services.rules.service import RulesService
 
+from ..types.a_tasks_batch_operation_specification_stub import (
+    ATasksBatchOperationSpecificationStub,
+)
 from ..types.batch_operation_enqueued_stub import BatchOperationEnqueuedStub
 from ..types.get_batch_operation200_response_stub import (
     GetBatchOperation200ResponseStub,
@@ -115,7 +118,9 @@ async def test_start(service: RulesService, gateway_url: str, httpx_mock: HTTPXM
     Start Batch Operations
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": ATasksBatchOperationSpecificationStub.create_instance(),
+    }
     _start_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks_batch_operations.start(**kwargs)
     check_type(resp, Union[BatchOperationEnqueued,])
@@ -130,7 +135,9 @@ async def test_start_without_types(
     Start Batch Operations
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": ATasksBatchOperationSpecificationStub.create_json(),
+    }
     _start_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks_batch_operations.start(**kwargs)
     check_type(resp, Model)

@@ -243,7 +243,10 @@ async def test_update(service: RulesService, gateway_url: str, httpx_mock: HTTPX
 
     nodeId = "node_id_example"
 
-    kwargs = {}
+    kwargs = {
+        "content": b"some_binary_content",
+        "headers": {"content-type": "text/plain"},
+    }
     _update_set_mock_response(
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
@@ -264,7 +267,10 @@ async def test_update_without_types(
 
     nodeId = "node_id_example"
 
-    kwargs = {}
+    kwargs = {
+        "content": b"some_binary_content",
+        "headers": {"content-type": "text/plain"},
+    }
     _update_set_mock_response(
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )

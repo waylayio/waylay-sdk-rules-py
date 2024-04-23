@@ -148,10 +148,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> ActuatorExecutionResult: ...
@@ -161,10 +166,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -174,10 +184,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -187,10 +202,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -200,10 +220,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -212,10 +237,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> ActuatorExecutionResult | T | Response | Model:
@@ -224,12 +254,15 @@ class PlugsExecutionApi(WithApiClient):
         Execute latest version of an actuator.
         :param name: (required)
         :type name: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteActuatorQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -248,10 +281,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -259,9 +288,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteActuatorQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -299,10 +337,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> ActuatorExecutionResult: ...
@@ -315,10 +358,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -331,10 +379,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -347,10 +400,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -363,10 +421,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -378,10 +441,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteActuatorVersionQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> ActuatorExecutionResult | T | Response | Model:
@@ -392,12 +460,15 @@ class PlugsExecutionApi(WithApiClient):
         :type name: str
         :param version: Version number of plugin (required)
         :type version: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteActuatorVersionQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -416,10 +487,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -428,9 +495,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteActuatorVersionQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -465,10 +541,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> SensorExecutionResult: ...
@@ -478,10 +559,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -491,10 +577,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -504,10 +595,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -517,10 +613,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -529,10 +630,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> SensorExecutionResult | T | Response | Model:
@@ -541,12 +647,15 @@ class PlugsExecutionApi(WithApiClient):
         Execute latest version of a sensor.
         :param name: (required)
         :type name: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteSensorQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -565,10 +674,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -576,9 +681,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteSensorQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -616,10 +730,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> SensorExecutionResult: ...
@@ -632,10 +751,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -648,10 +772,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -664,10 +793,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -680,10 +814,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -695,10 +834,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteSensorVersionQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> SensorExecutionResult | T | Response | Model:
@@ -709,12 +853,15 @@ class PlugsExecutionApi(WithApiClient):
         :type name: str
         :param version: Version number of plugin (required)
         :type version: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteSensorVersionQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -733,10 +880,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -745,9 +888,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteSensorVersionQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -782,10 +934,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TransformerExecutionResult: ...
@@ -795,10 +952,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -808,10 +970,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -821,10 +988,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -834,10 +1006,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -846,10 +1023,15 @@ class PlugsExecutionApi(WithApiClient):
         self,
         name: StrictStr,
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TransformerExecutionResult | T | Response | Model:
@@ -858,12 +1040,15 @@ class PlugsExecutionApi(WithApiClient):
         Execute the latest transformer version.
         :param name: (required)
         :type name: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteTransformerQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -882,10 +1067,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -893,9 +1074,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteTransformerQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -933,10 +1123,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TransformerExecutionResult: ...
@@ -949,10 +1144,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -965,10 +1165,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -981,10 +1186,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -997,10 +1207,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1012,10 +1227,15 @@ class PlugsExecutionApi(WithApiClient):
             str, Field(strict=True, description="Version number of plugin")
         ],
         *,
+        json: Annotated[
+            ExecutePlugsSpecification,
+            Field(description="Specification to execute a plug."),
+        ],
         query: ExecuteTransformerVersionQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TransformerExecutionResult | T | Response | Model:
@@ -1026,12 +1246,15 @@ class PlugsExecutionApi(WithApiClient):
         :type name: str
         :param version: Version number of plugin (required)
         :type version: str
+        :param json: Specification to execute a plug.
+        :type json: ExecutePlugsSpecification, optional
         :param query: URL Query parameters.
         :type query: ExecuteTransformerVersionQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1050,10 +1273,6 @@ class PlugsExecutionApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1062,9 +1281,18 @@ class PlugsExecutionApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    ExecutePlugsSpecification,
+                    Field(description="Specification to execute a plug."),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ExecuteTransformerVersionQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (

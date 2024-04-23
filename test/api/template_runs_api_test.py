@@ -23,6 +23,10 @@ from waylay.services.rules.api import TemplateRunsApi
 from waylay.services.rules.service import RulesService
 
 from ..types.template_run_invocation_stub import TemplateRunInvocationStub
+from ..types.template_run_specification_stub import TemplateRunSpecificationStub
+from ..types.template_run_with_graph_specification_stub import (
+    TemplateRunWithGraphSpecificationStub,
+)
 
 MODELS_AVAILABLE = (
     True if find_spec("waylay.services.rules.models") is not None else False
@@ -76,6 +80,7 @@ async def test_run_graph(
             log_level="DEBUG",
             target_node=[],
         ),
+        "json": TemplateRunWithGraphSpecificationStub.create_instance(),
     }
     _run_graph_set_mock_response(httpx_mock, gateway_url)
     resp = await service.template_runs.run_graph(**kwargs)
@@ -99,6 +104,7 @@ async def test_run_graph_without_types(
             "logLevel": "DEBUG",
             "targetNode": [],
         },
+        "json": TemplateRunWithGraphSpecificationStub.create_json(),
     }
     _run_graph_set_mock_response(httpx_mock, gateway_url)
     resp = await service.template_runs.run_graph(**kwargs)
@@ -135,6 +141,7 @@ async def test_run(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
             log_level="DEBUG",
             target_node=[],
         ),
+        "json": TemplateRunSpecificationStub.create_instance(),
     }
     _run_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.template_runs.run(name, **kwargs)
@@ -160,6 +167,7 @@ async def test_run_without_types(
             "logLevel": "DEBUG",
             "targetNode": [],
         },
+        "json": TemplateRunSpecificationStub.create_json(),
     }
     _run_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.template_runs.run(name, **kwargs)

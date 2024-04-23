@@ -68,11 +68,22 @@ class TemplateEntityMetadataStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return template_entity_metadata_faker.generate()
+        return template_entity_metadata_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "TemplateEntityMetadata":
         """Create TemplateEntityMetadata stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return TemplateEntityMetadataAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                TemplateEntityMetadataAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return TemplateEntityMetadataAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )
