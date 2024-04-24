@@ -47,6 +47,8 @@ try:
             'failOnWarning': False
             'returnWarnings': False
         },
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TaskSpecification() # TaskSpecification | Task Specification
     )
     print("The response of rules.tasks.create:\n")
     pprint(api_response)
@@ -62,6 +64,7 @@ POST /rules/v1/tasks
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
+**json** | [**TaskSpecification**](TaskSpecification.md) | json request body | Task Specification | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['failOnWarning']** (dict) <br> **query.fail_on_warning** (Query) | **bool** | query parameter `"failOnWarning"` | If &#x60;true&#x60; and there are task warnings, the response will be a &#x60;400 Validation failed&#x60; | [optional] [default False]
 **query['returnWarnings']** (dict) <br> **query.return_warnings** (Query) | **bool** | query parameter `"returnWarnings"` | If &#x60;true&#x60;, result body will contain a list of task warnings that where detected | [optional] [default False]
@@ -436,6 +439,8 @@ try:
     # calls `PUT /rules/v1/tasks/{taskId}`
     api_response = await waylay_client.rules.tasks.replace(
         'task_id_example', # task_id | path param "taskId"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TaskSpecification() # TaskSpecification | Task Specification
     )
     print("The response of rules.tasks.replace:\n")
     pprint(api_response)
@@ -452,6 +457,7 @@ PUT /rules/v1/tasks/{taskId}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
+**json** | [**TaskSpecification**](TaskSpecification.md) | json request body | Task Specification | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

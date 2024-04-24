@@ -33,6 +33,8 @@ try:
     # Push Streaming Data
     # calls `POST /rules/v1/data`
     api_response = await waylay_client.rules.push_data.push(
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.StreamData() # StreamData | Push (real-time) Data Specification
     )
     print("The response of rules.push_data.push:\n")
     pprint(api_response)
@@ -48,6 +50,7 @@ POST /rules/v1/data
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
+**json** | [**StreamData**](StreamData.md) | json request body | Push (real-time) Data Specification | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

@@ -60,11 +60,20 @@ class StatesTriggerStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return states_trigger_faker.generate()
+        return states_trigger_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "StatesTrigger":
         """Create StatesTrigger stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return StatesTriggerAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                StatesTriggerAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return StatesTriggerAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

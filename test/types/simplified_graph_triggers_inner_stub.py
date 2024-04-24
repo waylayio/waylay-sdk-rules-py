@@ -52,11 +52,23 @@ class SimplifiedGraphTriggersInnerStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return simplified_graph_triggers_inner_faker.generate()
+        return simplified_graph_triggers_inner_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "SimplifiedGraphTriggersInner":
         """Create SimplifiedGraphTriggersInner stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return SimplifiedGraphTriggersInnerAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                SimplifiedGraphTriggersInnerAdapter.json_schema(),
+                allow_none_optionals=1,
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return SimplifiedGraphTriggersInnerAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

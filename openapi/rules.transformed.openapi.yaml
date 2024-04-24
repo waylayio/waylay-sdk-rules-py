@@ -121,7 +121,7 @@ paths:
       x-py-method: create
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
     get:
       tags:
@@ -355,7 +355,7 @@ paths:
       x-py-method: replace
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
     delete:
       tags:
@@ -610,7 +610,7 @@ paths:
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: false
-      x-consumes-other: false
+      x-consumes-other: true
   /rules/v1/tasks/{taskId}/nodes/{nodeId}/states:
     get:
       tags:
@@ -687,7 +687,7 @@ paths:
       x-py-method: create
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
     get:
       tags:
@@ -953,7 +953,7 @@ paths:
       x-py-method: replace
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
     delete:
       tags:
@@ -1044,7 +1044,7 @@ paths:
       x-py-method: run
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
       x-produces-event-stream: true
   /rules/v1/templates/run:
@@ -1103,7 +1103,7 @@ paths:
       x-py-method: run_graph
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
       x-produces-event-stream: true
   /rules/v1/discoveryTemplate:
@@ -1202,7 +1202,7 @@ paths:
       x-py-method: start
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/batch/{batchId}:
     get:
@@ -1326,7 +1326,7 @@ paths:
       x-py-method: execute_sensor
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/sensors/{name}/versions/{version}:
     post:
@@ -1386,7 +1386,7 @@ paths:
       x-py-method: execute_sensor_version
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/actions/{name}:
     post:
@@ -1440,7 +1440,7 @@ paths:
       x-py-method: execute_actuator
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/actions/{name}/versions/{version}:
     post:
@@ -1496,7 +1496,7 @@ paths:
       x-py-method: execute_actuator_version
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/transformers/{name}:
     post:
@@ -1551,7 +1551,7 @@ paths:
       x-py-method: execute_transformer
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/transformers/{name}/versions/{version}:
     post:
@@ -1608,7 +1608,7 @@ paths:
       x-py-method: execute_transformer_version
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /rules/v1/data:
     post:
@@ -1639,7 +1639,7 @@ paths:
       x-py-method: push
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
 components:
   schemas:

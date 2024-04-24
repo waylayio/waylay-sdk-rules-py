@@ -34,7 +34,6 @@ class CreateQuery(WaylayBaseModel):
     """Model for `create` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_create_query_alias_for,
@@ -50,7 +49,6 @@ class DeleteQuery(WaylayBaseModel):
     """Model for `delete` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_delete_query_alias_for,
@@ -66,7 +64,6 @@ class GetDiscoveryQuery(WaylayBaseModel):
     """Model for `get_discovery` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_discovery_query_alias_for,
@@ -89,7 +86,6 @@ class GetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,
@@ -141,7 +137,6 @@ class ListQuery(WaylayBaseModel):
     tags_x: StrictStr | None = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_query_alias_for,
@@ -157,7 +152,6 @@ class ReplaceQuery(WaylayBaseModel):
     """Model for `replace` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_replace_query_alias_for,
@@ -182,7 +176,6 @@ class SetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_set_query_alias_for,
@@ -219,7 +212,6 @@ class UpgradePluginsQuery(WaylayBaseModel):
     tags_x: StrictStr | None = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_upgrade_plugins_query_alias_for,

@@ -21,6 +21,8 @@ from waylay.sdk.api._models import Model
 from waylay.services.rules.api import PushDataApi
 from waylay.services.rules.service import RulesService
 
+from ..types.stream_data_stub import StreamDataStub
+
 MODELS_AVAILABLE = (
     True if find_spec("waylay.services.rules.models") is not None else False
 )
@@ -61,7 +63,9 @@ async def test_push(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
     Push Streaming Data
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": StreamDataStub.create_instance(),
+    }
     _push_set_mock_response(httpx_mock, gateway_url)
     resp = await service.push_data.push(**kwargs)
     check_type(resp, Union[object,])
@@ -76,7 +80,9 @@ async def test_push_without_types(
     Push Streaming Data
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": StreamDataStub.create_json(),
+    }
     _push_set_mock_response(httpx_mock, gateway_url)
     resp = await service.push_data.push(**kwargs)
     check_type(resp, Model)

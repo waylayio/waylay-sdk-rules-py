@@ -41,6 +41,8 @@ try:
     # Create Template
     # calls `POST /rules/v1/templates`
     api_response = await waylay_client.rules.templates.create(
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TemplateEntity() # TemplateEntity | Template Specification
     )
     print("The response of rules.templates.create:\n")
     pprint(api_response)
@@ -56,6 +58,7 @@ POST /rules/v1/templates
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
+**json** | [**TemplateEntity**](TemplateEntity.md) | json request body | Template Specification | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -398,6 +401,8 @@ try:
     # calls `PUT /rules/v1/templates/{name}`
     api_response = await waylay_client.rules.templates.replace(
         'name_example', # name | path param "name"
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TemplateEntity() # TemplateEntity | Template Specification
     )
     print("The response of rules.templates.replace:\n")
     pprint(api_response)
@@ -414,6 +419,7 @@ PUT /rules/v1/templates/{name}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | Unique Template identifier | 
+**json** | [**TemplateEntity**](TemplateEntity.md) | json request body | Template Specification | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

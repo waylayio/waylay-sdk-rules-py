@@ -26,6 +26,7 @@ from ..types.create_template201_response_stub import CreateTemplate201ResponseSt
 from ..types.replace_template200_response_stub import ReplaceTemplate200ResponseStub
 from ..types.template_details_stub import TemplateDetailsStub
 from ..types.template_entity_metadata_stub import TemplateEntityMetadataStub
+from ..types.template_entity_stub import TemplateEntityStub
 from ..types.template_modification_stub import TemplateModificationStub
 from ..types.upgrade_plugins_templates200_response_stub import (
     UpgradePluginsTemplates200ResponseStub,
@@ -83,7 +84,9 @@ async def test_create(service: RulesService, gateway_url: str, httpx_mock: HTTPX
     Create Template
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": TemplateEntityStub.create_instance(),
+    }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.create(**kwargs)
     check_type(resp, Union[CreateTemplate201Response,])
@@ -98,7 +101,9 @@ async def test_create_without_types(
     Create Template
     """
     # set path params
-    kwargs = {}
+    kwargs = {
+        "json": TemplateEntityStub.create_json(),
+    }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.create(**kwargs)
     check_type(resp, Model)
@@ -326,7 +331,9 @@ async def test_replace(service: RulesService, gateway_url: str, httpx_mock: HTTP
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": TemplateEntityStub.create_instance(),
+    }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.templates.replace(name, **kwargs)
     check_type(resp, Union[ReplaceTemplate200Response,])
@@ -343,7 +350,9 @@ async def test_replace_without_types(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": TemplateEntityStub.create_json(),
+    }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.templates.replace(name, **kwargs)
     check_type(resp, Model)

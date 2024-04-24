@@ -83,6 +83,7 @@ async def test_create(service: RulesService, gateway_url: str, httpx_mock: HTTPX
             fail_on_warning=False,
             return_warnings=False,
         ),
+        "json": TaskSpecificationStub.create_instance(),
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks.create(**kwargs)
@@ -103,6 +104,7 @@ async def test_create_without_types(
             "failOnWarning": False,
             "returnWarnings": False,
         },
+        "json": TaskSpecificationStub.create_json(),
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks.create(**kwargs)
@@ -360,7 +362,9 @@ async def test_replace(service: RulesService, gateway_url: str, httpx_mock: HTTP
     # set path params
     taskId = "task_id_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": TaskSpecificationStub.create_instance(),
+    }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.replace(taskId, **kwargs)
     check_type(resp, Union[TaskEntity,])
@@ -377,7 +381,9 @@ async def test_replace_without_types(
     # set path params
     taskId = "task_id_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": TaskSpecificationStub.create_json(),
+    }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.replace(taskId, **kwargs)
     check_type(resp, Model)

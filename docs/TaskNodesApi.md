@@ -256,6 +256,13 @@ try:
     api_response = await waylay_client.rules.task_nodes.update(
         'task_id_example', # task_id | path param "taskId"
         'node_id_example', # node_id | path param "nodeId"
+        # non-json binary data: use a byte array or a generator of bytearray chuncks
+        content=b'my-binary-data',
+        # this operation supports multiple request content types: use `headers` to specify the one used
+        # alternatives: 
+        headers = {
+            'content-type': 'text/plain'
+        },
     )
     print("The response of rules.task_nodes.update:\n")
     pprint(api_response)
@@ -273,7 +280,9 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
 **node_id** | **str** | path parameter `"nodeId"` | Unique node label | 
+**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | Command string to apply to a node of a task. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+**headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `text/plain`
 
 ### Return type
 

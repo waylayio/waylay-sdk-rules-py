@@ -24,7 +24,6 @@ class GetStatesQuery(WaylayBaseModel):
     """Model for `get_states` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_states_query_alias_for,
@@ -40,7 +39,6 @@ class GetQuery(WaylayBaseModel):
     """Model for `get` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,
@@ -56,7 +54,6 @@ class PatchQuery(WaylayBaseModel):
     """Model for `patch` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_patch_query_alias_for,
@@ -72,7 +69,6 @@ class UpdateQuery(WaylayBaseModel):
     """Model for `update` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_update_query_alias_for,

@@ -24,7 +24,6 @@ class PushQuery(WaylayBaseModel):
     """Model for `push` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_push_query_alias_for,

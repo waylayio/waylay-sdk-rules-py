@@ -23,6 +23,7 @@ from waylay.services.rules.api import PlugsExecutionApi
 from waylay.services.rules.service import RulesService
 
 from ..types.actuator_execution_result_stub import ActuatorExecutionResultStub
+from ..types.execute_plugs_specification_stub import ExecutePlugsSpecificationStub
 from ..types.sensor_execution_result_stub import SensorExecutionResultStub
 from ..types.transformer_execution_result_stub import TransformerExecutionResultStub
 
@@ -76,7 +77,9 @@ async def test_execute_actuator(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_actuator_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_actuator(name, **kwargs)
     check_type(resp, Union[ActuatorExecutionResult,])
@@ -93,7 +96,9 @@ async def test_execute_actuator_without_types(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_actuator_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_actuator(name, **kwargs)
     check_type(resp, Model)
@@ -127,7 +132,9 @@ async def test_execute_actuator_version(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_actuator_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -150,7 +157,9 @@ async def test_execute_actuator_version_without_types(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_actuator_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -184,7 +193,9 @@ async def test_execute_sensor(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_sensor_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_sensor(name, **kwargs)
     check_type(resp, Union[SensorExecutionResult,])
@@ -201,7 +212,9 @@ async def test_execute_sensor_without_types(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_sensor_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_sensor(name, **kwargs)
     check_type(resp, Model)
@@ -235,7 +248,9 @@ async def test_execute_sensor_version(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_sensor_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -256,7 +271,9 @@ async def test_execute_sensor_version_without_types(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_sensor_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -288,7 +305,9 @@ async def test_execute_transformer(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_transformer_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_transformer(name, **kwargs)
     check_type(resp, Union[TransformerExecutionResult,])
@@ -305,7 +324,9 @@ async def test_execute_transformer_without_types(
     # set path params
     name = "name_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_transformer_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_transformer(name, **kwargs)
     check_type(resp, Model)
@@ -339,7 +360,9 @@ async def test_execute_transformer_version(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_instance(),
+    }
     _execute_transformer_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -362,7 +385,9 @@ async def test_execute_transformer_version_without_types(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "json": ExecutePlugsSpecificationStub.create_json(),
+    }
     _execute_transformer_version_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )

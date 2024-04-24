@@ -97,10 +97,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -111,10 +116,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -125,10 +135,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -139,10 +154,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -153,10 +173,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -166,10 +191,15 @@ class TemplateRunsApi(WithApiClient):
     async def run_graph(
         self,
         *,
+        json: Annotated[
+            TemplateRunWithGraphSpecification,
+            Field(description="Specification to run template through graph/BN."),
+        ],
         query: RunGraphQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -183,6 +213,8 @@ class TemplateRunsApi(WithApiClient):
         """Run Graph Or Bayesian Network.
 
         Run a graph or Bayesian Network. If `data` is specified, template will be run as reactive template. If `data` is not specified, template will be run as a one-time template (1 tick)
+        :param json: Specification to run template through graph/BN.
+        :type json: TemplateRunWithGraphSpecification, optional
         :param query: URL Query parameters.
         :type query: RunGraphQuery | QueryParamTypes, optional
         :param query['logLevel'] (dict) <br> query.log_level (Query) : sets the log level for filtering out logs to requested log level or higher from the template run output. Value `NONE` will disable all logs. If not specified all logs will be returned.
@@ -193,6 +225,7 @@ class TemplateRunsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -211,18 +244,25 @@ class TemplateRunsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {}
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    TemplateRunWithGraphSpecification,
+                    Field(
+                        description="Specification to run template through graph/BN."
+                    ),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(RunGraphQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -258,10 +298,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -273,10 +317,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -288,10 +336,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -303,10 +355,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -318,10 +374,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -332,10 +392,14 @@ class TemplateRunsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="Unique Template identifier")],
         *,
+        json: Annotated[
+            TemplateRunSpecification, Field(description="Specification to run template")
+        ],
         query: RunQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         stream: bool = True,
         timeout=STREAM_TIMEOUTS,
@@ -351,6 +415,8 @@ class TemplateRunsApi(WithApiClient):
         Run a template. If `data` is specified, template will be run as reactive template. If `data` is not specified, template will be run as a one-time template (1 tick)
         :param name: Unique Template identifier (required)
         :type name: str
+        :param json: Specification to run template
+        :type json: TemplateRunSpecification, optional
         :param query: URL Query parameters.
         :type query: RunQuery | QueryParamTypes, optional
         :param query['logLevel'] (dict) <br> query.log_level (Query) : sets the log level for filtering out logs to requested log level or higher from the template run output. Value `NONE` will disable all logs. If not specified all logs will be returned.
@@ -361,6 +427,7 @@ class TemplateRunsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -379,10 +446,6 @@ class TemplateRunsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -390,9 +453,18 @@ class TemplateRunsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[
+                    TemplateRunSpecification,
+                    Field(description="Specification to run template"),
+                ]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(RunQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (

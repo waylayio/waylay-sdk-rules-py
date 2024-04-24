@@ -145,10 +145,12 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> CreateTask201Response: ...
@@ -157,10 +159,12 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -169,10 +173,12 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -181,10 +187,12 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -193,10 +201,12 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -204,16 +214,20 @@ class TasksApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: CreateQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> CreateTask201Response | T | Response | Model:
         """Create Task.
 
         Create a new task.
+        :param json: Task Specification
+        :type json: TaskSpecification, optional
         :param query: URL Query parameters.
         :type query: CreateQuery | QueryParamTypes, optional
         :param query['failOnWarning'] (dict) <br> query.fail_on_warning (Query) : If `true` and there are task warnings, the response will be a `400 Validation failed`
@@ -224,6 +238,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -242,18 +257,20 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {}
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[TaskSpecification, Field(description="Task Specification")]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(CreateQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -291,6 +308,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> None: ...
@@ -304,6 +322,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -317,6 +336,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -330,6 +350,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> None: ...
@@ -343,6 +364,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -355,6 +377,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> None | T | Response:
@@ -369,6 +392,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -387,10 +411,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -400,7 +420,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(DeleteQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -438,6 +458,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskSpecification: ...
@@ -451,6 +472,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -464,6 +486,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -477,6 +500,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -490,6 +514,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -502,6 +527,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskSpecification | T | Response | Model:
@@ -518,6 +544,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -536,10 +563,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -549,7 +572,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetConfigurationQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -587,6 +610,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity: ...
@@ -600,6 +624,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -613,6 +638,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -626,6 +652,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -639,6 +666,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -651,6 +679,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity | T | Response | Model:
@@ -667,6 +696,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -685,10 +715,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -698,7 +724,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -735,6 +761,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> List[TaskEntity]: ...
@@ -747,6 +774,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -759,6 +787,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -771,6 +800,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -783,6 +813,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -794,6 +825,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> List[TaskEntity] | T | Response | Model:
@@ -840,6 +872,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -858,10 +891,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {}
 
@@ -869,7 +898,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ListQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -901,10 +930,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity: ...
@@ -914,10 +945,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -927,10 +960,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -940,10 +975,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -953,10 +990,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -965,10 +1004,12 @@ class TasksApi(WithApiClient):
         self,
         task_id: Annotated[StrictStr, Field(description="Unique Task identifier")],
         *,
+        json: Annotated[TaskSpecification, Field(description="Task Specification")],
         query: ReplaceQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity | T | Response | Model:
@@ -977,12 +1018,15 @@ class TasksApi(WithApiClient):
         Update a task.  Remark that the full specification of the task must be given
         :param task_id: Unique Task identifier (required)
         :type task_id: str
+        :param json: Task Specification
+        :type json: TaskSpecification, optional
         :param query: URL Query parameters.
         :type query: ReplaceQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1001,10 +1045,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -1012,9 +1052,15 @@ class TasksApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter = TypeAdapter(
+                Annotated[TaskSpecification, Field(description="Task Specification")]
+            )
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ReplaceQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1053,6 +1099,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity: ...
@@ -1066,6 +1113,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1079,6 +1127,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1092,6 +1141,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1105,6 +1155,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1117,6 +1168,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity | T | Response | Model:
@@ -1131,6 +1183,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1149,10 +1202,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -1162,7 +1211,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(StartQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1201,6 +1250,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity: ...
@@ -1214,6 +1264,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1227,6 +1278,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1240,6 +1292,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1253,6 +1306,7 @@ class TasksApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1265,6 +1319,7 @@ class TasksApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> TaskEntity | T | Response | Model:
@@ -1279,6 +1334,7 @@ class TasksApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1297,10 +1353,6 @@ class TasksApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "taskId": str(task_id),
@@ -1310,7 +1362,7 @@ class TasksApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(StopQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
