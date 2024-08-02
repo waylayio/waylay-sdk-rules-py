@@ -209,7 +209,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] 
+**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -285,7 +285,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] 
+**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -371,7 +371,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['hits']** (dict) <br> **query.hits** (Query) | **int** | query parameter `"hits"` | (Paging) maximal number of items returned | [optional] [default 10]
 **query['startIndex']** (dict) <br> **query.start_index** (Query) | **int** | query parameter `"startIndex"` | (Paging) items to skip in the listing | [optional] [default 0]
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] 
+**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` |  | [optional] 
 **query['resource']** (dict) <br> **query.resource** (Query) | **str** | query parameter `"resource"` |  | [optional] 
 **query['resourceType']** (dict) <br> **query.resource_type** (Query) | **str** | query parameter `"resourceType"` |  | [optional] 

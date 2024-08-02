@@ -289,7 +289,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),
@@ -496,7 +496,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),
@@ -682,7 +682,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),
@@ -889,7 +889,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),
@@ -1075,7 +1075,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),
@@ -1282,7 +1282,7 @@ class PlugsExecutionApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ExecutePlugsSpecification,
                     Field(description="Specification to execute a plug."),

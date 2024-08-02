@@ -389,7 +389,7 @@ class TasksBatchOperationsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     ATasksBatchOperationSpecification,
                     Field(description="Tasks Batch Operation"),

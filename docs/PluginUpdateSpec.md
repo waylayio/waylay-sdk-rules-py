@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** | Name of the plugin to update | 
 **from_version** | [**PluginUpdateSpecFromVersion**](PluginUpdateSpecFromVersion.md) |  | 
-**to_version** | **str** |  | 
+**to_version** | **str** | Plugin version to upgrade to | 
 
 ## Example
 
