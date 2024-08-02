@@ -265,7 +265,7 @@ class TemplatesApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[TemplateEntity, Field(description="Template Specification")]
             )
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
@@ -1023,7 +1023,7 @@ class TemplatesApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[TemplateEntity, Field(description="Template Specification")]
             )
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
@@ -1341,7 +1341,7 @@ class TemplatesApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     TemplateModification,
                     Field(description="Plugin Update Specifications"),

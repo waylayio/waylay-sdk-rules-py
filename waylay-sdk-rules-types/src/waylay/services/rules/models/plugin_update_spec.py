@@ -32,7 +32,9 @@ class PluginUpdateSpec(WaylayBaseModel):
 
     name: StrictStr = Field(description="Name of the plugin to update")
     from_version: PluginUpdateSpecFromVersion = Field(alias="fromVersion")
-    to_version: Annotated[str, Field(strict=True)] = Field(alias="toVersion")
+    to_version: Annotated[str, Field(strict=True)] = Field(
+        description="Plugin version to upgrade to", alias="toVersion"
+    )
 
     @field_validator("to_version")
     @classmethod

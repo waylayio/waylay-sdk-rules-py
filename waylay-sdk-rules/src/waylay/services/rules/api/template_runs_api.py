@@ -250,7 +250,7 @@ class TemplateRunsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     TemplateRunWithGraphSpecification,
                     Field(
@@ -454,7 +454,7 @@ class TemplateRunsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     TemplateRunSpecification,
                     Field(description="Specification to run template"),

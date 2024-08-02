@@ -59,7 +59,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **json** | [**TemplateRunWithGraphSpecification**](TemplateRunWithGraphSpecification.md) | json request body | Specification to run template through graph/BN. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
 **query['targetNode']** (dict) <br> **query.target_node** (Query) | [**List[str]**](str.md) | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -140,7 +140,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | Unique Template identifier | 
 **json** | [**TemplateRunSpecification**](TemplateRunSpecification.md) | json request body | Specification to run template | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
 **query['targetNode']** (dict) <br> **query.target_node** (Query) | [**List[str]**](str.md) | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
