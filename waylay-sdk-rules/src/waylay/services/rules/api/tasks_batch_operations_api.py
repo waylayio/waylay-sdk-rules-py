@@ -28,6 +28,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -38,8 +39,8 @@ from waylay.sdk.plugin import WithApiClient
 
 if TYPE_CHECKING:
     from waylay.services.rules.models import (
-        ATasksBatchOperationSpecification,
         BatchOperationEnqueued,
+        BatchTaskSpec,
         ErrorResponse,
         GetBatchOperation200Response,
     )
@@ -51,8 +52,8 @@ if TYPE_CHECKING:
 
 try:
     from waylay.services.rules.models import (
-        ATasksBatchOperationSpecification,
         BatchOperationEnqueued,
+        BatchTaskSpec,
         ErrorResponse,
         GetBatchOperation200Response,
     )
@@ -71,7 +72,7 @@ except ImportError:
 
         ErrorResponse = Model
 
-        ATasksBatchOperationSpecification = Model
+        BatchTaskSpec = Model
 
         StartQuery = dict
         BatchOperationEnqueued = Model
@@ -257,10 +258,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -274,10 +272,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -291,10 +286,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
@@ -308,10 +300,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -325,10 +314,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -341,10 +327,7 @@ class TasksBatchOperationsApi(WithApiClient):
     async def start(
         self,
         *,
-        json: Annotated[
-            ATasksBatchOperationSpecification,
-            Field(description="Tasks Batch Operation"),
-        ],
+        json: Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")],
         query: StartQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
@@ -357,7 +340,7 @@ class TasksBatchOperationsApi(WithApiClient):
 
         Start a batch operation.
         :param json: Tasks Batch Operation
-        :type json: ATasksBatchOperationSpecification, optional
+        :type json: BatchTaskSpec, optional
         :param query: URL Query parameters.
         :type query: StartQuery | QueryParamTypes, optional
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
@@ -390,10 +373,7 @@ class TasksBatchOperationsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
             body_adapter: Any = TypeAdapter(
-                Annotated[
-                    ATasksBatchOperationSpecification,
-                    Field(description="Tasks Batch Operation"),
-                ]
+                Annotated[BatchTaskSpec, Field(description="Tasks Batch Operation")]
             )
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
         body_args["json"] = json

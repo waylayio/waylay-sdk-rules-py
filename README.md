@@ -2,7 +2,7 @@
 The REST api to manage rule tasks and rule templates in the Waylay platform.
 
 This Python package is automatically generated based on the 
-Waylay Rules OpenAPI specification (API version: 6.5.0)
+Waylay Rules OpenAPI specification (API version: 6.12.0)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/rules.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -69,6 +69,7 @@ Class | Method | HTTP request | Description
 *TaskNodesApi* | [**get_states**](docs/TaskNodesApi.md#get_states) | **GET** /rules/v1/tasks/{taskId}/nodes/{nodeId}/states | Get Supported States
 *TaskNodesApi* | [**get**](docs/TaskNodesApi.md#get) | **GET** /rules/v1/tasks/{taskId}/nodes/{nodeId} | Get Current States
 *TaskNodesApi* | [**patch**](docs/TaskNodesApi.md#patch) | **PATCH** /rules/v1/tasks/{taskId}/nodes/{nodeId} | Set Node State
+*TaskNodesApi* | [**post**](docs/TaskNodesApi.md#post) | **POST** /rules/v1/tasks/callback | Finalize Asynchronous Execution With Token
 *TaskNodesApi* | [**update**](docs/TaskNodesApi.md#update) | **POST** /rules/v1/tasks/{taskId}/nodes/{nodeId} | Set Current State
 *TasksApi* | [**create**](docs/TasksApi.md#create) | **POST** /rules/v1/tasks | Create Task
 *TasksApi* | [**delete**](docs/TasksApi.md#delete) | **DELETE** /rules/v1/tasks/{taskId} | Delete Task
@@ -94,7 +95,6 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
- - [ATasksBatchOperationSpecification](docs/ATasksBatchOperationSpecification.md)
  - [ActuatorExecutionResult](docs/ActuatorExecutionResult.md)
  - [ActuatorNode](docs/ActuatorNode.md)
  - [BatchIdQuery](docs/BatchIdQuery.md)
@@ -109,6 +109,7 @@ Class | Method | HTTP request | Description
  - [BatchTaskCommandAllOfAction](docs/BatchTaskCommandAllOfAction.md)
  - [BatchTaskEntity](docs/BatchTaskEntity.md)
  - [BatchTaskQuery](docs/BatchTaskQuery.md)
+ - [BatchTaskSpec](docs/BatchTaskSpec.md)
  - [BatchUpdatePlugin](docs/BatchUpdatePlugin.md)
  - [BatchUpdateProperties](docs/BatchUpdateProperties.md)
  - [BatchUpdatePropertiesAllOfAction](docs/BatchUpdatePropertiesAllOfAction.md)
@@ -165,7 +166,11 @@ Class | Method | HTTP request | Description
  - [TaskDefaultsElement](docs/TaskDefaultsElement.md)
  - [TaskEntity](docs/TaskEntity.md)
  - [TaskEntityPagingResult](docs/TaskEntityPagingResult.md)
+ - [TaskEntityPagingResultAllOfValues](docs/TaskEntityPagingResultAllOfValues.md)
  - [TaskFromTemplate](docs/TaskFromTemplate.md)
+ - [TaskListingInner](docs/TaskListingInner.md)
+ - [TaskRuntimeInformation](docs/TaskRuntimeInformation.md)
+ - [TaskRuntimeInformationAllOfHealth](docs/TaskRuntimeInformationAllOfHealth.md)
  - [TaskScenarioType](docs/TaskScenarioType.md)
  - [TaskSettings](docs/TaskSettings.md)
  - [TaskSpecification](docs/TaskSpecification.md)

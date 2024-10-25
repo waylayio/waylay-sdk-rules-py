@@ -15,6 +15,7 @@ from pydantic import (
     ConfigDict,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.batch_task_entity import BatchTaskEntity

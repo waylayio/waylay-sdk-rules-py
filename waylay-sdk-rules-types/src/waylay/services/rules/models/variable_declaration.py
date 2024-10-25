@@ -17,6 +17,7 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.variable_declaration_default_value import VariableDeclarationDefaultValue
@@ -38,6 +39,9 @@ class VariableDeclaration(WaylayBaseModel):
     mandatory: StrictBool | None = Field(
         default=False,
         description="flag to indicate if value for variable is mandatory or not",
+    )
+    description: StrictStr | None = Field(
+        default=None, description="Description of the variable"
     )
     default_value: VariableDeclarationDefaultValue | None = Field(
         default=None, alias="defaultValue"

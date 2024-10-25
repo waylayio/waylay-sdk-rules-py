@@ -29,25 +29,6 @@ with open("openapi/rules.transformed.openapi.yaml", "r") as file:
 
 MODEL_DEFINITIONS = OPENAPI_SPEC["components"]["schemas"]
 
-_a_tasks_batch_operation_specification_model_schema = json.loads(
-    r"""{
-  "title" : "a tasks batch operation specification",
-  "type" : "object",
-  "oneOf" : [ {
-    "$ref" : "#/components/schemas/BatchUpdatePlugin"
-  }, {
-    "$ref" : "#/components/schemas/BatchTaskCommand"
-  }, {
-    "$ref" : "#/components/schemas/BatchUpdateProperties"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "a_tasks_batch_operation_specification": _a_tasks_batch_operation_specification_model_schema
-})
-
 _actuator_execution_result_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -416,8 +397,34 @@ _batch_task_query_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"BatchTask_query": _batch_task_query_model_schema})
 
+_batch_task_spec_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "example" : {
+    "entity" : "task",
+    "action" : "delete",
+    "query" : {
+      "type" : "onetime",
+      "status" : "stopped",
+      "finishedBefore" : 1648738809733
+    }
+  },
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/BatchUpdatePlugin"
+  }, {
+    "$ref" : "#/components/schemas/BatchTaskCommand"
+  }, {
+    "$ref" : "#/components/schemas/BatchUpdateProperties"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"BatchTaskSpec": _batch_task_spec_model_schema})
+
 _batch_update_plugin_model_schema = json.loads(
     r"""{
+  "title" : "BatchUpdatePlugin",
   "type" : "object",
   "description" : "Upgrade plugins on multiple tasks",
   "allOf" : [ {
@@ -441,6 +448,7 @@ MODEL_DEFINITIONS.update({"BatchUpdatePlugin": _batch_update_plugin_model_schema
 
 _batch_update_properties_model_schema = json.loads(
     r"""{
+  "title" : "BatchUpdateProperties",
   "type" : "object",
   "description" : "Update variables and/or tags of multiple tasks",
   "allOf" : [ {
@@ -1116,6 +1124,22 @@ _property_updates_spec_model_schema = json.loads(
     "tags" : {
       "type" : "object",
       "description" : "Key-value pairs.\nWill be merged with the current tags.\nTo delete any of the current tags set the value to `null`"
+    },
+    "gatesNeedFullObservation" : {
+      "type" : "boolean",
+      "description" : "Only evaluate gates when all inputs are observed",
+      "example" : true,
+      "default" : false
+    },
+    "resetObservations" : {
+      "title" : "whether to clear observations before next invocation",
+      "type" : "boolean",
+      "default" : true
+    },
+    "parallel" : {
+      "title" : "whether to run sensors in parallel or sequentially",
+      "type" : "boolean",
+      "default" : true
     }
   },
   "nullable" : true,
@@ -1728,7 +1752,7 @@ _task_entity_paging_result_model_schema = json.loads(
       "values" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/TaskEntity"
+          "$ref" : "#/components/schemas/TaskEntityPagingResult_allOf_values"
         }
       }
     }
@@ -1741,6 +1765,22 @@ _task_entity_paging_result_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "TaskEntityPagingResult": _task_entity_paging_result_model_schema
+})
+
+_task_entity_paging_result_all_of_values_model_schema = json.loads(
+    r"""{
+  "title" : "TaskEntityPagingResult_allOf_values",
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TaskEntity"
+  }, {
+    "$ref" : "#/components/schemas/TaskRuntimeInformation"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "TaskEntityPagingResult_allOf_values": _task_entity_paging_result_all_of_values_model_schema
 })
 
 _task_from_template_model_schema = json.loads(
@@ -1771,6 +1811,81 @@ _task_from_template_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"TaskFromTemplate": _task_from_template_model_schema})
+
+_task_listing_inner_model_schema = json.loads(
+    r"""{
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TaskEntity"
+  }, {
+    "$ref" : "#/components/schemas/TaskRuntimeInformation"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Task_listing_inner": _task_listing_inner_model_schema})
+
+_task_runtime_information_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TaskDefaultsElement"
+  }, {
+    "properties" : {
+      "finishedTime" : {
+        "$ref" : "#/components/schemas/UnixEpochMillis"
+      },
+      "invocationCount" : {
+        "type" : "integer",
+        "description" : "Number of times the task has been invoked",
+        "format" : "int64"
+      },
+      "rawData" : {
+        "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_rawData"
+      },
+      "lastExecutionTime" : {
+        "$ref" : "#/components/schemas/UnixEpochMillis"
+      },
+      "health" : {
+        "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_health"
+      }
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "TaskRuntimeInformation": _task_runtime_information_model_schema
+})
+
+_task_runtime_information_all_of_health_model_schema = json.loads(
+    r"""{
+  "title" : "TaskRuntimeInformation_allOf_health",
+  "required" : [ "errorsCount", "errorsRate" ],
+  "type" : "object",
+  "properties" : {
+    "errorsCount" : {
+      "title" : "errorsCount",
+      "type" : "integer",
+      "description" : "Number of errors during last 64 task invocations",
+      "format" : "int32"
+    },
+    "errorsRate" : {
+      "title" : "errorsRate",
+      "type" : "number",
+      "description" : "Error rate during last 64 task invocations. 0.0 means no errors, 1.0 means all errors",
+      "format" : "float"
+    }
+  },
+  "description" : "Health of the task"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "TaskRuntimeInformation_allOf_health": _task_runtime_information_all_of_health_model_schema
+})
 
 _task_scenario_type_model_schema = json.loads(
     r"""{
@@ -1953,6 +2068,10 @@ _template_entity_common_attributes_model_schema = json.loads(
     },
     "taskDefaults" : {
       "$ref" : "#/components/schemas/TaskDefaultsElement"
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of the template"
     },
     "notes" : {
       "type" : "array",
@@ -2159,6 +2278,14 @@ _template_run_invocation_model_schema = json.loads(
       "type" : "array",
       "items" : {
         "$ref" : "#/components/schemas/Logs_inner"
+      }
+    },
+    "taskOutput" : {
+      "title" : "Task output",
+      "type" : "object",
+      "description" : "The task output for the invocation. Only there if template uses TaskOutput sensor",
+      "externalDocs" : {
+        "url" : "https://docs.waylay.io/#/features/rules/?id=taskoutput-plugin"
       }
     }
   }
@@ -2426,6 +2553,10 @@ _variable_declaration_model_schema = json.loads(
       "type" : "boolean",
       "description" : "flag to indicate if value for variable is mandatory or not",
       "default" : false
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of the variable"
     },
     "defaultValue" : {
       "$ref" : "#/components/schemas/VariableDeclaration_defaultValue"

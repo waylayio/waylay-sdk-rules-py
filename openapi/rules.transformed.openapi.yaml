@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Waylay rules engine
-  version: 6.5.0
+  version: 6.12.0
   description: The REST api to manage rule tasks and rule templates in the Waylay platform.
 externalDocs:
   url: https://docs.waylay.io/#/api/rules/
@@ -226,6 +226,14 @@ paths:
           example: 3904859080956
           x-example: 3904859080956
           x-showExample: true
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter tasks that have one of the tag keys in the array
+          x-showExample: false
         - name: finishedBefore
           in: query
           description: Tasks stopped before provided time will be returned.
@@ -249,6 +257,17 @@ paths:
           example: 1662768000000
           x-example: 1662768000000
           x-showExample: true
+        - name: includeHealth
+          in: query
+          description: >-
+            If `true`, the response will include the health status of the task.
+
+            The health status is a summary of the errorsCount and errorsRate of
+            the last 64 invocations of the task.
+          schema:
+            type: boolean
+            default: false
+          x-showExample: true
       responses:
         '200':
           description: Successful Response
@@ -263,7 +282,9 @@ paths:
                 title: Task listing
                 type: array
                 items:
-                  $ref: '#/components/schemas/TaskEntity'
+                  allOf:
+                    - $ref: '#/components/schemas/TaskEntity'
+                    - $ref: '#/components/schemas/TaskRuntimeInformation'
             application/vnd.waylay.paged+json:
               schema:
                 $ref: '#/components/schemas/TaskEntityPagingResult'
@@ -295,7 +316,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskEntity'
+                allOf:
+                  - $ref: '#/components/schemas/TaskEntity'
+                  - $ref: '#/components/schemas/TaskRuntimeInformation'
         '404':
           $ref: '#/components/responses/TaskNotFoundResponse'
       security:
@@ -641,6 +664,43 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+  /rules/v1/tasks/callback:
+    post:
+      tags:
+        - Task Nodes
+      operationId: post_callback
+      summary: Finalize Asynchronous Execution With Token
+      description: >-
+        Post a result to finalize an asynchronous plugin execution using the
+        onetime token from the callback url.
+      security: []
+      parameters:
+        - name: access_token
+          in: query
+          required: true
+          description: Token that was given in the callback url
+          schema:
+            type: string
+          x-showExample: false
+      requestBody:
+        $ref: '#/components/requestBodies/AsyncPluginCallbackBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/DefaultSuccessResponse'
+        '403':
+          description: Invalid Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                statusCode: 403
+                error: 'Invalid json web token: token expired'
+      x-py-method: post
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: true
   /rules/v1/templates:
     post:
       tags:
@@ -743,6 +803,14 @@ paths:
             example: 'tags.myref: 3904859080956'
           x-example: '''tags.myref: 3904859080956'''
           x-showExample: true
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          description: Filter templates that have one of the tag keys in the array
+          x-showExample: false
       responses:
         '200':
           description: Successful Response
@@ -1011,6 +1079,8 @@ paths:
           x-showExample: false
         - $ref: '#/components/parameters/TargetNode'
           x-showExample: false
+        - $ref: '#/components/parameters/MaxTps'
+          x-showExample: false
       requestBody:
         $ref: '#/components/requestBodies/RunTemplateSpecification'
       responses:
@@ -1068,6 +1138,8 @@ paths:
         - $ref: '#/components/parameters/LogLevel'
           x-showExample: false
         - $ref: '#/components/parameters/TargetNode'
+          x-showExample: false
+        - $ref: '#/components/parameters/MaxTps'
           x-showExample: false
       requestBody:
         $ref: '#/components/requestBodies/RunTemplateSpecificationGraph'
@@ -1812,11 +1884,30 @@ components:
             Key-value pairs.
             Will be merged with the current tags.
             To delete any of the current tags set the value to `null`
+        gatesNeedFullObservation:
+          type: boolean
+          description: Only evaluate gates when all inputs are observed
+          default: false
+          example: true
+        resetObservations:
+          title: whether to clear observations before next invocation
+          type: boolean
+          default: true
+        parallel:
+          title: whether to run sensors in parallel or sequentially
+          type: boolean
+          default: true
       anyOf:
         - required:
             - variables
         - required:
             - tags
+        - required:
+            - gatesNeedFullObservation
+        - required:
+            - resetObservations
+        - required:
+            - parallel
     TemplateModification:
       type: object
       properties:
@@ -1859,6 +1950,9 @@ components:
             $ref: '#/components/schemas/VariableDeclaration'
         taskDefaults:
           $ref: '#/components/schemas/TaskDefaultsElement'
+        description:
+          type: string
+          description: Description of the template
         notes:
           description: List of notes as explanation for users
           type: array
@@ -2177,6 +2271,9 @@ components:
           description: flag to indicate if value for variable is mandatory or not
           type: boolean
           default: false
+        description:
+          type: string
+          description: Description of the variable
         defaultValue:
           description: Default value for the variable
           anyOf:
@@ -2465,6 +2562,14 @@ components:
               - time
               - level
               - message
+        taskOutput:
+          title: Task output
+          description: >-
+            The task output for the invocation. Only there if template uses
+            TaskOutput sensor
+          externalDocs:
+            url: https://docs.waylay.io/#/features/rules/?id=taskoutput-plugin
+          type: object
       required:
         - taskId
         - invocationId
@@ -2571,6 +2676,19 @@ components:
             - entity
             - action
             - query
+    BatchTaskSpec:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/BatchUpdatePlugin'
+        - $ref: '#/components/schemas/BatchTaskCommand'
+        - $ref: '#/components/schemas/BatchUpdateProperties'
+      example:
+        entity: task
+        action: delete
+        query:
+          type: onetime
+          status: stopped
+          finishedBefore: 1648738809733
     BatchUpdatePlugin:
       description: Upgrade plugins on multiple tasks
       type: object
@@ -3084,6 +3202,39 @@ components:
         - createTime
         - name
         - network
+    TaskRuntimeInformation:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TaskDefaultsElement'
+        - properties:
+            finishedTime:
+              $ref: '#/components/schemas/UnixEpochMillis'
+            invocationCount:
+              type: integer
+              format: int64
+              description: Number of times the task has been invoked
+            rawData:
+              type: object
+              description: rawData of the task
+            lastExecutionTime:
+              $ref: '#/components/schemas/UnixEpochMillis'
+            health:
+              type: object
+              description: Health of the task
+              properties:
+                errorsCount:
+                  type: integer
+                  format: int32
+                  description: Number of errors during last 64 task invocations
+                errorsRate:
+                  type: number
+                  format: float
+                  description: >-
+                    Error rate during last 64 task invocations. 0.0 means no
+                    errors, 1.0 means all errors
+              required:
+                - errorsCount
+                - errorsRate
     TaskEntityPagingResult:
       type: object
       allOf:
@@ -3091,7 +3242,9 @@ components:
             values:
               type: array
               items:
-                $ref: '#/components/schemas/TaskEntity'
+                allOf:
+                  - $ref: '#/components/schemas/TaskEntity'
+                  - $ref: '#/components/schemas/TaskRuntimeInformation'
         - $ref: '#/components/schemas/PagingResult'
     TaskSpecification:
       oneOf:
@@ -3138,12 +3291,7 @@ components:
       content:
         application/json:
           schema:
-            title: a tasks batch operation specification
-            type: object
-            oneOf:
-              - $ref: '#/components/schemas/BatchUpdatePlugin'
-              - $ref: '#/components/schemas/BatchTaskCommand'
-              - $ref: '#/components/schemas/BatchUpdateProperties'
+            $ref: '#/components/schemas/BatchTaskSpec'
           examples:
             Delete multiple tasks by query:
               value:
@@ -3273,6 +3421,12 @@ components:
             required:
               - resource
               - data
+    AsyncPluginCallbackBody:
+      description: Callback result to be passed to the plugin
+      content:
+        application/octet-stream:
+          schema: {}
+      required: false
   parameters:
     TaskId:
       name: taskId
@@ -3322,6 +3476,22 @@ components:
         items:
           type: string
           example: myFirstNode
+    MaxTps:
+      name: maxTps
+      in: query
+      description: >-
+        Maximum number of transactions/invocations per seconds.
+
+        When specified (and > 0), data will not be injected faster, and thus
+        template will not be run faster. Can be used for limiting load on
+        external systems accessed in the
+
+        template
+      required: false
+      schema:
+        type: number
+        minimum: 0
+        exclusiveMinimum: true
     NodeId:
       name: nodeId
       in: path

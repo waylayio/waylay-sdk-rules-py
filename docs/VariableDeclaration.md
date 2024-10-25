@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **type** | [**VariableType**](VariableType.md) |  | 
 **format** | [**VariableFormat**](VariableFormat.md) |  | [optional] 
 **mandatory** | **bool** | flag to indicate if value for variable is mandatory or not | [optional] [default to False]
+**description** | **str** | Description of the variable | [optional] 
 **default_value** | [**VariableDeclarationDefaultValue**](VariableDeclarationDefaultValue.md) |  | [optional] 
 
 ## Example

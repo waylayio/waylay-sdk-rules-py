@@ -348,6 +348,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | filter on template name | [optional] 
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` | either name of a plugin (e.g. &#x60;mySensor&#x60;), or full version specification of the plug (e.g &#x60;mySensor:1.0.3&#x60;) | [optional] 
 **query['tags.X']** (dict) <br> **query.tags_x** (Query) | **str** | query parameter `"tags.X"` |  | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter templates that have one of the tag keys in the array | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

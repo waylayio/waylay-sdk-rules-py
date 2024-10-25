@@ -20,6 +20,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.run_template_log_level_parameter import RunTemplateLogLevelParameter
@@ -30,6 +31,8 @@ def _run_graph_query_alias_for(field_name: str) -> str:
         return "logLevel"
     if field_name == "target_node":
         return "targetNode"
+    if field_name == "max_tps":
+        return "maxTps"
     return field_name
 
 
@@ -48,6 +51,14 @@ class RunGraphQuery(WaylayBaseModel):
             description="The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s)."
         ),
     ] = None
+    max_tps: Annotated[
+        Annotated[float, Field(strict=True, gt=0)]
+        | Annotated[int, Field(strict=True, gt=0)]
+        | None,
+        Field(
+            description="Maximum number of transactions/invocations per seconds. When specified (and > 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template"
+        ),
+    ] = None
 
     model_config = ConfigDict(
         protected_namespaces=(),
@@ -62,6 +73,8 @@ def _run_query_alias_for(field_name: str) -> str:
         return "logLevel"
     if field_name == "target_node":
         return "targetNode"
+    if field_name == "max_tps":
+        return "maxTps"
     return field_name
 
 
@@ -78,6 +91,14 @@ class RunQuery(WaylayBaseModel):
         List[StrictStr] | None,
         Field(
             description="The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s)."
+        ),
+    ] = None
+    max_tps: Annotated[
+        Annotated[float, Field(strict=True, gt=0)]
+        | Annotated[int, Field(strict=True, gt=0)]
+        | None,
+        Field(
+            description="Maximum number of transactions/invocations per seconds. When specified (and > 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template"
         ),
     ] = None
 

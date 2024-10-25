@@ -79,6 +79,7 @@ async def test_run_graph(
         "query": RunGraphQuery(
             log_level="DEBUG",
             target_node=[],
+            max_tps=3.4,
         ),
         "json": TemplateRunWithGraphSpecificationStub.create_instance(),
     }
@@ -103,6 +104,7 @@ async def test_run_graph_without_types(
         "query": {
             "logLevel": "DEBUG",
             "targetNode": [],
+            "maxTps": 3.4,
         },
         "json": TemplateRunWithGraphSpecificationStub.create_json(),
     }
@@ -140,6 +142,7 @@ async def test_run(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
         "query": RunQuery(
             log_level="DEBUG",
             target_node=[],
+            max_tps=3.4,
         ),
         "json": TemplateRunSpecificationStub.create_instance(),
     }
@@ -166,6 +169,7 @@ async def test_run_without_types(
         "query": {
             "logLevel": "DEBUG",
             "targetNode": [],
+            "maxTps": 3.4,
         },
         "json": TemplateRunSpecificationStub.create_json(),
     }

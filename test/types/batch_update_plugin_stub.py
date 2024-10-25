@@ -25,6 +25,7 @@ except ImportError as exc:
 
 batch_update_plugin_model_schema = json.loads(
     r"""{
+  "title" : "BatchUpdatePlugin",
   "type" : "object",
   "description" : "Upgrade plugins on multiple tasks",
   "allOf" : [ {
@@ -65,7 +66,7 @@ class BatchUpdatePluginStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 BatchUpdatePluginAdapter.json_schema(), allow_none_optionals=1

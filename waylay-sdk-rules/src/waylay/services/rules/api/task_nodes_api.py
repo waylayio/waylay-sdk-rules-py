@@ -28,6 +28,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -43,6 +44,7 @@ if TYPE_CHECKING:
         GetQuery,
         GetStatesQuery,
         PatchQuery,
+        PostQuery,
         UpdateQuery,
     )
 
@@ -53,6 +55,7 @@ try:
         GetQuery,
         GetStatesQuery,
         PatchQuery,
+        PostQuery,
         UpdateQuery,
     )
 
@@ -72,6 +75,10 @@ except ImportError:
         PatchQuery = dict
 
         ErrorResponse = Model
+
+        ErrorResponse = Model
+
+        PostQuery = dict
 
         ErrorResponse = Model
 
@@ -568,6 +575,175 @@ class TaskNodesApi(WithApiClient):
         return await self.api_client.request(
             method="PATCH",
             resource_path="/rules/v1/tasks/{taskId}/nodes/{nodeId}",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> object: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def post(
+        self,
+        *,
+        content: Annotated[
+            RequestContent | None,
+            Field(description="Callback result to be passed to the plugin"),
+        ] = None,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> object | T | Response | Model:
+        """Finalize Asynchronous Execution With Token.
+
+        Post a result to finalize an asynchronous plugin execution using the onetime token from the callback url.
+        :param content: Callback result to be passed to the plugin
+        :type content: ContentRequest, optional
+        :param query: URL Query parameters.
+        :type query: PostQuery | QueryParamTypes, optional
+        :param query['access_token'] (dict) <br> query.access_token (Query) : Token that was given in the callback url (required)
+        :type query['access_token']: str
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["content"] = content
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(PostQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": object if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {
+            "403": ErrorResponse,
+        }
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="POST",
+            resource_path="/rules/v1/tasks/callback",
             path_params=path_params,
             params=query,
             **body_args,

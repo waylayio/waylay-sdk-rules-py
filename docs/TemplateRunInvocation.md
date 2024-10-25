@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **sensors** | [**Dict[str, TemplateRunSensorResult]**](TemplateRunSensorResult.md) | The execution result for each of the sensors of the template | 
 **actuators** | [**Dict[str, TemplateRunActuatorResult]**](TemplateRunActuatorResult.md) | The execution result for each of the actuators of the template | 
 **log** | [**List[LogsInner]**](LogsInner.md) |  | 
+**task_output** | **object** | The task output for the invocation. Only there if template uses TaskOutput sensor | [optional] 
 
 ## Example
 

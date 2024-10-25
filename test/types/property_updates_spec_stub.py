@@ -34,6 +34,22 @@ property_updates_spec_model_schema = json.loads(
     "tags" : {
       "type" : "object",
       "description" : "Key-value pairs.\nWill be merged with the current tags.\nTo delete any of the current tags set the value to `null`"
+    },
+    "gatesNeedFullObservation" : {
+      "type" : "boolean",
+      "description" : "Only evaluate gates when all inputs are observed",
+      "example" : true,
+      "default" : false
+    },
+    "resetObservations" : {
+      "title" : "whether to clear observations before next invocation",
+      "type" : "boolean",
+      "default" : true
+    },
+    "parallel" : {
+      "title" : "whether to run sensors in parallel or sequentially",
+      "type" : "boolean",
+      "default" : true
     }
   },
   "nullable" : true,
@@ -65,7 +81,7 @@ class PropertyUpdatesSpecStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 PropertyUpdatesSpecAdapter.json_schema(), allow_none_optionals=1

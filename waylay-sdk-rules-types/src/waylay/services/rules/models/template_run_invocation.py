@@ -11,13 +11,14 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from pydantic import (
     ConfigDict,
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.logs_inner import LogsInner
@@ -39,6 +40,11 @@ class TemplateRunInvocation(WaylayBaseModel):
         description="The execution result for each of the actuators of the template"
     )
     log: List[LogsInner]
+    task_output: Dict[str, Any] | None = Field(
+        default=None,
+        description="The task output for the invocation. Only there if template uses TaskOutput sensor",
+        alias="taskOutput",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

@@ -16,7 +16,9 @@ from typing import Any, Dict
 from pydantic import (
     ConfigDict,
     Field,
+    StrictBool,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -31,6 +33,15 @@ class PropertyUpdatesSpec(WaylayBaseModel):
         default=None,
         description="Key-value pairs. Will be merged with the current tags. To delete any of the current tags set the value to `null`",
     )
+    gates_need_full_observation: StrictBool | None = Field(
+        default=False,
+        description="Only evaluate gates when all inputs are observed",
+        alias="gatesNeedFullObservation",
+    )
+    reset_observations: StrictBool | None = Field(
+        default=True, alias="resetObservations"
+    )
+    parallel: StrictBool | None = True
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

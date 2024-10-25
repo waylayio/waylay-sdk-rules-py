@@ -3,7 +3,6 @@
 LICENSE.txt
 Makefile
 README.md
-docs/ATasksBatchOperationSpecification.md
 docs/AboutApi.md
 docs/ActuatorExecutionResult.md
 docs/ActuatorNode.md
@@ -19,6 +18,7 @@ docs/BatchTaskCommand.md
 docs/BatchTaskCommandAllOfAction.md
 docs/BatchTaskEntity.md
 docs/BatchTaskQuery.md
+docs/BatchTaskSpec.md
 docs/BatchUpdatePlugin.md
 docs/BatchUpdateProperties.md
 docs/BatchUpdatePropertiesAllOfAction.md
@@ -78,8 +78,12 @@ docs/SuccessOperationResultValue.md
 docs/TaskDefaultsElement.md
 docs/TaskEntity.md
 docs/TaskEntityPagingResult.md
+docs/TaskEntityPagingResultAllOfValues.md
 docs/TaskFromTemplate.md
+docs/TaskListingInner.md
 docs/TaskNodesApi.md
+docs/TaskRuntimeInformation.md
+docs/TaskRuntimeInformationAllOfHealth.md
 docs/TaskScenarioType.md
 docs/TaskSettings.md
 docs/TaskSpecification.md
@@ -129,7 +133,6 @@ test/api/templates_api_test.py
 test/conftest.py
 test/openapi.py
 test/types/__init__.py
-test/types/a_tasks_batch_operation_specification_stub.py
 test/types/actuator_execution_result_stub.py
 test/types/actuator_node_stub.py
 test/types/batch_id_query_stub.py
@@ -143,6 +146,7 @@ test/types/batch_task_command_all_of_action_stub.py
 test/types/batch_task_command_stub.py
 test/types/batch_task_entity_stub.py
 test/types/batch_task_query_stub.py
+test/types/batch_task_spec_stub.py
 test/types/batch_task_stub.py
 test/types/batch_update_plugin_stub.py
 test/types/batch_update_properties_all_of_action_stub.py
@@ -198,9 +202,13 @@ test/types/stream_data_data_stub.py
 test/types/stream_data_stub.py
 test/types/success_operation_result_value_stub.py
 test/types/task_defaults_element_stub.py
+test/types/task_entity_paging_result_all_of_values_stub.py
 test/types/task_entity_paging_result_stub.py
 test/types/task_entity_stub.py
 test/types/task_from_template_stub.py
+test/types/task_listing_inner_stub.py
+test/types/task_runtime_information_all_of_health_stub.py
+test/types/task_runtime_information_stub.py
 test/types/task_scenario_type_stub.py
 test/types/task_settings_stub.py
 test/types/task_specification_stub.py

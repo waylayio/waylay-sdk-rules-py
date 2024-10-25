@@ -18,9 +18,12 @@ from pydantic import (
     Field,
     StrictInt,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.task_entity import TaskEntity
+from ..models.task_entity_paging_result_all_of_values import (
+    TaskEntityPagingResultAllOfValues,
+)
 
 
 class TaskEntityPagingResult(WaylayBaseModel):
@@ -33,7 +36,7 @@ class TaskEntityPagingResult(WaylayBaseModel):
     total: StrictInt = Field(
         description="Total number of items matching the query of which this is one page of results."
     )
-    values: List[TaskEntity] | None = None
+    values: List[TaskEntityPagingResultAllOfValues] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="allow"

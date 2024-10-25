@@ -29,7 +29,7 @@ MODELS_AVAILABLE = (
 )
 
 if MODELS_AVAILABLE:
-    pass
+    from waylay.services.rules.queries.task_nodes_api import PostQuery
 
 
 # some mappings that are needed for some <example> interpolations
@@ -214,6 +214,58 @@ async def test_patch_without_types(
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
     resp = await service.task_nodes.patch(taskId, nodeId, **kwargs)
+    check_type(resp, Model)
+
+
+def _post_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = None
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/rules/v1/tasks/callback(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_post(service: RulesService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for post
+    Finalize Asynchronous Execution With Token
+    """
+    # set path params
+    kwargs = {
+        # optionally use PostQuery to validate and reuse parameters
+        "query": PostQuery(
+            access_token="access_token_example",
+        ),
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _post_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.task_nodes.post(**kwargs)
+    check_type(resp, Union[object,])
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_post_without_types(
+    service: RulesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for post with models not installed
+    Finalize Asynchronous Execution With Token
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "access_token": "access_token_example",
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _post_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.task_nodes.post(**kwargs)
     check_type(resp, Model)
 
 

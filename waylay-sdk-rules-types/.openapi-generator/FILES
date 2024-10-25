@@ -1,7 +1,6 @@
 LICENSE.txt
 pyproject.toml
 src/waylay/services/rules/models/__init__.py
-src/waylay/services/rules/models/a_tasks_batch_operation_specification.py
 src/waylay/services/rules/models/actuator_execution_result.py
 src/waylay/services/rules/models/actuator_node.py
 src/waylay/services/rules/models/batch_id_query.py
@@ -16,6 +15,7 @@ src/waylay/services/rules/models/batch_task_command.py
 src/waylay/services/rules/models/batch_task_command_all_of_action.py
 src/waylay/services/rules/models/batch_task_entity.py
 src/waylay/services/rules/models/batch_task_query.py
+src/waylay/services/rules/models/batch_task_spec.py
 src/waylay/services/rules/models/batch_update_plugin.py
 src/waylay/services/rules/models/batch_update_properties.py
 src/waylay/services/rules/models/batch_update_properties_all_of_action.py
@@ -74,7 +74,11 @@ src/waylay/services/rules/models/success_operation_result_value.py
 src/waylay/services/rules/models/task_defaults_element.py
 src/waylay/services/rules/models/task_entity.py
 src/waylay/services/rules/models/task_entity_paging_result.py
+src/waylay/services/rules/models/task_entity_paging_result_all_of_values.py
 src/waylay/services/rules/models/task_from_template.py
+src/waylay/services/rules/models/task_listing_inner.py
+src/waylay/services/rules/models/task_runtime_information.py
+src/waylay/services/rules/models/task_runtime_information_all_of_health.py
 src/waylay/services/rules/models/task_scenario_type.py
 src/waylay/services/rules/models/task_settings.py
 src/waylay/services/rules/models/task_specification.py

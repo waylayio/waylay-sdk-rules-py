@@ -16,6 +16,7 @@ from pydantic import (
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.scheduled_task_setting_all_of_type import ScheduledTaskSettingAllOfType

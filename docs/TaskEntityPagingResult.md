@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **skip** | **int** | Number of items skipped before this page of results. | [default to 0]
 **limit** | **int** | Size of one page of results. | [default to 10]
 **total** | **int** | Total number of items matching the query of which this is one page of results. | 
-**values** | [**List[TaskEntity]**](TaskEntity.md) |  | [optional] 
+**values** | [**List[TaskEntityPagingResultAllOfValues]**](TaskEntityPagingResultAllOfValues.md) |  | [optional] 
 
 ## Example
 

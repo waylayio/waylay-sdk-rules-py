@@ -17,6 +17,7 @@ from pydantic import (
     ConfigDict,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.possible_values_enum_declaration_inner import (

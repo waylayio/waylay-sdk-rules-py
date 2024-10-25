@@ -83,6 +83,14 @@ template_run_invocation_model_schema = json.loads(
       "items" : {
         "$ref" : "#/components/schemas/Logs_inner"
       }
+    },
+    "taskOutput" : {
+      "title" : "Task output",
+      "type" : "object",
+      "description" : "The task output for the invocation. Only there if template uses TaskOutput sensor",
+      "externalDocs" : {
+        "url" : "https://docs.waylay.io/#/features/rules/?id=taskoutput-plugin"
+      }
     }
   }
 }
@@ -112,7 +120,7 @@ class TemplateRunInvocationStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 TemplateRunInvocationAdapter.json_schema(), allow_none_optionals=1

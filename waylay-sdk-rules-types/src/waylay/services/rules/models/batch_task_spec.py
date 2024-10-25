@@ -23,9 +23,9 @@ from ..models.batch_task_command import BatchTaskCommand
 from ..models.batch_update_plugin import BatchUpdatePlugin
 from ..models.batch_update_properties import BatchUpdateProperties
 
-ATasksBatchOperationSpecification = Union[
+BatchTaskSpec = Union[
     Annotated[BatchUpdatePlugin, ""],
     Annotated[BatchTaskCommand, ""],
     Annotated[BatchUpdateProperties, ""],
 ]
-"""ATasksBatchOperationSpecification."""
+"""BatchTaskSpec."""
