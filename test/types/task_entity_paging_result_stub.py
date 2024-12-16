@@ -33,7 +33,7 @@ task_entity_paging_result_model_schema = json.loads(
       "values" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/TaskEntity"
+          "$ref" : "#/components/schemas/TaskEntityPagingResult_allOf_values"
         }
       }
     }
@@ -67,7 +67,7 @@ class TaskEntityPagingResultStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 TaskEntityPagingResultAdapter.json_schema(), allow_none_optionals=1

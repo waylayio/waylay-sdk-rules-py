@@ -21,6 +21,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.list_tasks_format_parameter import ListTasksFormatParameter
@@ -108,6 +109,8 @@ def _list_query_alias_for(field_name: str) -> str:
         return "plugin"
     if field_name == "tags_x":
         return "tags.X"
+    if field_name == "tags":
+        return "tags"
     return field_name
 
 
@@ -135,6 +138,12 @@ class ListQuery(WaylayBaseModel):
         ),
     ] = None
     tags_x: StrictStr | None = None
+    tags: Annotated[
+        List[StrictStr] | None,
+        Field(
+            description="Filter templates that have one of the tag keys in the array"
+        ),
+    ] = None
 
     model_config = ConfigDict(
         protected_namespaces=(),

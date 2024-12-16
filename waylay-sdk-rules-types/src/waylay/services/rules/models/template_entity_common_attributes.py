@@ -19,6 +19,7 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.note_element import NoteElement
@@ -44,6 +45,9 @@ class TemplateEntityCommonAttributes(WaylayBaseModel):
     )
     task_defaults: TaskDefaultsElement | None = Field(
         default=None, alias="taskDefaults"
+    )
+    description: StrictStr | None = Field(
+        default=None, description="Description of the template"
     )
     notes: List[NoteElement] | None = Field(
         default=None, description="List of notes as explanation for users"

@@ -3,7 +3,7 @@
 
 This code was generated from the OpenAPI documentation of 'Waylay rules engine'
 
-version: 6.5.0
+version: 6.12.0
 
 The REST api to manage rule tasks and rule templates in the Waylay platform.
 

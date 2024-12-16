@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **tags** | **object** | Key-value pairs on which you can filter to finding templates back | [optional] 
 **variables** | [**List[VariableDeclaration]**](VariableDeclaration.md) | Variable declarations | [optional] 
 **task_defaults** | [**TaskDefaultsElement**](TaskDefaultsElement.md) |  | [optional] 
+**description** | **str** | Description of the template | [optional] 
 **notes** | [**List[NoteElement]**](NoteElement.md) | List of notes as explanation for users | [optional] 
 
 ## Example

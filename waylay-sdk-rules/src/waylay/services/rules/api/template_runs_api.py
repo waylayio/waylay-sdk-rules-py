@@ -29,6 +29,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -221,6 +222,8 @@ class TemplateRunsApi(WithApiClient):
         :type query['logLevel']: RunTemplateLogLevelParameter
         :param query['targetNode'] (dict) <br> query.target_node (Query) : The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s).
         :type query['targetNode']: List[str]
+        :param query['maxTps'] (dict) <br> query.max_tps (Query) : Maximum number of transactions/invocations per seconds. When specified (and > 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template
+        :type query['maxTps']: float
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -423,6 +426,8 @@ class TemplateRunsApi(WithApiClient):
         :type query['logLevel']: RunTemplateLogLevelParameter
         :param query['targetNode'] (dict) <br> query.target_node (Query) : The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s).
         :type query['targetNode']: List[str]
+        :param query['maxTps'] (dict) <br> query.max_tps (Query) : Maximum number of transactions/invocations per seconds. When specified (and > 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template
+        :type query['maxTps']: float
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.

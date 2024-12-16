@@ -279,6 +279,7 @@ async def test_list(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
             id="id_example",
             plugin="mySensor:1.0.3",
             tags_x="tags.myref: 3904859080956",
+            tags=[],
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -304,6 +305,7 @@ async def test_list_without_types(
             "id": "id_example",
             "plugin": "mySensor:1.0.3",
             "tags.X": "tags.myref: 3904859080956",
+            "tags": [],
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)

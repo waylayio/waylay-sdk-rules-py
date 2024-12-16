@@ -51,6 +51,10 @@ template_entity_common_attributes_model_schema = json.loads(
     "taskDefaults" : {
       "$ref" : "#/components/schemas/TaskDefaultsElement"
     },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of the template"
+    },
     "notes" : {
       "type" : "array",
       "description" : "List of notes as explanation for users",
@@ -88,7 +92,7 @@ class TemplateEntityCommonAttributesStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 TemplateEntityCommonAttributesAdapter.json_schema(),

@@ -12,7 +12,13 @@ from __future__ import annotations  # for Python 3.7–3.9
 
 from pydantic import (
     ConfigDict,
+    Field,
+    StrictStr,
 )
+from typing_extensions import (
+    Annotated,  # >=3.11
+)
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -57,6 +63,27 @@ class PatchQuery(WaylayBaseModel):
         protected_namespaces=(),
         extra="allow",
         alias_generator=_patch_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _post_query_alias_for(field_name: str) -> str:
+    if field_name == "access_token":
+        return "access_token"
+    return field_name
+
+
+class PostQuery(WaylayBaseModel):
+    """Model for `post` query parameters."""
+
+    access_token: Annotated[
+        StrictStr, Field(description="Token that was given in the callback url")
+    ]
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_post_query_alias_for,
         populate_by_name=True,
     )
 

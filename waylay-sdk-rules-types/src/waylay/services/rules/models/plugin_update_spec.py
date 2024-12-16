@@ -22,6 +22,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.plugin_update_spec_from_version import PluginUpdateSpecFromVersion

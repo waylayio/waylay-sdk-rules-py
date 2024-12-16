@@ -29,6 +29,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -43,6 +44,7 @@ if TYPE_CHECKING:
         ErrorResponse,
         ErrorWithDetailsResponse,
         TaskEntity,
+        TaskListingInner,
         TaskSpecification,
     )
     from waylay.services.rules.queries.tasks_api import (
@@ -63,6 +65,7 @@ try:
         ErrorResponse,
         ErrorWithDetailsResponse,
         TaskEntity,
+        TaskListingInner,
         TaskSpecification,
     )
     from waylay.services.rules.queries.tasks_api import (
@@ -98,12 +101,12 @@ except ImportError:
         ErrorResponse = Model
 
         GetQuery = dict
-        TaskEntity = Model
+        TaskListingInner = Model
 
         ErrorResponse = Model
 
         ListQuery = dict
-        TaskEntity = Model
+        TaskListingInner = Model
 
         TaskSpecification = Model
 
@@ -613,7 +616,7 @@ class TasksApi(WithApiClient):
         validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> TaskEntity: ...
+    ) -> TaskListingInner: ...
 
     @overload
     async def get(
@@ -682,7 +685,7 @@ class TasksApi(WithApiClient):
         validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> TaskEntity | T | Response | Model:
+    ) -> TaskListingInner | T | Response | Model:
         """Retrieve Task Details.
 
         Retrieve the details of a task.
@@ -731,7 +734,7 @@ class TasksApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": TaskEntity if not select_path else Model,
+                "200": TaskListingInner if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {
@@ -764,7 +767,7 @@ class TasksApi(WithApiClient):
         validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> List[TaskEntity]: ...
+    ) -> List[TaskListingInner]: ...
 
     @overload
     async def list(
@@ -828,7 +831,7 @@ class TasksApi(WithApiClient):
         validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> List[TaskEntity] | T | Response | Model:
+    ) -> List[TaskListingInner] | T | Response | Model:
         """Query Multiple Tasks.
 
         Query multiple tasks.
@@ -862,12 +865,16 @@ class TasksApi(WithApiClient):
         :type query['filter']: str
         :param query['tags.key'] (dict) <br> query.tags_key (Query) : Parameter is `form` style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id=queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the `tags.<key>` query parameter without a value, tasks which have a value for tag `<key>` will be returned
         :type query['tags.key']: ListTasksTagsKeyParameter
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter tasks that have one of the tag keys in the array
+        :type query['tags']: List[str]
         :param query['finishedBefore'] (dict) <br> query.finished_before (Query) : Tasks stopped before provided time will be returned.
         :type query['finishedBefore']: int
         :param query['createdAfter'] (dict) <br> query.created_after (Query) : Tasks created after provided time will be returned.
         :type query['createdAfter']: int
         :param query['createdBefore'] (dict) <br> query.created_before (Query) : Tasks created before provided time will be returned
         :type query['createdBefore']: int
+        :param query['includeHealth'] (dict) <br> query.include_health (Query) : If `true`, the response will include the health status of the task. The health status is a summary of the errorsCount and errorsRate of the last 64 invocations of the task.
+        :type query['includeHealth']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -905,7 +912,7 @@ class TasksApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": List[TaskEntity] if not select_path else Model,
+                "200": List[TaskListingInner] if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}

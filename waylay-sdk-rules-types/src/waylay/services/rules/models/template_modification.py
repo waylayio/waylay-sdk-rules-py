@@ -18,6 +18,7 @@ from pydantic import (
     Field,
     StrictBool,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.plugin_update_spec import PluginUpdateSpec

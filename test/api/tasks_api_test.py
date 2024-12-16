@@ -25,6 +25,7 @@ from waylay.services.rules.service import RulesService
 from ..types.create_task201_response_stub import CreateTask201ResponseStub
 from ..types.list_tasks_tags_key_parameter_stub import ListTasksTagsKeyParameterStub
 from ..types.task_entity_stub import TaskEntityStub
+from ..types.task_listing_inner_stub import TaskListingInnerStub
 from ..types.task_specification_stub import TaskSpecificationStub
 
 MODELS_AVAILABLE = (
@@ -35,6 +36,7 @@ if MODELS_AVAILABLE:
     from waylay.services.rules.models import (
         CreateTask201Response,
         TaskEntity,
+        TaskListingInner,
         TaskSpecification,
     )
     from waylay.services.rules.queries.tasks_api import (
@@ -211,7 +213,7 @@ async def test_get_configuration_without_types(
 
 
 def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, taskId: str):
-    mock_response = TaskEntityStub.create_json()
+    mock_response = TaskListingInnerStub.create_json()
     httpx_mock_kwargs = {
         "method": "GET",
         "url": re.compile(f"^{gateway_url}/rules/v1/tasks/{taskId}(\\?.*)?"),
@@ -238,7 +240,7 @@ async def test_get(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
     }
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.get(taskId, **kwargs)
-    check_type(resp, Union[TaskEntity,])
+    check_type(resp, Union[TaskListingInner,])
 
 
 @pytest.mark.asyncio
@@ -263,7 +265,7 @@ async def test_get_without_types(
 
 
 def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
-    mock_response = [TaskEntityStub.create_json()]
+    mock_response = [TaskListingInnerStub.create_json()]
     httpx_mock_kwargs = {
         "method": "GET",
         "url": re.compile(f"^{gateway_url}/rules/v1/tasks(\\?.*)?"),
@@ -297,14 +299,16 @@ async def test_list(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
             template="template_example",
             filter="filter_example",
             tags_key=ListTasksTagsKeyParameterStub.create_json(),
+            tags=[],
             finished_before=56,
             created_after=1661990400000,
             created_before=1662768000000,
+            include_health=False,
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks.list(**kwargs)
-    check_type(resp, Union[List[TaskEntity],])
+    check_type(resp, Union[List[TaskListingInner],])
 
 
 @pytest.mark.asyncio
@@ -332,9 +336,11 @@ async def test_list_without_types(
             "template": "template_example",
             "filter": "filter_example",
             "tags.key": ListTasksTagsKeyParameterStub.create_json(),
+            "tags": [],
             "finishedBefore": 56,
             "createdAfter": 1661990400000,
             "createdBefore": 1662768000000,
+            "includeHealth": False,
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)

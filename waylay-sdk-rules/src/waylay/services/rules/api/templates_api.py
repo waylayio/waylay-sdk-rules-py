@@ -29,6 +29,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -838,6 +839,8 @@ class TemplatesApi(WithApiClient):
         :type query['plugin']: str
         :param query['tags.X'] (dict) <br> query.tags_x (Query) :
         :type query['tags.X']: str
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter templates that have one of the tag keys in the array
+        :type query['tags']: List[str]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.

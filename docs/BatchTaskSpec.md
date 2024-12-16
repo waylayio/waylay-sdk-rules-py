@@ -1,4 +1,4 @@
-# ATasksBatchOperationSpecification
+# BatchTaskSpec
 
 
 ## Properties
@@ -13,19 +13,19 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from waylay.services.rules.models.a_tasks_batch_operation_specification import ATasksBatchOperationSpecification
+from waylay.services.rules.models.batch_task_spec import BatchTaskSpec
 
 # TODO update the JSON string below
 json = "{}"
-# create an instance of ATasksBatchOperationSpecification from a JSON string
-a_tasks_batch_operation_specification_instance = ATasksBatchOperationSpecification.from_json(json)
+# create an instance of BatchTaskSpec from a JSON string
+batch_task_spec_instance = BatchTaskSpec.from_json(json)
 # print the JSON string representation of the object
-print ATasksBatchOperationSpecification.to_json()
+print BatchTaskSpec.to_json()
 
 # convert the object into a dict
-a_tasks_batch_operation_specification_dict = a_tasks_batch_operation_specification_instance.to_dict()
-# create an instance of ATasksBatchOperationSpecification from a dict
-a_tasks_batch_operation_specification_form_dict = a_tasks_batch_operation_specification.from_dict(a_tasks_batch_operation_specification_dict)
+batch_task_spec_dict = batch_task_spec_instance.to_dict()
+# create an instance of BatchTaskSpec from a dict
+batch_task_spec_form_dict = batch_task_spec.from_dict(batch_task_spec_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -48,6 +48,10 @@ variable_declaration_model_schema = json.loads(
       "description" : "flag to indicate if value for variable is mandatory or not",
       "default" : false
     },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of the variable"
+    },
     "defaultValue" : {
       "$ref" : "#/components/schemas/VariableDeclaration_defaultValue"
     }
@@ -84,7 +88,7 @@ class VariableDeclarationStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 VariableDeclarationAdapter.json_schema(), allow_none_optionals=1

@@ -98,14 +98,14 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.a_tasks_batch_operation_specification import ATasksBatchOperationSpecification
 from waylay.services.rules.models.batch_operation_enqueued import BatchOperationEnqueued
+from waylay.services.rules.models.batch_task_spec import BatchTaskSpec
 try:
     # Start Batch Operations
     # calls `POST /rules/v1/batch`
     api_response = await waylay_client.rules.tasks_batch_operations.start(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = {"entity":"task","action":"delete","query":{"type":"onetime","status":"stopped","finishedBefore":1648738809733}} # ATasksBatchOperationSpecification | Tasks Batch Operation
+        json = {"entity":"task","action":"delete","query":{"type":"onetime","status":"stopped","finishedBefore":1648738809733}} # BatchTaskSpec | Tasks Batch Operation
     )
     print("The response of rules.tasks_batch_operations.start:\n")
     pprint(api_response)
@@ -121,7 +121,7 @@ POST /rules/v1/batch
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
-**json** | [**ATasksBatchOperationSpecification**](ATasksBatchOperationSpecification.md) | json request body | Tasks Batch Operation | 
+**json** | [**BatchTaskSpec**](BatchTaskSpec.md) | json request body | Tasks Batch Operation | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

@@ -239,7 +239,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > task_id: str,
 > query: GetQuery,
 > headers
-> ) -> TaskEntity
+> ) -> TaskListingInner
 
 Retrieve Task Details
 
@@ -259,7 +259,7 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
-from waylay.services.rules.models.task_entity import TaskEntity
+from waylay.services.rules.models.task_listing_inner import TaskListingInner
 try:
     # Retrieve Task Details
     # calls `GET /rules/v1/tasks/{taskId}`
@@ -292,7 +292,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`TaskEntity`** |  | [TaskEntity](TaskEntity.md)
+Literal[""] _(default)_  | False _(default)_ | **`TaskListingInner`** |  | [TaskListingInner](TaskListingInner.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -314,7 +314,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > list(
 > query: ListQuery,
 > headers
-> ) -> List[TaskEntity]
+> ) -> List[TaskListingInner]
 
 Query Multiple Tasks
 
@@ -334,7 +334,7 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
-from waylay.services.rules.models.task_entity import TaskEntity
+from waylay.services.rules.models.task_listing_inner import TaskListingInner
 from waylay.services.rules.models.task_scenario_type import TaskScenarioType
 from waylay.services.rules.models.task_status import TaskStatus
 try:
@@ -352,6 +352,7 @@ try:
             'finishedBefore': 56
             'createdAfter': 1661990400000
             'createdBefore': 1662768000000
+            'includeHealth': False
         },
     )
     print("The response of rules.tasks.list:\n")
@@ -383,16 +384,18 @@ Name     | Type  | API binding   | Description   | Notes
 **query['template']** (dict) <br> **query.template** (Query) | **str** | query parameter `"template"` |  | [optional] 
 **query['filter']** (dict) <br> **query.filter** (Query) | **str** | query parameter `"filter"` | fuzzy search on multiple properties | [optional] 
 **query['tags.key']** (dict) <br> **query.tags_key** (Query) | [**ListTasksTagsKeyParameter**](.md) | query parameter `"tags.key"` | Parameter is &#x60;form&#x60; style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id&#x3D;queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the &#x60;tags.&lt;key&gt;&#x60; query parameter without a value, tasks which have a value for tag &#x60;&lt;key&gt;&#x60; will be returned | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter tasks that have one of the tag keys in the array | [optional] 
 **query['finishedBefore']** (dict) <br> **query.finished_before** (Query) | **int** | query parameter `"finishedBefore"` | Tasks stopped before provided time will be returned. | [optional] 
 **query['createdAfter']** (dict) <br> **query.created_after** (Query) | **int** | query parameter `"createdAfter"` | Tasks created after provided time will be returned. | [optional] 
 **query['createdBefore']** (dict) <br> **query.created_before** (Query) | **int** | query parameter `"createdBefore"` | Tasks created before provided time will be returned | [optional] 
+**query['includeHealth']** (dict) <br> **query.include_health** (Query) | **bool** | query parameter `"includeHealth"` | If &#x60;true&#x60;, the response will include the health status of the task. The health status is a summary of the errorsCount and errorsRate of the last 64 invocations of the task. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`List[TaskEntity]`** |  | [List[TaskEntity]](TaskEntity.md)
+Literal[""] _(default)_  | False _(default)_ | **`List[TaskListingInner]`** |  | [List[TaskListingInner]](TaskListingInner.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 

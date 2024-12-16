@@ -22,6 +22,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.list_tasks_format_parameter import ListTasksFormatParameter
@@ -149,12 +150,16 @@ def _list_query_alias_for(field_name: str) -> str:
         return "filter"
     if field_name == "tags_key":
         return "tags.key"
+    if field_name == "tags":
+        return "tags"
     if field_name == "finished_before":
         return "finishedBefore"
     if field_name == "created_after":
         return "createdAfter"
     if field_name == "created_before":
         return "createdBefore"
+    if field_name == "include_health":
+        return "includeHealth"
     return field_name
 
 
@@ -189,6 +194,10 @@ class ListQuery(WaylayBaseModel):
             description="Parameter is `form` style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id=queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the `tags.<key>` query parameter without a value, tasks which have a value for tag `<key>` will be returned"
         ),
     ] = None
+    tags: Annotated[
+        List[StrictStr] | None,
+        Field(description="Filter tasks that have one of the tag keys in the array"),
+    ] = None
     finished_before: Annotated[
         StrictInt | None,
         Field(description="Tasks stopped before provided time will be returned."),
@@ -200,6 +209,12 @@ class ListQuery(WaylayBaseModel):
     created_before: Annotated[
         StrictInt | None,
         Field(description="Tasks created before provided time will be returned"),
+    ] = None
+    include_health: Annotated[
+        StrictBool | None,
+        Field(
+            description="If `true`, the response will include the health status of the task. The health status is a summary of the errorsCount and errorsRate of the last 64 invocations of the task."
+        ),
     ] = None
 
     model_config = ConfigDict(

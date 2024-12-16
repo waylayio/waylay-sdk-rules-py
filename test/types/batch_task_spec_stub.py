@@ -16,21 +16,25 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.rules.models.a_tasks_batch_operation_specification import (
-        ATasksBatchOperationSpecification,
-    )
+    from waylay.services.rules.models.batch_task_spec import BatchTaskSpec
 
-    ATasksBatchOperationSpecificationAdapter = TypeAdapter(
-        ATasksBatchOperationSpecification
-    )
+    BatchTaskSpecAdapter = TypeAdapter(BatchTaskSpec)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-a_tasks_batch_operation_specification_model_schema = json.loads(
+batch_task_spec_model_schema = json.loads(
     r"""{
-  "title" : "a tasks batch operation specification",
   "type" : "object",
+  "example" : {
+    "entity" : "task",
+    "action" : "delete",
+    "query" : {
+      "type" : "onetime",
+      "status" : "stopped",
+      "finishedBefore" : 1648738809733
+    }
+  },
   "oneOf" : [ {
     "$ref" : "#/components/schemas/BatchUpdatePlugin"
   }, {
@@ -42,38 +46,31 @@ a_tasks_batch_operation_specification_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-a_tasks_batch_operation_specification_model_schema.update({
-    "definitions": MODEL_DEFINITIONS
-})
+batch_task_spec_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-a_tasks_batch_operation_specification_faker = JSF(
-    a_tasks_batch_operation_specification_model_schema, allow_none_optionals=1
-)
+batch_task_spec_faker = JSF(batch_task_spec_model_schema, allow_none_optionals=1)
 
 
-class ATasksBatchOperationSpecificationStub:
-    """ATasksBatchOperationSpecification unit test stubs."""
+class BatchTaskSpecStub:
+    """BatchTaskSpec unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return a_tasks_batch_operation_specification_faker.generate(
-            use_defaults=True, use_examples=True
-        )
+        return batch_task_spec_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
-    def create_instance(cls) -> "ATasksBatchOperationSpecification":
-        """Create ATasksBatchOperationSpecification stub instance."""
+    def create_instance(cls) -> "BatchTaskSpec":
+        """Create BatchTaskSpec stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                ATasksBatchOperationSpecificationAdapter.json_schema(),
-                allow_none_optionals=1,
+                BatchTaskSpecAdapter.json_schema(), allow_none_optionals=1
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return ATasksBatchOperationSpecificationAdapter.validate_python(
+        return BatchTaskSpecAdapter.validate_python(
             json, context={"skip_validation": True}
         )
