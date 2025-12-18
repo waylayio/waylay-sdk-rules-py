@@ -17,7 +17,6 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.variable_declaration_default_value import VariableDeclarationDefaultValue
@@ -45,6 +44,16 @@ class VariableDeclaration(WaylayBaseModel):
     )
     default_value: VariableDeclarationDefaultValue | None = Field(
         default=None, alias="defaultValue"
+    )
+    override_by_stream: StrictBool | None = Field(
+        default=False,
+        description="Override variable value by streamed data parameter with the same name in reactive tasks if this property set to true",
+        alias="overrideByStream",
+    )
+    override_by_data: StrictBool | None = Field(
+        default=False,
+        description="Override variable value by last value of task node's resource timeseries metric with the same name. Task node should be linked to some resource.",
+        alias="overrideByData",
     )
 
     model_config = ConfigDict(

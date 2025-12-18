@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **sequence** | **int** |  | [optional] 
 **position** | **List[int]** |  | [optional] 
 **timeout** | **str** |  | [optional] [default to 'PT50S']
+**description** | **str** |  | [optional] 
 
 ## Example
 

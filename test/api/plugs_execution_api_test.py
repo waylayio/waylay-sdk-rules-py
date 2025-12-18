@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -82,7 +81,7 @@ async def test_execute_actuator(
     }
     _execute_actuator_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_actuator(name, **kwargs)
-    check_type(resp, Union[ActuatorExecutionResult,])
+    check_type(resp, ActuatorExecutionResult)
 
 
 @pytest.mark.asyncio
@@ -141,7 +140,7 @@ async def test_execute_actuator_version(
     resp = await service.plugs_execution.execute_actuator_version(
         name, version, **kwargs
     )
-    check_type(resp, Union[ActuatorExecutionResult,])
+    check_type(resp, ActuatorExecutionResult)
 
 
 @pytest.mark.asyncio
@@ -198,7 +197,7 @@ async def test_execute_sensor(
     }
     _execute_sensor_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_sensor(name, **kwargs)
-    check_type(resp, Union[SensorExecutionResult,])
+    check_type(resp, SensorExecutionResult)
 
 
 @pytest.mark.asyncio
@@ -255,7 +254,7 @@ async def test_execute_sensor_version(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plugs_execution.execute_sensor_version(name, version, **kwargs)
-    check_type(resp, Union[SensorExecutionResult,])
+    check_type(resp, SensorExecutionResult)
 
 
 @pytest.mark.asyncio
@@ -310,7 +309,7 @@ async def test_execute_transformer(
     }
     _execute_transformer_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plugs_execution.execute_transformer(name, **kwargs)
-    check_type(resp, Union[TransformerExecutionResult,])
+    check_type(resp, TransformerExecutionResult)
 
 
 @pytest.mark.asyncio
@@ -369,7 +368,7 @@ async def test_execute_transformer_version(
     resp = await service.plugs_execution.execute_transformer_version(
         name, version, **kwargs
     )
-    check_type(resp, Union[TransformerExecutionResult,])
+    check_type(resp, TransformerExecutionResult)
 
 
 @pytest.mark.asyncio

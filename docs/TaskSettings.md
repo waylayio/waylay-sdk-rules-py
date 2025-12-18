@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **reset_observations** | **bool** |  | [optional] [default to True]
 **parallel** | **bool** |  | [optional] [default to True]
 **gates_need_full_observation** | **bool** |  | [optional] [default to False]
+**protected** | **bool** |  | [optional] [default to False]
 **tags** | **object** | Key-value pairs on which you can set at task creation and later filter tasks | [optional] 
 **variables** | **object** | set of variables which will be used when starting a task and will automatically be injected in the template before starting a task. | [optional] 
 **type** | [**ReactiveTaskSettingType**](ReactiveTaskSettingType.md) |  | 

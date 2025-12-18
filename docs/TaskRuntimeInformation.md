@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **raw_data** | **object** | rawData of the task | [optional] 
 **last_execution_time** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | [optional] 
 **health** | [**TaskRuntimeInformationAllOfHealth**](TaskRuntimeInformationAllOfHealth.md) |  | [optional] 
+**pending_nodes** | **object** | returns the nodes that are pending to be resumed. Every key in the object is the node name. Can be multiple pending nodes in the task. | [optional] 
 
 ## Example
 

@@ -20,7 +20,6 @@ from pydantic import (
     StrictInt,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.reactive_task_setting_type import ReactiveTaskSettingType
@@ -40,6 +39,7 @@ class TaskFromTemplate(WaylayBaseModel):
     gates_need_full_observation: StrictBool | None = Field(
         default=False, alias="gatesNeedFullObservation"
     )
+    protected: StrictBool | None = False
     tags: Dict[str, Any] | None = Field(
         default=None,
         description="Key-value pairs on which you can set at task creation and later filter tasks",

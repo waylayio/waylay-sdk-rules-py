@@ -65,6 +65,18 @@ template_run_specification_model_schema = json.loads(
         "threshold" : 13
       }
     },
+    "nodesRawData" : {
+      "title" : "input data for template node debug",
+      "type" : "object",
+      "description" : "The input data for the template execution. The data is used to inject the actual data into the template execution nodes map.",
+      "example" : {
+        "dice_1" : {
+          "state" : "ONE",
+          "randomValue" : 0.9192044737545031
+        },
+        "dice_2" : { }
+      }
+    },
     "resourceMetaData" : {
       "title" : "Resource Metadata",
       "type" : "object",

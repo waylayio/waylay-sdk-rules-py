@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 
 import pytest
 from pytest_httpx import HTTPXMock
@@ -68,7 +67,7 @@ async def test_push(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
     }
     _push_set_mock_response(httpx_mock, gateway_url)
     resp = await service.push_data.push(**kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio

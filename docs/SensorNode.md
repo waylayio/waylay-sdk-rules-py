@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **label** | **str** | Unique node label | 
 **name** | **str** |  | 
 **version** | **str** |  | 
+**icon_url** | **str** | URL to an icon representing the sensor | [optional] 
 **properties** | **object** |  | [optional] 
 **resource** | **str** | Unique resource identifier | [optional] 
 **sequence** | **int** |  | [optional] [default to 1]
@@ -22,6 +23,9 @@ Name | Type | Description | Notes
 **timeout_state** | **str** |  | [optional] 
 **loop_def** | **str** | A loop definition is a string that defines items over which node will be iterated multiple times. The string is an JSON array of JSON objects.During template execution the sensor node with such a defined loop definition will be invoked for every JSON Object in the JSON array. Parameter is optional. Node will be executed only once if loop definition is not defined. | [optional] 
 **retry_config** | [**RetryConfig**](RetryConfig.md) |  | [optional] 
+**pause_execution** | **bool** |  | [optional] [default to False]
+**pause_execution_timeout** | **str** |  | [optional] [default to 'PT1H']
+**description** | **str** |  | [optional] 
 
 ## Example
 

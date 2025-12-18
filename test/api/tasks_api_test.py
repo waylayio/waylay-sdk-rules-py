@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import List, Union
+from typing import List
 from urllib.parse import quote
 
 import pytest
@@ -41,6 +41,7 @@ if MODELS_AVAILABLE:
     )
     from waylay.services.rules.queries.tasks_api import (
         CreateQuery,
+        DeleteQuery,
         GetConfigurationQuery,
         GetQuery,
         ListQuery,
@@ -89,7 +90,7 @@ async def test_create(service: RulesService, gateway_url: str, httpx_mock: HTTPX
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks.create(**kwargs)
-    check_type(resp, Union[CreateTask201Response,])
+    check_type(resp, CreateTask201Response)
 
 
 @pytest.mark.asyncio
@@ -133,7 +134,12 @@ async def test_delete(service: RulesService, gateway_url: str, httpx_mock: HTTPX
     # set path params
     taskId = "task_id_example"
 
-    kwargs = {}
+    kwargs = {
+        # optionally use DeleteQuery to validate and reuse parameters
+        "query": DeleteQuery(
+            force_stop=False,
+        ),
+    }
     _delete_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.delete(taskId, **kwargs)
     assert not resp
@@ -150,7 +156,11 @@ async def test_delete_without_types(
     # set path params
     taskId = "task_id_example"
 
-    kwargs = {}
+    kwargs = {
+        "query": {
+            "forceStop": False,
+        },
+    }
     _delete_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.delete(taskId, **kwargs)
     assert not resp
@@ -188,7 +198,7 @@ async def test_get_configuration(
     }
     _get_configuration_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.get_configuration(taskId, **kwargs)
-    check_type(resp, Union[TaskSpecification,])
+    check_type(resp, TaskSpecification)
 
 
 @pytest.mark.asyncio
@@ -240,7 +250,7 @@ async def test_get(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
     }
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.get(taskId, **kwargs)
-    check_type(resp, Union[TaskListingInner,])
+    check_type(resp, TaskListingInner)
 
 
 @pytest.mark.asyncio
@@ -293,13 +303,14 @@ async def test_list(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
             resource_type="resource_type_example",
             type="scheduled",
             status="running",
-            ids=[],
+            ids=["808aec38-3fb3-4163-a45e-1890e94081ea"],
             id="id_example",
             plugin="plugin_example",
             template="template_example",
             filter="filter_example",
+            resource_metadata_expression="resource_metadata_expression_example",
             tags_key=ListTasksTagsKeyParameterStub.create_json(),
-            tags=[],
+            tags=[""],
             finished_before=56,
             created_after=1661990400000,
             created_before=1662768000000,
@@ -308,7 +319,7 @@ async def test_list(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tasks.list(**kwargs)
-    check_type(resp, Union[List[TaskListingInner],])
+    check_type(resp, List[TaskListingInner])
 
 
 @pytest.mark.asyncio
@@ -330,13 +341,14 @@ async def test_list_without_types(
             "resourceType": "resource_type_example",
             "type": "scheduled",
             "status": "running",
-            "ids": [],
+            "ids": ["808aec38-3fb3-4163-a45e-1890e94081ea"],
             "id": "id_example",
             "plugin": "plugin_example",
             "template": "template_example",
             "filter": "filter_example",
+            "resourceMetadataExpression": "resource_metadata_expression_example",
             "tags.key": ListTasksTagsKeyParameterStub.create_json(),
-            "tags": [],
+            "tags": [""],
             "finishedBefore": 56,
             "createdAfter": 1661990400000,
             "createdBefore": 1662768000000,
@@ -373,7 +385,7 @@ async def test_replace(service: RulesService, gateway_url: str, httpx_mock: HTTP
     }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.replace(taskId, **kwargs)
-    check_type(resp, Union[TaskEntity,])
+    check_type(resp, TaskEntity)
 
 
 @pytest.mark.asyncio
@@ -420,7 +432,7 @@ async def test_start(service: RulesService, gateway_url: str, httpx_mock: HTTPXM
     kwargs = {}
     _start_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.start(taskId, **kwargs)
-    check_type(resp, Union[TaskEntity,])
+    check_type(resp, TaskEntity)
 
 
 @pytest.mark.asyncio
@@ -465,7 +477,7 @@ async def test_stop(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
     kwargs = {}
     _stop_set_mock_response(httpx_mock, gateway_url, quote(str(taskId)))
     resp = await service.tasks.stop(taskId, **kwargs)
-    check_type(resp, Union[TaskEntity,])
+    check_type(resp, TaskEntity)
 
 
 @pytest.mark.asyncio

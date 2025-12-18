@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.bayesian_graph import BayesianGraph
 from ..models.simplified_graph import SimplifiedGraph

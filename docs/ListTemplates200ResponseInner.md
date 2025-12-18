@@ -1,4 +1,4 @@
-# ReplaceTemplate200Response
+# ListTemplates200ResponseInner
 
 
 ## Properties
@@ -21,23 +21,25 @@ Name | Type | Description | Notes
 **actuators** | [**List[ActuatorNode]**](ActuatorNode.md) | List of actuators with required properties | [optional] 
 **relations** | [**List[RelationNode]**](RelationNode.md) | List of relations (gates) between sensors | [optional] 
 **triggers** | [**List[SimplifiedGraphTriggersInner]**](SimplifiedGraphTriggersInner.md) | List of conditions under which actuators/sensors get executed. | [optional] 
+**nodes** | **List[object]** |  | [optional] 
+**posterior** | **List[object]** |  | [optional] 
 
 ## Example
 
 ```python
-from waylay.services.rules.models.replace_template200_response import ReplaceTemplate200Response
+from waylay.services.rules.models.list_templates200_response_inner import ListTemplates200ResponseInner
 
 # TODO update the JSON string below
 json = "{}"
-# create an instance of ReplaceTemplate200Response from a JSON string
-replace_template200_response_instance = ReplaceTemplate200Response.from_json(json)
+# create an instance of ListTemplates200ResponseInner from a JSON string
+list_templates200_response_inner_instance = ListTemplates200ResponseInner.from_json(json)
 # print the JSON string representation of the object
-print ReplaceTemplate200Response.to_json()
+print ListTemplates200ResponseInner.to_json()
 
 # convert the object into a dict
-replace_template200_response_dict = replace_template200_response_instance.to_dict()
-# create an instance of ReplaceTemplate200Response from a dict
-replace_template200_response_form_dict = replace_template200_response.from_dict(replace_template200_response_dict)
+list_templates200_response_inner_dict = list_templates200_response_inner_instance.to_dict()
+# create an instance of ListTemplates200ResponseInner from a dict
+list_templates200_response_inner_form_dict = list_templates200_response_inner.from_dict(list_templates200_response_inner_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

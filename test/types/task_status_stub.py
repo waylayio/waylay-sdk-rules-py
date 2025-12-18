@@ -27,7 +27,7 @@ task_status_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Status of a task",
-  "enum" : [ "running", "stopped", "failed" ]
+  "enum" : [ "running", "pending", "stopped", "failed" ]
 }
 """,
     object_hook=with_example_provider,

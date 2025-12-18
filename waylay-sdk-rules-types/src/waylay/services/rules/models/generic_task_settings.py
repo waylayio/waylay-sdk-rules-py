@@ -19,7 +19,6 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -37,6 +36,7 @@ class GenericTaskSettings(WaylayBaseModel):
     gates_need_full_observation: StrictBool | None = Field(
         default=False, alias="gatesNeedFullObservation"
     )
+    protected: StrictBool | None = False
     tags: Dict[str, Any] | None = Field(
         default=None,
         description="Key-value pairs on which you can set at task creation and later filter tasks",

@@ -4,8 +4,170 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**debug_graph**](TemplateRunsApi.md#debug_graph) | **POST** /rules/v1/templates/debug | Debug Graph Or Bayesian Network
+[**debug**](TemplateRunsApi.md#debug) | **POST** /rules/v1/templates/{name}/debug | Debug Template
 [**run_graph**](TemplateRunsApi.md#run_graph) | **POST** /rules/v1/templates/run | Run Graph Or Bayesian Network
 [**run**](TemplateRunsApi.md#run) | **POST** /rules/v1/templates/{name}/run | Run Template
+
+# **debug_graph**
+> debug_graph(
+> query: DebugGraphQuery,
+> headers
+> ) -> AsyncIterator[TemplateRunInvocation]
+
+Debug Graph Or Bayesian Network
+
+Debug a node in a graph or Bayesian Network.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
+from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
+from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
+from waylay.services.rules.models.template_run_with_graph_specification import TemplateRunWithGraphSpecification
+try:
+    # Debug Graph Or Bayesian Network
+    # calls `POST /rules/v1/templates/debug`
+    api_response = await waylay_client.rules.template_runs.debug_graph(
+        # query parameters:
+        query = {
+        },
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TemplateRunWithGraphSpecification() # TemplateRunWithGraphSpecification | Specification to run template through graph/BN.
+    )
+    print("The response of rules.template_runs.debug_graph:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling rules.template_runs.debug_graph: %s\n" % e)
+```
+
+### Endpoint
+```
+POST /rules/v1/templates/debug
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**json** | [**TemplateRunWithGraphSpecification**](TemplateRunWithGraphSpecification.md) | json request body | Specification to run template through graph/BN. | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['nodeToDebug']** (dict) <br> **query.node_to_debug** (Query) | **str** | query parameter `"nodeToDebug"` | node to debug inside template or graph | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`AsyncIterator[TemplateRunInvocation]`** |  | [TemplateRunInvocation](TemplateRunInvocation.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/x-ndjson, application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Stream Of Invocation Results |  -  |
+**400** | Validation Failed |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **debug**
+> debug(
+> name: str,
+> query: DebugQuery,
+> headers
+> ) -> AsyncIterator[TemplateRunInvocation]
+
+Debug Template
+
+Debug a node in template.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
+from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
+from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
+from waylay.services.rules.models.template_run_specification import TemplateRunSpecification
+try:
+    # Debug Template
+    # calls `POST /rules/v1/templates/{name}/debug`
+    api_response = await waylay_client.rules.template_runs.debug(
+        'name_example', # name | path param "name"
+        # query parameters:
+        query = {
+        },
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.rules.TemplateRunSpecification() # TemplateRunSpecification | Specification to run template
+    )
+    print("The response of rules.template_runs.debug:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling rules.template_runs.debug: %s\n" % e)
+```
+
+### Endpoint
+```
+POST /rules/v1/templates/{name}/debug
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**name** | **str** | path parameter `"name"` | Unique Template identifier | 
+**json** | [**TemplateRunSpecification**](TemplateRunSpecification.md) | json request body | Specification to run template | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['nodeToDebug']** (dict) <br> **query.node_to_debug** (Query) | **str** | query parameter `"nodeToDebug"` | node to debug inside template or graph | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`AsyncIterator[TemplateRunInvocation]`** |  | [TemplateRunInvocation](TemplateRunInvocation.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/x-ndjson, application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Stream Of Invocation Results |  -  |
+**400** | Validation Failed |  -  |
+**404** | Template Not Found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **run_graph**
 > run_graph(

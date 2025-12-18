@@ -25,7 +25,6 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.retry_config import RetryConfig
@@ -37,6 +36,11 @@ class SensorNode(WaylayBaseModel):
     label: StrictStr = Field(description="Unique node label")
     name: StrictStr
     version: Annotated[str, Field(strict=True)]
+    icon_url: StrictStr | None = Field(
+        default=None,
+        description="URL to an icon representing the sensor",
+        alias="iconURL",
+    )
     properties: Dict[str, Any] | None = None
     resource: StrictStr | None = Field(
         default=None, description="Unique resource identifier"
@@ -65,6 +69,11 @@ class SensorNode(WaylayBaseModel):
         alias="loopDef",
     )
     retry_config: RetryConfig | None = Field(default=None, alias="retryConfig")
+    pause_execution: StrictBool | None = Field(default=False, alias="pauseExecution")
+    pause_execution_timeout: StrictStr | None = Field(
+        default="PT1H", alias="pauseExecutionTimeout"
+    )
+    description: StrictStr | None = None
 
     @field_validator("version")
     @classmethod

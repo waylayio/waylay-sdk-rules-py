@@ -90,6 +90,10 @@ _actuator_node_model_schema = json.loads(
       "title" : "Time (in ISO 8601 duration format) before the plugin times out, defaults to PT50S (50 seconds)",
       "type" : "string",
       "default" : "PT50S"
+    },
+    "description" : {
+      "title" : "Description of the actuator node",
+      "type" : "string"
     }
   },
   "additionalProperties" : false,
@@ -717,6 +721,11 @@ _generic_task_settings_model_schema = json.loads(
       "type" : "boolean",
       "default" : false
     },
+    "protected" : {
+      "title" : "whether the task is protected or not. Can be set only by user with protected permission. Can not be modified/deleted by user without protected permission.",
+      "type" : "boolean",
+      "default" : false
+    },
     "tags" : {
       "$ref" : "#/components/schemas/TagsTaskObject"
     },
@@ -815,6 +824,21 @@ _list_tasks_tags_key_parameter_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "list_tasks_tags_key_parameter": _list_tasks_tags_key_parameter_model_schema
+})
+
+_list_templates_200_response_inner_model_schema = json.loads(
+    r"""{
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/TemplateEntityMetadata"
+  }, {
+    "$ref" : "#/components/schemas/TemplateDetails"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "list_templates_200_response_inner": _list_templates_200_response_inner_model_schema
 })
 
 _log_level_model_schema = json.loads(
@@ -1398,6 +1422,11 @@ _sensor_node_model_schema = json.loads(
     "version" : {
       "$ref" : "#/components/schemas/Version"
     },
+    "iconURL" : {
+      "type" : "string",
+      "description" : "URL to an icon representing the sensor",
+      "format" : "url"
+    },
     "properties" : {
       "title" : "Key-value object of required properties",
       "type" : "object"
@@ -1456,6 +1485,20 @@ _sensor_node_model_schema = json.loads(
     },
     "retryConfig" : {
       "$ref" : "#/components/schemas/RetryConfig"
+    },
+    "pauseExecution" : {
+      "title" : "Boolean to indicate if sensor needs to be paused. Execution can be resumed by calling POST operation\non /tasks/task/{taskId}/nodes/{nodeId} REST endpoint.",
+      "type" : "boolean",
+      "default" : false
+    },
+    "pauseExecutionTimeout" : {
+      "title" : "Time (in ISO 8601 duration format) before the plugin times out if it is paused and not resumed, defaults to PT1H (1 hour)",
+      "type" : "string",
+      "default" : "PT1H"
+    },
+    "description" : {
+      "title" : "Description of the sensor node",
+      "type" : "string"
     }
   },
   "additionalProperties" : false,
@@ -1848,6 +1891,9 @@ _task_runtime_information_model_schema = json.loads(
       },
       "health" : {
         "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_health"
+      },
+      "pendingNodes" : {
+        "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_pendingNodes"
       }
     }
   } ]
@@ -1931,7 +1977,7 @@ _task_status_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Status of a task",
-  "enum" : [ "running", "stopped", "failed" ]
+  "enum" : [ "running", "pending", "stopped", "failed" ]
 }
 """,
     object_hook=with_example_provider,
@@ -2072,6 +2118,16 @@ _template_entity_common_attributes_model_schema = json.loads(
     "description" : {
       "type" : "string",
       "description" : "Description of the template"
+    },
+    "iconURL" : {
+      "type" : "string",
+      "description" : "URL to an icon representing the template",
+      "format" : "url"
+    },
+    "protected" : {
+      "type" : "boolean",
+      "description" : "Flag to indicate if the template is protected. Can be set only by user with protected permission. Modification or deletion of template is not allowed to user without protected permission.",
+      "default" : false
     },
     "notes" : {
       "type" : "array",
@@ -2359,6 +2415,18 @@ _template_run_specification_model_schema = json.loads(
         "threshold" : 13
       }
     },
+    "nodesRawData" : {
+      "title" : "input data for template node debug",
+      "type" : "object",
+      "description" : "The input data for the template execution. The data is used to inject the actual data into the template execution nodes map.",
+      "example" : {
+        "dice_1" : {
+          "state" : "ONE",
+          "randomValue" : 0.9192044737545031
+        },
+        "dice_2" : { }
+      }
+    },
     "resourceMetaData" : {
       "title" : "Resource Metadata",
       "type" : "object",
@@ -2560,6 +2628,16 @@ _variable_declaration_model_schema = json.loads(
     },
     "defaultValue" : {
       "$ref" : "#/components/schemas/VariableDeclaration_defaultValue"
+    },
+    "overrideByStream" : {
+      "type" : "boolean",
+      "description" : "Override variable value by streamed data parameter with the same name in reactive tasks if this property set to true",
+      "default" : false
+    },
+    "overrideByData" : {
+      "type" : "boolean",
+      "description" : "Override variable value by last value of task node's resource timeseries metric with the same name. Task node should be linked to some resource.",
+      "default" : false
     }
   },
   "description" : "Variable declaration.",

@@ -13,6 +13,8 @@ Name | Type | Description | Notes
 **mandatory** | **bool** | flag to indicate if value for variable is mandatory or not | [optional] [default to False]
 **description** | **str** | Description of the variable | [optional] 
 **default_value** | [**VariableDeclarationDefaultValue**](VariableDeclarationDefaultValue.md) |  | [optional] 
+**override_by_stream** | **bool** | Override variable value by streamed data parameter with the same name in reactive tasks if this property set to true | [optional] [default to False]
+**override_by_data** | **bool** | Override variable value by last value of task node&#39;s resource timeseries metric with the same name. Task node should be linked to some resource. | [optional] [default to False]
 
 ## Example
 
