@@ -2,14 +2,14 @@
 The REST api to manage rule tasks and rule templates in the Waylay platform.
 
 This Python package is automatically generated based on the 
-Waylay Rules OpenAPI specification (API version: 6.12.0)
+Waylay Rules OpenAPI specification (API version: 6.20.0)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/rules.html).
 
 It consists of a plugin for the waylay-sdk-core package, and contains the Rules api methods.
 Note that the typed model classes for all path params, query params, body params and responses for each of the api methods are contained in a separate package called waylay-sdk-rules-types.
 
 ## Requirements.
-This package requires Python 3.9+.
+This package requires Python 3.10+.
 
 ## Installation
 

@@ -270,6 +270,9 @@ try:
         'version_example', # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        headers = {
+            'x-waylay-revision': 'x_waylay_revision_example',
+        },
     )
     print("The response of rules.plugs_execution.execute_sensor_version:\n")
     pprint(api_response)
@@ -289,6 +292,7 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | Version number of plugin | 
 **json** | [**ExecutePlugsSpecification**](ExecutePlugsSpecification.md) | json request body | Specification to execute a plug. | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+**headers['x-waylay-revision']** | **str** | request header `"x-waylay-revision"`  | Draft plugin revision. Revision number returned by plug registry in metadata of sensor | [optional] 
 
 ### Return type
 

@@ -14,7 +14,6 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.reactive_task_setting_type import ReactiveTaskSettingType

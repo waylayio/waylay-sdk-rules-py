@@ -2,7 +2,7 @@
 The REST api to manage rule tasks and rule templates in the Waylay platform.
 
 This Python package is automatically generated based on the 
-Waylay Rules OpenAPI specification (API version: 6.12.0)
+Waylay Rules OpenAPI specification (API version: 6.20.0)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/rules.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -10,7 +10,7 @@ It consists of two sub-packages that are both plugins for the waylay-sdk-core pa
 - The `waylay-sdk-rules-types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-rules`.
 
 ## Requirements.
-This package requires Python 3.9+.
+This package requires Python 3.10+.
 
 ## Installation
 
@@ -81,8 +81,11 @@ Class | Method | HTTP request | Description
 *TasksApi* | [**stop**](docs/TasksApi.md#stop) | **POST** /rules/v1/tasks/{taskId}/command/stop | Stop Task
 *TasksBatchOperationsApi* | [**get**](docs/TasksBatchOperationsApi.md#get) | **GET** /rules/v1/batch/{batchId} | Get Tasks Batch Operation Status
 *TasksBatchOperationsApi* | [**start**](docs/TasksBatchOperationsApi.md#start) | **POST** /rules/v1/batch | Start Batch Operations
+*TemplateRunsApi* | [**debug_graph**](docs/TemplateRunsApi.md#debug_graph) | **POST** /rules/v1/templates/debug | Debug Graph Or Bayesian Network
+*TemplateRunsApi* | [**debug**](docs/TemplateRunsApi.md#debug) | **POST** /rules/v1/templates/{name}/debug | Debug Template
 *TemplateRunsApi* | [**run_graph**](docs/TemplateRunsApi.md#run_graph) | **POST** /rules/v1/templates/run | Run Graph Or Bayesian Network
 *TemplateRunsApi* | [**run**](docs/TemplateRunsApi.md#run) | **POST** /rules/v1/templates/{name}/run | Run Template
+*TemplatesApi* | [**copy**](docs/TemplatesApi.md#copy) | **PATCH** /rules/v1/templates/{name} | Copy Template
 *TemplatesApi* | [**create**](docs/TemplatesApi.md#create) | **POST** /rules/v1/templates | Create Template
 *TemplatesApi* | [**delete**](docs/TemplatesApi.md#delete) | **DELETE** /rules/v1/templates/{name} | Delete Template
 *TemplatesApi* | [**get_discovery**](docs/TemplatesApi.md#get_discovery) | **GET** /rules/v1/discoveryTemplate | Retrieve Discovery Template
@@ -128,6 +131,7 @@ Class | Method | HTTP request | Description
  - [GraphDefinition](docs/GraphDefinition.md)
  - [ListTasksFormatParameter](docs/ListTasksFormatParameter.md)
  - [ListTasksTagsKeyParameter](docs/ListTasksTagsKeyParameter.md)
+ - [ListTemplates200ResponseInner](docs/ListTemplates200ResponseInner.md)
  - [LogLevel](docs/LogLevel.md)
  - [LogsInner](docs/LogsInner.md)
  - [LogsInnerLevel](docs/LogsInnerLevel.md)

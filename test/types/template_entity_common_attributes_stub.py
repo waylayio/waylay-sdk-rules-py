@@ -55,6 +55,16 @@ template_entity_common_attributes_model_schema = json.loads(
       "type" : "string",
       "description" : "Description of the template"
     },
+    "iconURL" : {
+      "type" : "string",
+      "description" : "URL to an icon representing the template",
+      "format" : "url"
+    },
+    "protected" : {
+      "type" : "boolean",
+      "description" : "Flag to indicate if the template is protected. Can be set only by user with protected permission. Modification or deletion of template is not allowed to user without protected permission.",
+      "default" : false
+    },
     "notes" : {
       "type" : "array",
       "description" : "List of notes as explanation for users",

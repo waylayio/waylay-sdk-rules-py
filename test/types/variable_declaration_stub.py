@@ -54,6 +54,16 @@ variable_declaration_model_schema = json.loads(
     },
     "defaultValue" : {
       "$ref" : "#/components/schemas/VariableDeclaration_defaultValue"
+    },
+    "overrideByStream" : {
+      "type" : "boolean",
+      "description" : "Override variable value by streamed data parameter with the same name in reactive tasks if this property set to true",
+      "default" : false
+    },
+    "overrideByData" : {
+      "type" : "boolean",
+      "description" : "Override variable value by last value of task node's resource timeseries metric with the same name. Task node should be linked to some resource.",
+      "default" : false
     }
   },
   "description" : "Variable declaration.",

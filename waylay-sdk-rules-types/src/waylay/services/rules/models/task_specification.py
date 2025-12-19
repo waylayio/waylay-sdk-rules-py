@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.task_from_template import TaskFromTemplate
 from ..models.task_with_rule import TaskWithRule

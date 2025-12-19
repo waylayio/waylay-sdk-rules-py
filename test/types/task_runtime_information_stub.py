@@ -48,6 +48,9 @@ task_runtime_information_model_schema = json.loads(
       },
       "health" : {
         "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_health"
+      },
+      "pendingNodes" : {
+        "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_pendingNodes"
       }
     }
   } ]

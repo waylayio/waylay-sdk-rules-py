@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import AsyncIterator, Union, get_args
+from typing import AsyncIterator, get_args
 from urllib.parse import quote
 
 import pytest
@@ -36,7 +36,12 @@ if MODELS_AVAILABLE:
     from waylay.services.rules.models import (
         TemplateRunInvocation,
     )
-    from waylay.services.rules.queries.template_runs_api import RunGraphQuery, RunQuery
+    from waylay.services.rules.queries.template_runs_api import (
+        DebugGraphQuery,
+        DebugQuery,
+        RunGraphQuery,
+        RunQuery,
+    )
 
 
 # some mappings that are needed for some <example> interpolations
@@ -51,6 +56,130 @@ def template_runs_api(waylay_api_client: ApiClient) -> TemplateRunsApi:
 def test_registered(waylay_client: WaylayClient):
     """Test that TemplateRunsApi api is registered in the sdk client."""
     assert isinstance(waylay_client.rules.template_runs, TemplateRunsApi)
+
+
+def _debug_graph_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = TemplateRunInvocationStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/rules/v1/templates/debug(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str) + "\n",
+        "status_code": 200,
+        "headers": {"content-type": "application/x-ndjson"},
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_debug_graph(
+    service: RulesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for debug_graph
+    Debug Graph Or Bayesian Network
+    """
+    # set path params
+    kwargs = {
+        # optionally use DebugGraphQuery to validate and reuse parameters
+        "query": DebugGraphQuery(
+            log_level="DEBUG",
+            node_to_debug="myFirstNode",
+        ),
+        "json": TemplateRunWithGraphSpecificationStub.create_instance(),
+    }
+    _debug_graph_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.template_runs.debug_graph(**kwargs)
+    check_type(resp, AsyncIterator[TemplateRunInvocation])
+    async for item in resp:
+        check_type(item, get_args(AsyncIterator[TemplateRunInvocation])[0])
+        break  # Test only the first value
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_debug_graph_without_types(
+    service: RulesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for debug_graph with models not installed
+    Debug Graph Or Bayesian Network
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "logLevel": "DEBUG",
+            "nodeToDebug": "myFirstNode",
+        },
+        "json": TemplateRunWithGraphSpecificationStub.create_json(),
+    }
+    _debug_graph_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.template_runs.debug_graph(**kwargs)
+    check_type(resp, Model)
+    async for item in resp:
+        check_type(item, Model)
+        break  # Test only the first value
+
+
+def _debug_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, name: str):
+    mock_response = TemplateRunInvocationStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/rules/v1/templates/{name}/debug(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str) + "\n",
+        "status_code": 200,
+        "headers": {"content-type": "application/x-ndjson"},
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_debug(service: RulesService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for debug
+    Debug Template
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        # optionally use DebugQuery to validate and reuse parameters
+        "query": DebugQuery(
+            log_level="DEBUG",
+            node_to_debug="myFirstNode",
+        ),
+        "json": TemplateRunSpecificationStub.create_instance(),
+    }
+    _debug_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.template_runs.debug(name, **kwargs)
+    check_type(resp, AsyncIterator[TemplateRunInvocation])
+    async for item in resp:
+        check_type(item, get_args(AsyncIterator[TemplateRunInvocation])[0])
+        break  # Test only the first value
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_debug_without_types(
+    service: RulesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for debug with models not installed
+    Debug Template
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "logLevel": "DEBUG",
+            "nodeToDebug": "myFirstNode",
+        },
+        "json": TemplateRunSpecificationStub.create_json(),
+    }
+    _debug_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.template_runs.debug(name, **kwargs)
+    check_type(resp, Model)
+    async for item in resp:
+        check_type(item, Model)
+        break  # Test only the first value
 
 
 def _run_graph_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
@@ -78,16 +207,16 @@ async def test_run_graph(
         # optionally use RunGraphQuery to validate and reuse parameters
         "query": RunGraphQuery(
             log_level="DEBUG",
-            target_node=[],
+            target_node=["myFirstNode"],
             max_tps=3.4,
         ),
         "json": TemplateRunWithGraphSpecificationStub.create_instance(),
     }
     _run_graph_set_mock_response(httpx_mock, gateway_url)
     resp = await service.template_runs.run_graph(**kwargs)
-    check_type(resp, Union[AsyncIterator[TemplateRunInvocation],])
+    check_type(resp, AsyncIterator[TemplateRunInvocation])
     async for item in resp:
-        check_type(item, get_args(Union[AsyncIterator[TemplateRunInvocation],])[0])
+        check_type(item, get_args(AsyncIterator[TemplateRunInvocation])[0])
         break  # Test only the first value
 
 
@@ -103,7 +232,7 @@ async def test_run_graph_without_types(
     kwargs = {
         "query": {
             "logLevel": "DEBUG",
-            "targetNode": [],
+            "targetNode": ["myFirstNode"],
             "maxTps": 3.4,
         },
         "json": TemplateRunWithGraphSpecificationStub.create_json(),
@@ -141,16 +270,16 @@ async def test_run(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
         # optionally use RunQuery to validate and reuse parameters
         "query": RunQuery(
             log_level="DEBUG",
-            target_node=[],
+            target_node=["myFirstNode"],
             max_tps=3.4,
         ),
         "json": TemplateRunSpecificationStub.create_instance(),
     }
     _run_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.template_runs.run(name, **kwargs)
-    check_type(resp, Union[AsyncIterator[TemplateRunInvocation],])
+    check_type(resp, AsyncIterator[TemplateRunInvocation])
     async for item in resp:
-        check_type(item, get_args(Union[AsyncIterator[TemplateRunInvocation],])[0])
+        check_type(item, get_args(AsyncIterator[TemplateRunInvocation])[0])
         break  # Test only the first value
 
 
@@ -168,7 +297,7 @@ async def test_run_without_types(
     kwargs = {
         "query": {
             "logLevel": "DEBUG",
-            "targetNode": [],
+            "targetNode": ["myFirstNode"],
             "maxTps": 3.4,
         },
         "json": TemplateRunSpecificationStub.create_json(),

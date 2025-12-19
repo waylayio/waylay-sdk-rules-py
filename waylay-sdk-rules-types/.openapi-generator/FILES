@@ -34,6 +34,7 @@ src/waylay/services/rules/models/get_batch_operation200_response.py
 src/waylay/services/rules/models/graph_definition.py
 src/waylay/services/rules/models/list_tasks_format_parameter.py
 src/waylay/services/rules/models/list_tasks_tags_key_parameter.py
+src/waylay/services/rules/models/list_templates200_response_inner.py
 src/waylay/services/rules/models/log_level.py
 src/waylay/services/rules/models/logs_inner.py
 src/waylay/services/rules/models/logs_inner_level.py

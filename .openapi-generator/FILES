@@ -37,6 +37,7 @@ docs/GetBatchOperation200Response.md
 docs/GraphDefinition.md
 docs/ListTasksFormatParameter.md
 docs/ListTasksTagsKeyParameter.md
+docs/ListTemplates200ResponseInner.md
 docs/LogLevel.md
 docs/LogsInner.md
 docs/LogsInnerLevel.md
@@ -166,6 +167,7 @@ test/types/get_batch_operation200_response_stub.py
 test/types/graph_definition_stub.py
 test/types/list_tasks_format_parameter_stub.py
 test/types/list_tasks_tags_key_parameter_stub.py
+test/types/list_templates200_response_inner_stub.py
 test/types/log_level_stub.py
 test/types/logs_inner_level_stub.py
 test/types/logs_inner_stub.py

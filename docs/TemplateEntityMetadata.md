@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **variables** | [**List[VariableDeclaration]**](VariableDeclaration.md) | Variable declarations | [optional] 
 **task_defaults** | [**TaskDefaultsElement**](TaskDefaultsElement.md) |  | [optional] 
 **description** | **str** | Description of the template | [optional] 
+**icon_url** | **str** | URL to an icon representing the template | [optional] 
+**protected** | **bool** | Flag to indicate if the template is protected. Can be set only by user with protected permission. Modification or deletion of template is not allowed to user without protected permission. | [optional] [default to False]
 **notes** | [**List[NoteElement]**](NoteElement.md) | List of notes as explanation for users | [optional] 
 **user** | **str** | Creation user mail address | 
 **create_time** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | 

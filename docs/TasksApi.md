@@ -95,6 +95,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 # **delete**
 > delete(
 > task_id: str,
+> query: DeleteQuery,
 > headers
 > ) -> void (empty response body)
 
@@ -120,6 +121,9 @@ try:
     # calls `DELETE /rules/v1/tasks/{taskId}`
     await waylay_client.rules.tasks.delete(
         'task_id_example', # task_id | path param "taskId"
+        # query parameters:
+        query = {
+        },
     )
 except ApiError as e:
     print("Exception when calling rules.tasks.delete: %s\n" % e)
@@ -134,6 +138,8 @@ DELETE /rules/v1/tasks/{taskId}
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['forceStop']** (dict) <br> **query.force_stop** (Query) | **bool** | query parameter `"forceStop"` | Force task stop before deletion | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -383,6 +389,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` |  | [optional] 
 **query['template']** (dict) <br> **query.template** (Query) | **str** | query parameter `"template"` |  | [optional] 
 **query['filter']** (dict) <br> **query.filter** (Query) | **str** | query parameter `"filter"` | fuzzy search on multiple properties | [optional] 
+**query['resourceMetadataExpression']** (dict) <br> **query.resource_metadata_expression** (Query) | **str** | query parameter `"resourceMetadataExpression"` | return tasks that has linked resource from a list returned by resource metadata query. | [optional] 
 **query['tags.key']** (dict) <br> **query.tags_key** (Query) | [**ListTasksTagsKeyParameter**](.md) | query parameter `"tags.key"` | Parameter is &#x60;form&#x60; style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id&#x3D;queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the &#x60;tags.&lt;key&gt;&#x60; query parameter without a value, tasks which have a value for tag &#x60;&lt;key&gt;&#x60; will be returned | [optional] 
 **query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter tasks that have one of the tag keys in the array | [optional] 
 **query['finishedBefore']** (dict) <br> **query.finished_before** (Query) | **int** | query parameter `"finishedBefore"` | Tasks stopped before provided time will be returned. | [optional] 

@@ -20,7 +20,6 @@ from pydantic import (
     StrictInt,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.task_runtime_information_all_of_health import (
@@ -101,6 +100,11 @@ class TaskListingInner(WaylayBaseModel):
         alias="lastExecutionTime",
     )
     health: TaskRuntimeInformationAllOfHealth | None = None
+    pending_nodes: Dict[str, Any] | None = Field(
+        default=None,
+        description="returns the nodes that are pending to be resumed. Every key in the object is the node name. Can be multiple pending nodes in the task.",
+        alias="pendingNodes",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

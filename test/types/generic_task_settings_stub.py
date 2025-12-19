@@ -48,6 +48,11 @@ generic_task_settings_model_schema = json.loads(
       "type" : "boolean",
       "default" : false
     },
+    "protected" : {
+      "title" : "whether the task is protected or not. Can be set only by user with protected permission. Can not be modified/deleted by user without protected permission.",
+      "type" : "boolean",
+      "default" : false
+    },
     "tags" : {
       "$ref" : "#/components/schemas/TagsTaskObject"
     },

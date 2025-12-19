@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -79,7 +78,7 @@ async def test_get_states(
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
     resp = await service.task_nodes.get_states(taskId, nodeId, **kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio
@@ -134,7 +133,7 @@ async def test_get(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
     resp = await service.task_nodes.get(taskId, nodeId, **kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio
@@ -191,7 +190,7 @@ async def test_patch(service: RulesService, gateway_url: str, httpx_mock: HTTPXM
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
     resp = await service.task_nodes.patch(taskId, nodeId, **kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio
@@ -245,7 +244,7 @@ async def test_post(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
     }
     _post_set_mock_response(httpx_mock, gateway_url)
     resp = await service.task_nodes.post(**kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio
@@ -303,7 +302,7 @@ async def test_update(service: RulesService, gateway_url: str, httpx_mock: HTTPX
         httpx_mock, gateway_url, quote(str(taskId)), quote(str(nodeId))
     )
     resp = await service.task_nodes.update(taskId, nodeId, **kwargs)
-    check_type(resp, Union[object,])
+    check_type(resp, object)
 
 
 @pytest.mark.asyncio

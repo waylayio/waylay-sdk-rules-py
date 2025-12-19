@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Waylay rules engine
-  version: 6.12.0
+  version: 6.20.0
   description: The REST api to manage rule tasks and rule templates in the Waylay platform.
 externalDocs:
   url: https://docs.waylay.io/#/api/rules/
@@ -197,6 +197,14 @@ paths:
             type: string
           description: fuzzy search on multiple properties
           x-showExample: false
+        - name: resourceMetadataExpression
+          in: query
+          schema:
+            type: string
+          description: >-
+            return tasks that has linked resource from a list returned by
+            resource metadata query.
+          x-showExample: false
         - name: tags.key
           in: query
           style: form
@@ -391,6 +399,8 @@ paths:
         description: Waylay Documentation
       parameters:
         - $ref: '#/components/parameters/TaskId'
+          x-showExample: false
+        - $ref: '#/components/parameters/ForceStop'
           x-showExample: false
       responses:
         '204':
@@ -763,6 +773,8 @@ paths:
           x-showExample: false
         - $ref: '#/components/parameters/PagingStart'
           x-showExample: false
+        - $ref: '#/components/parameters/Format'
+          x-showExample: false
         - name: filter
           description: fuzzy search on multiple properties
           in: query
@@ -811,6 +823,13 @@ paths:
               type: string
           description: Filter templates that have one of the tag keys in the array
           x-showExample: false
+        - name: includegraph
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: If `true`, the response will include the graph of the template.
+          x-showExample: true
       responses:
         '200':
           description: Successful Response
@@ -824,7 +843,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/TemplateEntityMetadata'
+                  oneOf:
+                    - $ref: '#/components/schemas/TemplateEntityMetadata'
+                    - $ref: '#/components/schemas/TemplateDetails'
       security:
         - waylayApiKeySecret: []
       x-py-method: list
@@ -962,6 +983,58 @@ paths:
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: false
+      x-consumes-other: false
+    patch:
+      tags:
+        - Templates
+      operationId: copy_template
+      summary: Copy Template
+      description: Copy a template. The creationtime and lastmodifiedtime will be updated.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      parameters:
+        - $ref: '#/components/parameters/TemplateId'
+          x-showExample: false
+        - name: newName
+          in: query
+          required: true
+          description: New name for the copied template
+          schema:
+            $ref: '#/components/schemas/TemplateId'
+          x-example: '''internet.json'''
+          x-showExample: true
+      responses:
+        '200':
+          description: Template Copied
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/TemplateEntityMetadata'
+                  - $ref: '#/components/schemas/SimplifiedGraph'
+        '400':
+          description: Copy Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              examples:
+                Duplicate name:
+                  value:
+                    statusCode: 400
+                    error: A template with name xxx already exists
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: copy
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
       x-consumes-other: false
     put:
       tags:
@@ -1173,6 +1246,112 @@ paths:
       security:
         - waylayApiKeySecret: []
       x-py-method: run_graph
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+      x-produces-event-stream: true
+  /rules/v1/templates/{name}/debug:
+    post:
+      tags:
+        - Template Runs
+      operationId: debug_template
+      summary: Debug Template
+      description: Debug a node in template.
+      externalDocs:
+        description: Waylay Documentation
+        url: https://docs.waylay.io/#/api/rules/?id=running-a-template
+      parameters:
+        - $ref: '#/components/parameters/TemplateId'
+          x-showExample: false
+        - $ref: '#/components/parameters/LogLevel'
+          x-showExample: false
+        - $ref: '#/components/parameters/NodeToDebug'
+          x-showExample: false
+      requestBody:
+        $ref: '#/components/requestBodies/RunTemplateSpecification'
+      responses:
+        '200':
+          description: Stream Of Invocation Results
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/TemplateRunInvocation'
+          x-is-event-stream: true
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: Variable 'threshold' not found
+                code: VALIDATION
+                details:
+                  - type: VARIABLE
+                    message: Variable 'threshold' not found
+                    severity: ERROR
+                    details:
+                      variable: threshold
+        '404':
+          $ref: '#/components/responses/TemplateNotFoundResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: debug
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+      x-produces-event-stream: true
+  /rules/v1/templates/debug:
+    post:
+      tags:
+        - Template Runs
+      operationId: debugGraph
+      summary: Debug Graph Or Bayesian Network
+      description: Debug a node in a graph or Bayesian Network.
+      externalDocs:
+        description: Waylay Documentation
+        url: >-
+          https://docs.waylay.io/#/api/rules/?id=running-a-batch-dataset-through-a-graphbns
+      parameters:
+        - $ref: '#/components/parameters/LogLevel'
+          x-showExample: false
+        - $ref: '#/components/parameters/NodeToDebug'
+          x-showExample: false
+      requestBody:
+        $ref: '#/components/requestBodies/RunTemplateSpecificationGraph'
+      responses:
+        '200':
+          description: Stream Of Invocation Results
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/TemplateRunInvocation'
+          x-is-event-stream: true
+        '400':
+          description: Validation Failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorWithDetailsResponse'
+              example:
+                statusCode: 400
+                error: Plugin dbDialog:1.2.3 not found
+                code: TRANSFORMATION
+                details:
+                  - type: PLUGIN
+                    message: Plugin dbDialog:1.2.3 not found
+                    severity: ERROR
+                    details:
+                      nodeId: debugDialog_1
+                      plugin:
+                        name: dbDialog
+                        version: 1.2.3
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: debug_graph
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: true
@@ -1418,6 +1597,8 @@ paths:
           required: true
           x-showExample: false
         - $ref: '#/components/parameters/VersionId'
+          x-showExample: false
+        - $ref: '#/components/parameters/WaylayRevision'
           x-showExample: false
       requestBody:
         $ref: '#/components/requestBodies/ExecutePlugsSpecification'
@@ -1953,6 +2134,17 @@ components:
         description:
           type: string
           description: Description of the template
+        iconURL:
+          type: string
+          format: url
+          description: URL to an icon representing the template
+        protected:
+          type: boolean
+          description: >-
+            Flag to indicate if the template is protected. Can be set only by
+            user with protected permission. Modification or deletion of template
+            is not allowed to user without protected permission.
+          default: false
         notes:
           description: List of notes as explanation for users
           type: array
@@ -2002,6 +2194,10 @@ components:
           type: string
         version:
           $ref: '#/components/schemas/Version'
+        iconURL:
+          type: string
+          format: url
+          description: URL to an icon representing the sensor
         properties:
           title: Key-value object of required properties
           type: object
@@ -2063,6 +2259,23 @@ components:
             definition is not defined.
         retryConfig:
           $ref: '#/components/schemas/RetryConfig'
+        pauseExecution:
+          title: >-
+            Boolean to indicate if sensor needs to be paused. Execution can be
+            resumed by calling POST operation
+
+            on /tasks/task/{taskId}/nodes/{nodeId} REST endpoint.
+          type: boolean
+          default: false
+        pauseExecutionTimeout:
+          title: >-
+            Time (in ISO 8601 duration format) before the plugin times out if it
+            is paused and not resumed, defaults to PT1H (1 hour)
+          type: string
+          default: PT1H
+        description:
+          title: Description of the sensor node
+          type: string
       additionalProperties: false
       description: Representation of a sensor in a Rule Template.
       example:
@@ -2103,6 +2316,9 @@ components:
             defaults to PT50S (50 seconds)
           type: string
           default: PT50S
+        description:
+          title: Description of the actuator node
+          type: string
       additionalProperties: false
       description: Representation of an actuator in a Rule Template.
       example:
@@ -2281,6 +2497,19 @@ components:
             - type: number
             - type: boolean
             - type: object
+        overrideByStream:
+          description: >-
+            Override variable value by streamed data parameter with the same
+            name in reactive tasks if this property set to true
+          type: boolean
+          default: false
+        overrideByData:
+          description: >-
+            Override variable value by last value of task node's resource
+            timeseries metric with the same name. Task node should be linked to
+            some resource.
+          type: boolean
+          default: false
       example:
         name: city
         displayName: City
@@ -2356,6 +2585,7 @@ components:
       type: string
       enum:
         - running
+        - pending
         - stopped
         - failed
       description: Status of a task
@@ -2428,6 +2658,17 @@ components:
           type: object
           example:
             threshold: 13
+        nodesRawData:
+          title: input data for template node debug
+          description: >-
+            The input data for the template execution. The data is used to
+            inject the actual data into the template execution nodes map.
+          type: object
+          example:
+            dice_1:
+              state: ONE
+              randomValue: 0.9192044737545031
+            dice_2: {}
         resourceMetaData:
           title: Resource Metadata
           description: >-
@@ -3063,6 +3304,13 @@ components:
           title: Only evaluate gates when all inputs are observed
           type: boolean
           default: false
+        protected:
+          title: >-
+            whether the task is protected or not. Can be set only by user with
+            protected permission. Can not be modified/deleted by user without
+            protected permission.
+          type: boolean
+          default: false
         tags:
           $ref: '#/components/schemas/TagsTaskObject'
         variables:
@@ -3235,6 +3483,17 @@ components:
               required:
                 - errorsCount
                 - errorsRate
+            pendingNodes:
+              type: object
+              description: >-
+                returns the nodes that are pending to be resumed. Every key in
+                the object is the node name. Can be multiple pending nodes in
+                the task.
+              example:
+                pendingNodes:
+                  dice_1: {}
+                  debugMessage_1:
+                    message: hello John
     TaskEntityPagingResult:
       type: object
       allOf:
@@ -3389,8 +3648,10 @@ components:
             anyOf:
               - pattern: ^state=
                 description: State update command
-              - pattern: ^operation=
-                description: Operation command
+              - pattern: ^operation=start
+                description: Start node execution
+              - pattern: ^operation=resume
+                description: Resume node execution
           example: state=Alive
     StreamData:
       description: Push (real-time) Data Specification
@@ -3476,6 +3737,14 @@ components:
         items:
           type: string
           example: myFirstNode
+    NodeToDebug:
+      name: nodeToDebug
+      in: query
+      description: node to debug inside template or graph
+      required: true
+      schema:
+        type: string
+        example: myFirstNode
     MaxTps:
       name: maxTps
       in: query
@@ -3513,6 +3782,15 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/Version'
+    WaylayRevision:
+      name: x-waylay-revision
+      in: header
+      description: >-
+        Draft plugin revision. Revision number returned by plug registry in
+        metadata of sensor
+      required: false
+      schema:
+        type: string
     PagingHits:
       name: hits
       in: query
@@ -3535,6 +3813,13 @@ components:
           - bn
           - simplified
         default: bn
+    ForceStop:
+      name: forceStop
+      in: query
+      description: Force task stop before deletion
+      schema:
+        type: boolean
+        default: false
   responses:
     DefaultSuccessResponse:
       description: Successful Response

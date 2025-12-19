@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 ListTasksTagsKeyParameter = Union[
     Annotated[str, ""], Annotated[float, ""], Annotated[bool, ""]

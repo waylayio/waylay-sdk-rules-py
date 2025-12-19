@@ -39,6 +39,11 @@ sensor_node_model_schema = json.loads(
     "version" : {
       "$ref" : "#/components/schemas/Version"
     },
+    "iconURL" : {
+      "type" : "string",
+      "description" : "URL to an icon representing the sensor",
+      "format" : "url"
+    },
     "properties" : {
       "title" : "Key-value object of required properties",
       "type" : "object"
@@ -97,6 +102,20 @@ sensor_node_model_schema = json.loads(
     },
     "retryConfig" : {
       "$ref" : "#/components/schemas/RetryConfig"
+    },
+    "pauseExecution" : {
+      "title" : "Boolean to indicate if sensor needs to be paused. Execution can be resumed by calling POST operation\non /tasks/task/{taskId}/nodes/{nodeId} REST endpoint.",
+      "type" : "boolean",
+      "default" : false
+    },
+    "pauseExecutionTimeout" : {
+      "title" : "Time (in ISO 8601 duration format) before the plugin times out if it is paused and not resumed, defaults to PT1H (1 hour)",
+      "type" : "string",
+      "default" : "PT1H"
+    },
+    "description" : {
+      "title" : "Description of the sensor node",
+      "type" : "string"
     }
   },
   "additionalProperties" : false,

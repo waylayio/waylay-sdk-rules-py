@@ -17,7 +17,10 @@ from typing import (
 
 from typing_extensions import Annotated
 
-PossibleValuesEnumDeclarationInner = Union[
-    Annotated[str, ""], Annotated[float, ""], Annotated[object, ""]
+from ..models.template_details import TemplateDetails
+from ..models.template_entity_metadata import TemplateEntityMetadata
+
+ListTemplates200ResponseInner = Union[
+    Annotated[TemplateEntityMetadata, ""], Annotated[TemplateDetails, ""]
 ]
-"""PossibleValuesEnumDeclarationInner."""
+"""ListTemplates200ResponseInner."""

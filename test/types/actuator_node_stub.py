@@ -54,6 +54,10 @@ actuator_node_model_schema = json.loads(
       "title" : "Time (in ISO 8601 duration format) before the plugin times out, defaults to PT50S (50 seconds)",
       "type" : "string",
       "default" : "PT50S"
+    },
+    "description" : {
+      "title" : "Description of the actuator node",
+      "type" : "string"
     }
   },
   "additionalProperties" : false,

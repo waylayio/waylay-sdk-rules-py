@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.plugin_update_spec_from_version_one_of import (
     PluginUpdateSpecFromVersionOneOf,

@@ -18,6 +18,7 @@ class TaskStatus(str, Enum):
     """Status of a task."""
 
     RUNNING = "running"
+    PENDING = "pending"
     STOPPED = "stopped"
     FAILED = "failed"
 

@@ -4,6 +4,7 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**copy**](TemplatesApi.md#copy) | **PATCH** /rules/v1/templates/{name} | Copy Template
 [**create**](TemplatesApi.md#create) | **POST** /rules/v1/templates | Create Template
 [**delete**](TemplatesApi.md#delete) | **DELETE** /rules/v1/templates/{name} | Delete Template
 [**get_discovery**](TemplatesApi.md#get_discovery) | **GET** /rules/v1/discoveryTemplate | Retrieve Discovery Template
@@ -12,6 +13,86 @@ Method | HTTP request | Description
 [**replace**](TemplatesApi.md#replace) | **PUT** /rules/v1/templates/{name} | Update Template
 [**set**](TemplatesApi.md#set) | **PUT** /rules/v1/discoveryTemplate | Set Discovery Template
 [**upgrade_plugins**](TemplatesApi.md#upgrade_plugins) | **PATCH** /rules/v1/templates | Upgrade Plugins
+
+# **copy**
+> copy(
+> name: str,
+> query: CopyQuery,
+> headers
+> ) -> ReplaceTemplate200Response
+
+Copy Template
+
+Copy a template. The creationtime and lastmodifiedtime will be updated.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
+from waylay.services.rules.models.replace_template200_response import ReplaceTemplate200Response
+try:
+    # Copy Template
+    # calls `PATCH /rules/v1/templates/{name}`
+    api_response = await waylay_client.rules.templates.copy(
+        'name_example', # name | path param "name"
+        # query parameters:
+        query = {
+            'newName': 'new_name_example'
+        },
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = None # object |  (optional)
+    )
+    print("The response of rules.templates.copy:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling rules.templates.copy: %s\n" % e)
+```
+
+### Endpoint
+```
+PATCH /rules/v1/templates/{name}
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**name** | **str** | path parameter `"name"` | Unique Template identifier | 
+**json** | **object** | json request body |  | [optional] 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['newName']** (dict) <br> **query.new_name** (Query) | **str** | query parameter `"newName"` | New name for the copied template | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`ReplaceTemplate200Response`** |  | [ReplaceTemplate200Response](ReplaceTemplate200Response.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Template Copied |  -  |
+**400** | Copy Failed |  -  |
+**404** | Template Not Found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create**
 > create(
@@ -295,7 +376,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > list(
 > query: ListQuery,
 > headers
-> ) -> List[TemplateEntityMetadata]
+> ) -> List[ListTemplates200ResponseInner]
 
 List Templates
 
@@ -314,7 +395,8 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.template_entity_metadata import TemplateEntityMetadata
+from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
+from waylay.services.rules.models.list_templates200_response_inner import ListTemplates200ResponseInner
 try:
     # List Templates
     # calls `GET /rules/v1/templates`
@@ -324,6 +406,7 @@ try:
             'id': 'id_example'
             'plugin': 'mySensor:1.0.3'
             'tags.X': 'tags.myref: 3904859080956'
+            'includegraph': False
         },
     )
     print("The response of rules.templates.list:\n")
@@ -343,19 +426,21 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['hits']** (dict) <br> **query.hits** (Query) | **int** | query parameter `"hits"` | (Paging) maximal number of items returned | [optional] [default 10]
 **query['startIndex']** (dict) <br> **query.start_index** (Query) | **int** | query parameter `"startIndex"` | (Paging) items to skip in the listing | [optional] [default 0]
+**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **query['filter']** (dict) <br> **query.filter** (Query) | **str** | query parameter `"filter"` | fuzzy search on multiple properties | [optional] 
 **query['ids']** (dict) <br> **query.ids** (Query) | [**List[str]**](str.md) | query parameter `"ids"` | comma separated string of template names | [optional] 
 **query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | filter on template name | [optional] 
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` | either name of a plugin (e.g. &#x60;mySensor&#x60;), or full version specification of the plug (e.g &#x60;mySensor:1.0.3&#x60;) | [optional] 
 **query['tags.X']** (dict) <br> **query.tags_x** (Query) | **str** | query parameter `"tags.X"` |  | [optional] 
 **query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter templates that have one of the tag keys in the array | [optional] 
+**query['includegraph']** (dict) <br> **query.includegraph** (Query) | **bool** | query parameter `"includegraph"` | If &#x60;true&#x60;, the response will include the graph of the template. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`List[TemplateEntityMetadata]`** |  | [List[TemplateEntityMetadata]](TemplateEntityMetadata.md)
+Literal[""] _(default)_  | False _(default)_ | **`List[ListTemplates200ResponseInner]`** |  | [List[ListTemplates200ResponseInner]](ListTemplates200ResponseInner.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 

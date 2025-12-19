@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.one_time_task_setting import OneTimeTaskSetting
 from ..models.periodic_task_setting import PeriodicTaskSetting

@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import List, Union
+from typing import List
 from urllib.parse import quote
 
 import pytest
@@ -23,9 +23,11 @@ from waylay.services.rules.api import TemplatesApi
 from waylay.services.rules.service import RulesService
 
 from ..types.create_template201_response_stub import CreateTemplate201ResponseStub
+from ..types.list_templates200_response_inner_stub import (
+    ListTemplates200ResponseInnerStub,
+)
 from ..types.replace_template200_response_stub import ReplaceTemplate200ResponseStub
 from ..types.template_details_stub import TemplateDetailsStub
-from ..types.template_entity_metadata_stub import TemplateEntityMetadataStub
 from ..types.template_entity_stub import TemplateEntityStub
 from ..types.template_modification_stub import TemplateModificationStub
 from ..types.upgrade_plugins_templates200_response_stub import (
@@ -39,12 +41,13 @@ MODELS_AVAILABLE = (
 if MODELS_AVAILABLE:
     from waylay.services.rules.models import (
         CreateTemplate201Response,
+        ListTemplates200ResponseInner,
         ReplaceTemplate200Response,
         TemplateDetails,
-        TemplateEntityMetadata,
         UpgradePluginsTemplates200Response,
     )
     from waylay.services.rules.queries.templates_api import (
+        CopyQuery,
         GetQuery,
         ListQuery,
         SetQuery,
@@ -64,6 +67,60 @@ def templates_api(waylay_api_client: ApiClient) -> TemplatesApi:
 def test_registered(waylay_client: WaylayClient):
     """Test that TemplatesApi api is registered in the sdk client."""
     assert isinstance(waylay_client.rules.templates, TemplatesApi)
+
+
+def _copy_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, name: str):
+    mock_response = ReplaceTemplate200ResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PATCH",
+        "url": re.compile(f"^{gateway_url}/rules/v1/templates/{name}(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_copy(service: RulesService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for copy
+    Copy Template
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        # optionally use CopyQuery to validate and reuse parameters
+        "query": CopyQuery(
+            new_name="new_name_example",
+        ),
+        "json": None,
+    }
+    _copy_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.templates.copy(name, **kwargs)
+    check_type(resp, ReplaceTemplate200Response)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_copy_without_types(
+    service: RulesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for copy with models not installed
+    Copy Template
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "newName": "new_name_example",
+        },
+        "json": None,
+    }
+    _copy_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.templates.copy(name, **kwargs)
+    check_type(resp, Model)
 
 
 def _create_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
@@ -89,7 +146,7 @@ async def test_create(service: RulesService, gateway_url: str, httpx_mock: HTTPX
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.create(**kwargs)
-    check_type(resp, Union[CreateTemplate201Response,])
+    check_type(resp, CreateTemplate201Response)
 
 
 @pytest.mark.asyncio
@@ -175,13 +232,7 @@ async def test_get_discovery(
     kwargs = {}
     _get_discovery_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.get_discovery(**kwargs)
-    check_type(
-        resp,
-        Union[
-            TemplateDetails,
-            None,
-        ],
-    )
+    check_type(resp, TemplateDetails | None)
 
 
 @pytest.mark.asyncio
@@ -227,7 +278,7 @@ async def test_get(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
     }
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.templates.get(name, **kwargs)
-    check_type(resp, Union[TemplateDetails,])
+    check_type(resp, TemplateDetails)
 
 
 @pytest.mark.asyncio
@@ -252,7 +303,7 @@ async def test_get_without_types(
 
 
 def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
-    mock_response = [TemplateEntityMetadataStub.create_json()]
+    mock_response = [ListTemplates200ResponseInnerStub.create_json()]
     httpx_mock_kwargs = {
         "method": "GET",
         "url": re.compile(f"^{gateway_url}/rules/v1/templates(\\?.*)?"),
@@ -274,17 +325,19 @@ async def test_list(service: RulesService, gateway_url: str, httpx_mock: HTTPXMo
         "query": ListQuery(
             hits=10,
             start_index=0,
+            format="bn",
             filter="filter_example",
-            ids=[],
+            ids=["internet.json"],
             id="id_example",
             plugin="mySensor:1.0.3",
             tags_x="tags.myref: 3904859080956",
-            tags=[],
+            tags=[""],
+            includegraph=False,
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.list(**kwargs)
-    check_type(resp, Union[List[TemplateEntityMetadata],])
+    check_type(resp, List[ListTemplates200ResponseInner])
 
 
 @pytest.mark.asyncio
@@ -300,12 +353,14 @@ async def test_list_without_types(
         "query": {
             "hits": 10,
             "startIndex": 0,
+            "format": "bn",
             "filter": "filter_example",
-            "ids": [],
+            "ids": ["internet.json"],
             "id": "id_example",
             "plugin": "mySensor:1.0.3",
             "tags.X": "tags.myref: 3904859080956",
-            "tags": [],
+            "tags": [""],
+            "includegraph": False,
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -338,7 +393,7 @@ async def test_replace(service: RulesService, gateway_url: str, httpx_mock: HTTP
     }
     _replace_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.templates.replace(name, **kwargs)
-    check_type(resp, Union[ReplaceTemplate200Response,])
+    check_type(resp, ReplaceTemplate200Response)
 
 
 @pytest.mark.asyncio
@@ -386,13 +441,7 @@ async def test_set(service: RulesService, gateway_url: str, httpx_mock: HTTPXMoc
     }
     _set_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.set(**kwargs)
-    check_type(
-        resp,
-        Union[
-            TemplateDetails,
-            None,
-        ],
-    )
+    check_type(resp, TemplateDetails | None)
 
 
 @pytest.mark.asyncio
@@ -446,7 +495,7 @@ async def test_upgrade_plugins(
     }
     _upgrade_plugins_set_mock_response(httpx_mock, gateway_url)
     resp = await service.templates.upgrade_plugins(**kwargs)
-    check_type(resp, Union[UpgradePluginsTemplates200Response,])
+    check_type(resp, UpgradePluginsTemplates200Response)
 
 
 @pytest.mark.asyncio

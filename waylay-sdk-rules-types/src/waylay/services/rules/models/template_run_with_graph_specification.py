@@ -17,7 +17,6 @@ from pydantic import (
     ConfigDict,
     Field,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.graph_definition import GraphDefinition
@@ -36,6 +35,11 @@ class TemplateRunWithGraphSpecification(WaylayBaseModel):
     variables: Dict[str, Any] | None = Field(
         default=None,
         description="The values for the variables declared in the template",
+    )
+    nodes_raw_data: Dict[str, Any] | None = Field(
+        default=None,
+        description="The input data for the template execution. The data is used to inject the actual data into the template execution nodes map.",
+        alias="nodesRawData",
     )
     resource_meta_data: Dict[str, Dict[str, Any]] | None = Field(
         default=None,
