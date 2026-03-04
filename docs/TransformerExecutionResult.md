@@ -1,6 +1,11 @@
 # TransformerExecutionResult
 
 
+**Source:** `waylay.services.rules.models.transformer_execution_result`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,29 @@ Name | Type | Description | Notes
 **data** | **object** |  | [optional] 
 **log** | **List[object]** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.rules.models.transformer_execution_result import TransformerExecutionResult
+from waylay.services.rules.models.transformer_execution_result import (
+    TransformerExecutionResult,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TransformerExecutionResult from a JSON string
-transformer_execution_result_instance = TransformerExecutionResult.from_json(json)
-# print the JSON string representation of the object
-print TransformerExecutionResult.to_json()
+transformer_execution_result = TransformerExecutionResult(
+    result=..., error=..., data=..., log=...
+)
 
-# convert the object into a dict
-transformer_execution_result_dict = transformer_execution_result_instance.to_dict()
-# create an instance of TransformerExecutionResult from a dict
-transformer_execution_result_form_dict = transformer_execution_result.from_dict(transformer_execution_result_dict)
+# Create from JSON
+transformer_execution_result = TransformerExecutionResult.from_json(
+    '{ "result": ..., "error": ..., "data": ..., "log": ... }'
+)
+
+# Export to dictionary
+transformer_execution_result_dict = transformer_execution_result.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

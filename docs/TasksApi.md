@@ -17,7 +17,7 @@ Method | HTTP request | Description
 > create(
 > query: CreateQuery,
 > headers
-> ) -> CreateTask201Response
+> ) -> TaskCreated
 
 Create Task
 
@@ -26,8 +26,6 @@ Create a new task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -36,22 +34,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.create_task201_response import CreateTask201Response
+from waylay.services.rules.models.task_created import TaskCreated
 from waylay.services.rules.models.task_specification import TaskSpecification
+
 try:
     # Create Task
     # calls `POST /rules/v1/tasks`
     api_response = await waylay_client.rules.tasks.create(
         # query parameters:
-        query = {
-            'failOnWarning': False
-            'returnWarnings': False
+        query={
+            "failOnWarning": False,
+            "returnWarnings": False,
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TaskSpecification() # TaskSpecification | Task Specification
+        json=waylay.services.rules.TaskSpecification(),  # TaskSpecification | Task Specification
     )
-    print("The response of rules.tasks.create:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.create: %s\n" % e)
 ```
@@ -74,7 +72,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`CreateTask201Response`** |  | [CreateTask201Response](CreateTask201Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`TaskCreated`** |  | [TaskCreated](TaskCreated.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -106,8 +104,6 @@ Delete a task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -120,10 +116,9 @@ try:
     # Delete Task
     # calls `DELETE /rules/v1/tasks/{taskId}`
     await waylay_client.rules.tasks.delete(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
         # query parameters:
-        query = {
-        },
+        query={},
     )
 except ApiError as e:
     print("Exception when calling rules.tasks.delete: %s\n" % e)
@@ -178,8 +173,6 @@ Getting the configuration of an existing task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -188,19 +181,18 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
+from waylay.services.rules.models.graph_format import GraphFormat
 from waylay.services.rules.models.task_specification import TaskSpecification
+
 try:
     # Get Task Configuration
     # calls `GET /rules/v1/tasks/{taskId}/conf`
     api_response = await waylay_client.rules.tasks.get_configuration(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
         # query parameters:
-        query = {
-        },
+        query={},
     )
-    print("The response of rules.tasks.get_configuration:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.get_configuration: %s\n" % e)
 ```
@@ -215,7 +207,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
+**query['format']** (dict) <br> **query.format** (Query) | [**GraphFormat**](GraphFormat.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -245,7 +237,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > task_id: str,
 > query: GetQuery,
 > headers
-> ) -> TaskListingInner
+> ) -> TaskWithRuntimeInfo
 
 Retrieve Task Details
 
@@ -254,8 +246,6 @@ Retrieve the details of a task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -264,19 +254,18 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
-from waylay.services.rules.models.task_listing_inner import TaskListingInner
+from waylay.services.rules.models.graph_format import GraphFormat
+from waylay.services.rules.models.task_with_runtime_info import TaskWithRuntimeInfo
+
 try:
     # Retrieve Task Details
     # calls `GET /rules/v1/tasks/{taskId}`
     api_response = await waylay_client.rules.tasks.get(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
         # query parameters:
-        query = {
-        },
+        query={},
     )
-    print("The response of rules.tasks.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.get: %s\n" % e)
 ```
@@ -291,14 +280,14 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **task_id** | **str** | path parameter `"taskId"` | Unique Task identifier | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
+**query['format']** (dict) <br> **query.format** (Query) | [**GraphFormat**](GraphFormat.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`TaskListingInner`** |  | [TaskListingInner](TaskListingInner.md)
+Literal[""] _(default)_  | False _(default)_ | **`TaskWithRuntimeInfo`** |  | [TaskWithRuntimeInfo](TaskWithRuntimeInfo.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -320,7 +309,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > list(
 > query: ListQuery,
 > headers
-> ) -> List[TaskListingInner]
+> ) -> List[TaskWithRuntimeInfo]
 
 Query Multiple Tasks
 
@@ -329,8 +318,6 @@ Query multiple tasks.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -339,30 +326,30 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
-from waylay.services.rules.models.task_listing_inner import TaskListingInner
+from waylay.services.rules.models.graph_format import GraphFormat
 from waylay.services.rules.models.task_scenario_type import TaskScenarioType
 from waylay.services.rules.models.task_status import TaskStatus
+from waylay.services.rules.models.task_with_runtime_info import TaskWithRuntimeInfo
+
 try:
     # Query Multiple Tasks
     # calls `GET /rules/v1/tasks`
     api_response = await waylay_client.rules.tasks.list(
         # query parameters:
-        query = {
-            'resource': 'resource_example'
-            'resourceType': 'resource_type_example'
-            'type': 'scheduled'
-            'status': 'running'
-            'id': 'id_example'
-            'tags.key': 3904859080956
-            'finishedBefore': 56
-            'createdAfter': 1661990400000
-            'createdBefore': 1662768000000
-            'includeHealth': False
+        query={
+            "resource": "resource_example",
+            "resourceType": "resource_type_example",
+            "type": "scheduled",
+            "status": "running",
+            "id": "id_example",
+            "tags.key": 3904859080956,
+            "finishedBefore": 56,
+            "createdAfter": 1661990400000,
+            "createdBefore": 1662768000000,
+            "includeHealth": False,
         },
     )
-    print("The response of rules.tasks.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.list: %s\n" % e)
 ```
@@ -378,20 +365,20 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['hits']** (dict) <br> **query.hits** (Query) | **int** | query parameter `"hits"` | (Paging) maximal number of items returned | [optional] [default 10]
 **query['startIndex']** (dict) <br> **query.start_index** (Query) | **int** | query parameter `"startIndex"` | (Paging) items to skip in the listing | [optional] [default 0]
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
+**query['format']** (dict) <br> **query.format** (Query) | [**GraphFormat**](GraphFormat.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` |  | [optional] 
 **query['resource']** (dict) <br> **query.resource** (Query) | **str** | query parameter `"resource"` |  | [optional] 
 **query['resourceType']** (dict) <br> **query.resource_type** (Query) | **str** | query parameter `"resourceType"` |  | [optional] 
-**query['type']** (dict) <br> **query.type** (Query) | [**TaskScenarioType**](.md) | query parameter `"type"` |  | [optional] 
-**query['status']** (dict) <br> **query.status** (Query) | [**TaskStatus**](.md) | query parameter `"status"` |  | [optional] 
-**query['ids']** (dict) <br> **query.ids** (Query) | [**List[str]**](str.md) | query parameter `"ids"` |  | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**TaskScenarioType**](TaskScenarioType.md) | query parameter `"type"` |  | [optional] 
+**query['status']** (dict) <br> **query.status** (Query) | [**TaskStatus**](TaskStatus.md) | query parameter `"status"` |  | [optional] 
+**query['ids']** (dict) <br> **query.ids** (Query) | **List[str]** | query parameter `"ids"` |  | [optional] 
 **query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` |  | [optional] 
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` |  | [optional] 
 **query['template']** (dict) <br> **query.template** (Query) | **str** | query parameter `"template"` |  | [optional] 
 **query['filter']** (dict) <br> **query.filter** (Query) | **str** | query parameter `"filter"` | fuzzy search on multiple properties | [optional] 
 **query['resourceMetadataExpression']** (dict) <br> **query.resource_metadata_expression** (Query) | **str** | query parameter `"resourceMetadataExpression"` | return tasks that has linked resource from a list returned by resource metadata query. | [optional] 
-**query['tags.key']** (dict) <br> **query.tags_key** (Query) | [**ListTasksTagsKeyParameter**](.md) | query parameter `"tags.key"` | Parameter is &#x60;form&#x60; style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id&#x3D;queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the &#x60;tags.&lt;key&gt;&#x60; query parameter without a value, tasks which have a value for tag &#x60;&lt;key&gt;&#x60; will be returned | [optional] 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter tasks that have one of the tag keys in the array | [optional] 
+**query['tags.key']** (dict) <br> **query.tags_key** (Query) | [**ListTasksTagsKey**](ListTasksTagsKey.md) | query parameter `"tags.key"` | Parameter is &#x60;form&#x60; style serialized, with explode: true  See [Query multiple tasks tag examples](/#/api/rules/?id&#x3D;queryTagExamples)  You can add the same tag query parameter multiple times with different values, which will be applied with a logical OR.  You can specify the &#x60;tags.&lt;key&gt;&#x60; query parameter without a value, tasks which have a value for tag &#x60;&lt;key&gt;&#x60; will be returned | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | **List[str]** | query parameter `"tags"` | Filter tasks that have one of the tag keys in the array | [optional] 
 **query['finishedBefore']** (dict) <br> **query.finished_before** (Query) | **int** | query parameter `"finishedBefore"` | Tasks stopped before provided time will be returned. | [optional] 
 **query['createdAfter']** (dict) <br> **query.created_after** (Query) | **int** | query parameter `"createdAfter"` | Tasks created after provided time will be returned. | [optional] 
 **query['createdBefore']** (dict) <br> **query.created_before** (Query) | **int** | query parameter `"createdBefore"` | Tasks created before provided time will be returned | [optional] 
@@ -402,7 +389,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`List[TaskListingInner]`** |  | [List[TaskListingInner]](TaskListingInner.md)
+Literal[""] _(default)_  | False _(default)_ | **`List[TaskWithRuntimeInfo]`** |  | [List[TaskWithRuntimeInfo]](TaskWithRuntimeInfo.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -432,8 +419,6 @@ Update a task.  Remark that the full specification of the task must be given
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -444,16 +429,16 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.task_entity import TaskEntity
 from waylay.services.rules.models.task_specification import TaskSpecification
+
 try:
     # Update Task
     # calls `PUT /rules/v1/tasks/{taskId}`
     api_response = await waylay_client.rules.tasks.replace(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TaskSpecification() # TaskSpecification | Task Specification
+        json=waylay.services.rules.TaskSpecification(),  # TaskSpecification | Task Specification
     )
-    print("The response of rules.tasks.replace:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.replace: %s\n" % e)
 ```
@@ -506,8 +491,6 @@ Start a task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -517,14 +500,14 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.task_entity import TaskEntity
+
 try:
     # Start Task
     # calls `POST /rules/v1/tasks/{taskId}/command/start`
     api_response = await waylay_client.rules.tasks.start(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
     )
-    print("The response of rules.tasks.start:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.start: %s\n" % e)
 ```
@@ -576,8 +559,6 @@ Stop a task.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -587,14 +568,14 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.task_entity import TaskEntity
+
 try:
     # Stop Task
     # calls `POST /rules/v1/tasks/{taskId}/command/stop`
     api_response = await waylay_client.rules.tasks.stop(
-        'task_id_example', # task_id | path param "taskId"
+        "task_id_example",  # task_id | path param "taskId"
     )
-    print("The response of rules.tasks.stop:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks.stop: %s\n" % e)
 ```

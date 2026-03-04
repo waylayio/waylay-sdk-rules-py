@@ -1,6 +1,11 @@
 # ExecutePlugsSpecification
 
 
+**Source:** `waylay.services.rules.models.execute_plugs_specification`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,29 @@ Name | Type | Description | Notes
 **resource** | **str** | Unique resource identifier | [optional] 
 **stream_data** | **object** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ExecutePlugsSpecification from a JSON string
-execute_plugs_specification_instance = ExecutePlugsSpecification.from_json(json)
-# print the JSON string representation of the object
-print ExecutePlugsSpecification.to_json()
+execute_plugs_specification = ExecutePlugsSpecification(
+    properties=..., resource=..., stream_data=...
+)
 
-# convert the object into a dict
-execute_plugs_specification_dict = execute_plugs_specification_instance.to_dict()
-# create an instance of ExecutePlugsSpecification from a dict
-execute_plugs_specification_form_dict = execute_plugs_specification.from_dict(execute_plugs_specification_dict)
+# Create from JSON
+execute_plugs_specification = ExecutePlugsSpecification.from_json(
+    '{ "properties": ..., "resource": ..., "streamData": ... }'
+)
+
+# Export to dictionary
+execute_plugs_specification_dict = execute_plugs_specification.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

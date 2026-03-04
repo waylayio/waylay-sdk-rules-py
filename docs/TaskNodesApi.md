@@ -24,8 +24,6 @@ Get the supported states of a node.  #### visibility This definition has visibil
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -38,11 +36,10 @@ try:
     # Get Supported States
     # calls `GET /rules/v1/tasks/{taskId}/nodes/{nodeId}/states`
     api_response = await waylay_client.rules.task_nodes.get_states(
-        'task_id_example', # task_id | path param "taskId"
-        'node_id_example', # node_id | path param "nodeId"
+        "task_id_example",  # task_id | path param "taskId"
+        "node_id_example",  # node_id | path param "nodeId"
     )
-    print("The response of rules.task_nodes.get_states:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.task_nodes.get_states: %s\n" % e)
 ```
@@ -94,8 +91,6 @@ Get current states (posteriors) and raw data of the node.  #### visibility This 
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -108,11 +103,10 @@ try:
     # Get Current States
     # calls `GET /rules/v1/tasks/{taskId}/nodes/{nodeId}`
     api_response = await waylay_client.rules.task_nodes.get(
-        'task_id_example', # task_id | path param "taskId"
-        'node_id_example', # node_id | path param "nodeId"
+        "task_id_example",  # task_id | path param "taskId"
+        "node_id_example",  # node_id | path param "nodeId"
     )
-    print("The response of rules.task_nodes.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.task_nodes.get: %s\n" % e)
 ```
@@ -165,8 +159,6 @@ Set the current state and rawData for the node. This can only be done for a runn
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -176,17 +168,17 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.node_state_specification import NodeStateSpecification
+
 try:
     # Set Node State
     # calls `PATCH /rules/v1/tasks/{taskId}/nodes/{nodeId}`
     api_response = await waylay_client.rules.task_nodes.patch(
-        'task_id_example', # task_id | path param "taskId"
-        'node_id_example', # node_id | path param "nodeId"
+        "task_id_example",  # task_id | path param "taskId"
+        "node_id_example",  # node_id | path param "nodeId"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.NodeStateSpecification() # NodeStateSpecification | 
+        json=waylay.services.rules.NodeStateSpecification(),  # NodeStateSpecification |
     )
-    print("The response of rules.task_nodes.patch:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.task_nodes.patch: %s\n" % e)
 ```
@@ -240,8 +232,6 @@ Post a result to finalize an asynchronous plugin execution using the onetime tok
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -255,18 +245,14 @@ try:
     # calls `POST /rules/v1/tasks/callback`
     api_response = await waylay_client.rules.task_nodes.post(
         # query parameters:
-        query = {
-        },
+        query={},
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 
-        headers = {
-            'content-type': 'application/octet-stream'
-        },
+        # alternatives:
+        headers={"content-type": "application/octet-stream"},
     )
-    print("The response of rules.task_nodes.post:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.task_nodes.post: %s\n" % e)
 ```
@@ -321,8 +307,6 @@ Set the current state of the node.  This call is deprecated. Please use `PATCH /
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -335,18 +319,15 @@ try:
     # Set Current State
     # calls `POST /rules/v1/tasks/{taskId}/nodes/{nodeId}`
     api_response = await waylay_client.rules.task_nodes.update(
-        'task_id_example', # task_id | path param "taskId"
-        'node_id_example', # node_id | path param "nodeId"
+        "task_id_example",  # task_id | path param "taskId"
+        "node_id_example",  # node_id | path param "nodeId"
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 
-        headers = {
-            'content-type': 'text/plain'
-        },
+        # alternatives:
+        headers={"content-type": "text/plain"},
     )
-    print("The response of rules.task_nodes.update:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.task_nodes.update: %s\n" % e)
 ```

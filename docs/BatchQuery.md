@@ -1,6 +1,11 @@
 # BatchQuery
 
 
+**Source:** `waylay.services.rules.models.batch_query`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -17,23 +22,37 @@ Name | Type | Description | Notes
 **created_before** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | [optional] 
 **tags** | **object** | Key-value pairs on which you can set at task creation and later filter tasks | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.batch_query import BatchQuery
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of BatchQuery from a JSON string
-batch_query_instance = BatchQuery.from_json(json)
-# print the JSON string representation of the object
-print BatchQuery.to_json()
+batch_query = BatchQuery(
+    name=...,
+    resource=...,
+    type=...,
+    status=...,
+    template=...,
+    plugin=...,
+    user=...,
+    finished_before=...,
+    created_after=...,
+    created_before=...,
+    tags=...,
+)
 
-# convert the object into a dict
-batch_query_dict = batch_query_instance.to_dict()
-# create an instance of BatchQuery from a dict
-batch_query_form_dict = batch_query.from_dict(batch_query_dict)
+# Create from JSON
+batch_query = BatchQuery.from_json(
+    '{ "name": ..., "resource": ..., "type": ..., "status": ..., "template": ..., "plugin": ..., "user": ..., "finishedBefore": ..., "createdAfter": ..., "createdBefore": ..., "tags": ... }'
+)
+
+# Export to dictionary
+batch_query_dict = batch_query.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

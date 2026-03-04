@@ -18,8 +18,6 @@ Push (real-time) streaming data.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -29,15 +27,15 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.stream_data import StreamData
+
 try:
     # Push Streaming Data
     # calls `POST /rules/v1/data`
     api_response = await waylay_client.rules.push_data.push(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.StreamData() # StreamData | Push (real-time) Data Specification
+        json=waylay.services.rules.StreamData(),  # StreamData | Push (real-time) Data Specification
     )
-    print("The response of rules.push_data.push:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.push_data.push: %s\n" % e)
 ```

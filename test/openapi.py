@@ -24,7 +24,7 @@ def with_example_provider(dct):
     return dct
 
 
-with open("openapi/rules.transformed.openapi.yaml", "r") as file:
+with open("openapi/rules.transformed.openapi.yaml") as file:
     OPENAPI_SPEC = yaml.safe_load(file)
 
 MODEL_DEFINITIONS = OPENAPI_SPEC["components"]["schemas"]
@@ -145,7 +145,7 @@ _batch_operation_model_schema = json.loads(
       "example" : "user/22f6dfdf-a50c-4eab-953e-8d2e56891dbe"
     },
     "operation" : {
-      "$ref" : "#/components/schemas/BatchOperation_operation"
+      "$ref" : "#/components/schemas/BatchOperationSummary"
     },
     "queueTime" : {
       "$ref" : "#/components/schemas/UnixEpochMillis"
@@ -166,6 +166,18 @@ _batch_operation_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"BatchOperation": _batch_operation_model_schema})
+
+_batch_operation_action_model_schema = json.loads(
+    r"""{
+  "title" : "BatchOperationAction",
+  "type" : "string",
+  "example" : "delete",
+  "enum" : [ "updatePlugins", "delete", "start", "restart", "stop", "reload", "updateProperties" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"BatchOperationAction": _batch_operation_action_model_schema})
 
 _batch_operation_enqueued_model_schema = json.loads(
     r"""{
@@ -193,48 +205,6 @@ _batch_operation_enqueued_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "Batch_operation_enqueued": _batch_operation_enqueued_model_schema
-})
-
-_batch_operation_operation_model_schema = json.loads(
-    r"""{
-  "title" : "BatchOperation_operation",
-  "required" : [ "action", "description", "entity" ],
-  "type" : "object",
-  "properties" : {
-    "entity" : {
-      "$ref" : "#/components/schemas/BatchTask_entity"
-    },
-    "action" : {
-      "$ref" : "#/components/schemas/BatchOperation_operation_action"
-    },
-    "description" : {
-      "title" : "description",
-      "type" : "string",
-      "description" : "description of the operations",
-      "example" : "Remove tasks filtered by ids=808aec38-3fb3-4163-a45e-1890e94081ea"
-    }
-  },
-  "description" : "Summary of the batch operation"
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "BatchOperation_operation": _batch_operation_operation_model_schema
-})
-
-_batch_operation_operation_action_model_schema = json.loads(
-    r"""{
-  "title" : "BatchOperation_operation_action",
-  "type" : "string",
-  "example" : "delete",
-  "enum" : [ "updatePlugins", "delete", "start", "restart", "stop", "reload", "updateProperties" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "BatchOperation_operation_action": _batch_operation_operation_action_model_schema
 })
 
 _batch_operation_result_model_schema = json.loads(
@@ -276,6 +246,68 @@ _batch_operation_result_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"BatchOperationResult": _batch_operation_result_model_schema})
+
+_batch_operation_results_model_schema = json.loads(
+    r"""{
+  "title" : "BatchOperationResults",
+  "required" : [ "failure", "success" ],
+  "type" : "object",
+  "properties" : {
+    "success" : {
+      "$ref" : "#/components/schemas/SuccessOperationResult"
+    },
+    "failure" : {
+      "$ref" : "#/components/schemas/FailureOperationResult"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "BatchOperationResults": _batch_operation_results_model_schema
+})
+
+_batch_operation_status_model_schema = json.loads(
+    r"""{
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/BatchOperationResult"
+  }, {
+    "$ref" : "#/components/schemas/BatchOperation"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"BatchOperationStatus": _batch_operation_status_model_schema})
+
+_batch_operation_summary_model_schema = json.loads(
+    r"""{
+  "title" : "BatchOperationSummary",
+  "required" : [ "action", "description", "entity" ],
+  "type" : "object",
+  "properties" : {
+    "entity" : {
+      "$ref" : "#/components/schemas/BatchTask_entity"
+    },
+    "action" : {
+      "$ref" : "#/components/schemas/BatchOperationAction"
+    },
+    "description" : {
+      "title" : "description",
+      "type" : "string",
+      "description" : "description of the operations",
+      "example" : "Remove tasks filtered by ids=808aec38-3fb3-4163-a45e-1890e94081ea"
+    }
+  },
+  "description" : "Summary of the batch operation"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "BatchOperationSummary": _batch_operation_summary_model_schema
+})
 
 _batch_query_model_schema = json.loads(
     r"""{
@@ -353,7 +385,7 @@ _batch_task_command_model_schema = json.loads(
     "required" : [ "action", "entity", "query" ],
     "properties" : {
       "action" : {
-        "$ref" : "#/components/schemas/BatchTaskCommand_allOf_action"
+        "$ref" : "#/components/schemas/BatchTaskCommandAction"
       }
     }
   } ]
@@ -363,9 +395,9 @@ _batch_task_command_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"BatchTaskCommand": _batch_task_command_model_schema})
 
-_batch_task_command_all_of_action_model_schema = json.loads(
+_batch_task_command_action_model_schema = json.loads(
     r"""{
-  "title" : "BatchTaskCommand_allOf_action",
+  "title" : "BatchTaskCommandAction",
   "type" : "string",
   "enum" : [ "delete", "start", "restart", "stop", "reload", "stopAndDelete" ]
 }
@@ -373,7 +405,7 @@ _batch_task_command_all_of_action_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "BatchTaskCommand_allOf_action": _batch_task_command_all_of_action_model_schema
+    "BatchTaskCommandAction": _batch_task_command_action_model_schema
 })
 
 _batch_task_entity_model_schema = json.loads(
@@ -437,7 +469,7 @@ _batch_update_plugin_model_schema = json.loads(
     "required" : [ "action", "actionParameters", "entity", "query" ],
     "properties" : {
       "action" : {
-        "$ref" : "#/components/schemas/TemplateModification_operation"
+        "$ref" : "#/components/schemas/BatchUpdatePluginAction"
       },
       "actionParameters" : {
         "$ref" : "#/components/schemas/PluginUpdateSpec"
@@ -450,6 +482,19 @@ _batch_update_plugin_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"BatchUpdatePlugin": _batch_update_plugin_model_schema})
 
+_batch_update_plugin_action_model_schema = json.loads(
+    r"""{
+  "title" : "BatchUpdatePluginAction",
+  "type" : "string",
+  "enum" : [ "updatePlugins" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "BatchUpdatePluginAction": _batch_update_plugin_action_model_schema
+})
+
 _batch_update_properties_model_schema = json.loads(
     r"""{
   "title" : "BatchUpdateProperties",
@@ -461,7 +506,7 @@ _batch_update_properties_model_schema = json.loads(
     "required" : [ "action", "actionParameters", "entity", "query" ],
     "properties" : {
       "action" : {
-        "$ref" : "#/components/schemas/BatchUpdateProperties_allOf_action"
+        "$ref" : "#/components/schemas/BatchUpdatePropertiesAction"
       },
       "actionParameters" : {
         "$ref" : "#/components/schemas/PropertyUpdatesSpec"
@@ -476,9 +521,9 @@ MODEL_DEFINITIONS.update({
     "BatchUpdateProperties": _batch_update_properties_model_schema
 })
 
-_batch_update_properties_all_of_action_model_schema = json.loads(
+_batch_update_properties_action_model_schema = json.loads(
     r"""{
-  "title" : "BatchUpdateProperties_allOf_action",
+  "title" : "BatchUpdatePropertiesAction",
   "type" : "string",
   "enum" : [ "updateProperties" ]
 }
@@ -486,7 +531,7 @@ _batch_update_properties_all_of_action_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "BatchUpdateProperties_allOf_action": _batch_update_properties_all_of_action_model_schema
+    "BatchUpdatePropertiesAction": _batch_update_properties_action_model_schema
 })
 
 _bayesian_graph_model_schema = json.loads(
@@ -513,55 +558,21 @@ _bayesian_graph_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"BayesianGraph": _bayesian_graph_model_schema})
 
-_create_task_201_response_model_schema = json.loads(
+_cron_schedule_model_schema = json.loads(
     r"""{
-  "required" : [ "ID" ],
+  "title" : "CronSchedule",
+  "required" : [ "cron" ],
   "type" : "object",
   "properties" : {
-    "ID" : {
-      "$ref" : "#/components/schemas/TaskId"
-    },
-    "warnings" : {
-      "type" : "array",
-      "description" : "List of task warning issues. Will only be there if query parameter `returnWarnings` was set to `true`",
-      "items" : {
-        "$ref" : "#/components/schemas/ValidationIssue"
-      }
+    "cron" : {
+      "$ref" : "#/components/schemas/CronExpression"
     }
   }
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "create_task_201_response": _create_task_201_response_model_schema
-})
-
-_create_template_201_response_model_schema = json.loads(
-    r"""{
-  "required" : [ "entity", "statusCode", "uri" ],
-  "type" : "object",
-  "properties" : {
-    "statusCode" : {
-      "type" : "integer",
-      "example" : 201
-    },
-    "uri" : {
-      "type" : "string",
-      "format" : "uri",
-      "example" : "/rules/v1/templates/internet.json"
-    },
-    "entity" : {
-      "$ref" : "#/components/schemas/TemplateEntity"
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "create_template_201_response": _create_template_201_response_model_schema
-})
+MODEL_DEFINITIONS.update({"CronSchedule": _cron_schedule_model_schema})
 
 _error_response_model_schema = json.loads(
     r"""{
@@ -767,21 +778,6 @@ _generic_trigger_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"GenericTrigger": _generic_trigger_model_schema})
 
-_get_batch_operation_200_response_model_schema = json.loads(
-    r"""{
-  "oneOf" : [ {
-    "$ref" : "#/components/schemas/BatchOperationResult"
-  }, {
-    "$ref" : "#/components/schemas/BatchOperation"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "get_batch_operation_200_response": _get_batch_operation_200_response_model_schema
-})
-
 _graph_definition_model_schema = json.loads(
     r"""{
   "title" : "GraphDefinition",
@@ -796,7 +792,7 @@ _graph_definition_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"GraphDefinition": _graph_definition_model_schema})
 
-_list_tasks_format_parameter_model_schema = json.loads(
+_graph_format_model_schema = json.loads(
     r"""{
   "type" : "string",
   "default" : "bn",
@@ -805,11 +801,9 @@ _list_tasks_format_parameter_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "list_tasks_format_parameter": _list_tasks_format_parameter_model_schema
-})
+MODEL_DEFINITIONS.update({"GraphFormat": _graph_format_model_schema})
 
-_list_tasks_tags_key_parameter_model_schema = json.loads(
+_list_tasks_tags_key_model_schema = json.loads(
     r"""{
   "oneOf" : [ {
     "type" : "string"
@@ -822,47 +816,19 @@ _list_tasks_tags_key_parameter_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "list_tasks_tags_key_parameter": _list_tasks_tags_key_parameter_model_schema
-})
+MODEL_DEFINITIONS.update({"ListTasksTags.key": _list_tasks_tags_key_model_schema})
 
-_list_templates_200_response_inner_model_schema = json.loads(
+_log_entry_model_schema = json.loads(
     r"""{
-  "oneOf" : [ {
-    "$ref" : "#/components/schemas/TemplateEntityMetadata"
-  }, {
-    "$ref" : "#/components/schemas/TemplateDetails"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "list_templates_200_response_inner": _list_templates_200_response_inner_model_schema
-})
-
-_log_level_model_schema = json.loads(
-    r"""{
-  "type" : "string",
-  "example" : "INFO",
-  "enum" : [ "DEBUG", "INFO", "WARN", "ERROR", "NONE" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"LogLevel": _log_level_model_schema})
-
-_logs_inner_model_schema = json.loads(
-    r"""{
-  "title" : "Logs_inner",
+  "title" : "LogEntry",
   "required" : [ "level", "message", "time" ],
   "type" : "object",
   "properties" : {
     "time" : {
-      "$ref" : "#/components/schemas/SO8601Timestamp"
+      "$ref" : "#/components/schemas/ISO8601Timestamp"
     },
     "level" : {
-      "$ref" : "#/components/schemas/Logs_inner_level"
+      "$ref" : "#/components/schemas/LogEntryLevel"
     },
     "message" : {
       "title" : "message",
@@ -875,11 +841,11 @@ _logs_inner_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"Logs_inner": _logs_inner_model_schema})
+MODEL_DEFINITIONS.update({"LogEntry": _log_entry_model_schema})
 
-_logs_inner_level_model_schema = json.loads(
+_log_entry_level_model_schema = json.loads(
     r"""{
-  "title" : "Logs_inner_level",
+  "title" : "LogEntryLevel",
   "type" : "string",
   "example" : "INFO",
   "enum" : [ "DEBUG", "INFO", "WARN", "ERROR" ]
@@ -887,7 +853,18 @@ _logs_inner_level_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"Logs_inner_level": _logs_inner_level_model_schema})
+MODEL_DEFINITIONS.update({"LogEntryLevel": _log_entry_level_model_schema})
+
+_log_level_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "example" : "INFO",
+  "enum" : [ "DEBUG", "INFO", "WARN", "ERROR", "NONE" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"LogLevel": _log_level_model_schema})
 
 _node_state_specification_model_schema = json.loads(
     r"""{
@@ -976,7 +953,7 @@ _operation_result_object_model_schema = json.loads(
       "$ref" : "#/components/schemas/UnixEpochMillis"
     },
     "results" : {
-      "$ref" : "#/components/schemas/OperationResultObject_results"
+      "$ref" : "#/components/schemas/BatchOperationResults"
     }
   },
   "description" : "Finished Batch Operation results"
@@ -986,27 +963,6 @@ _operation_result_object_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "OperationResultObject": _operation_result_object_model_schema
-})
-
-_operation_result_object_results_model_schema = json.loads(
-    r"""{
-  "title" : "OperationResultObject_results",
-  "required" : [ "failure", "success" ],
-  "type" : "object",
-  "properties" : {
-    "success" : {
-      "$ref" : "#/components/schemas/SuccessOperationResult"
-    },
-    "failure" : {
-      "$ref" : "#/components/schemas/FailureOperationResult"
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "OperationResultObject_results": _operation_result_object_results_model_schema
 })
 
 _paging_result_model_schema = json.loads(
@@ -1089,6 +1045,16 @@ _plugin_update_spec_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"PluginUpdateSpec": _plugin_update_spec_model_schema})
 
+_plugin_update_spec_any_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "enum" : [ "any" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"PluginUpdateSpecAny": _plugin_update_spec_any_model_schema})
+
 _plugin_update_spec_from_version_model_schema = json.loads(
     r"""{
   "title" : "PluginUpdateSpec_fromVersion",
@@ -1097,7 +1063,7 @@ _plugin_update_spec_from_version_model_schema = json.loads(
   "oneOf" : [ {
     "$ref" : "#/components/schemas/Version"
   }, {
-    "$ref" : "#/components/schemas/PluginUpdateSpec_fromVersion_oneOf"
+    "$ref" : "#/components/schemas/PluginUpdateSpecAny"
   } ]
 }
 """,
@@ -1105,36 +1071,6 @@ _plugin_update_spec_from_version_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "PluginUpdateSpec_fromVersion": _plugin_update_spec_from_version_model_schema
-})
-
-_plugin_update_spec_from_version_one_of_model_schema = json.loads(
-    r"""{
-  "type" : "string",
-  "enum" : [ "any" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "PluginUpdateSpec_fromVersion_oneOf": _plugin_update_spec_from_version_one_of_model_schema
-})
-
-_possible_values__enum_declaration__inner_model_schema = json.loads(
-    r"""{
-  "title" : "Possible_values__enum_declaration__inner",
-  "oneOf" : [ {
-    "type" : "string"
-  }, {
-    "type" : "number"
-  }, {
-    "type" : "object"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "Possible_values__enum_declaration__inner": _possible_values__enum_declaration__inner_model_schema
 })
 
 _property_updates_spec_model_schema = json.loads(
@@ -1173,6 +1109,22 @@ _property_updates_spec_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"PropertyUpdatesSpec": _property_updates_spec_model_schema})
+
+_r_rule_schedule_model_schema = json.loads(
+    r"""{
+  "title" : "RRuleSchedule",
+  "required" : [ "rrule" ],
+  "type" : "object",
+  "properties" : {
+    "rrule" : {
+      "$ref" : "#/components/schemas/RRuleExpression"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RRuleSchedule": _r_rule_schedule_model_schema})
 
 _reactive_task_setting_model_schema = json.loads(
     r"""{
@@ -1250,21 +1202,6 @@ _relation_node_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"RelationNode": _relation_node_model_schema})
 
-_replace_template_200_response_model_schema = json.loads(
-    r"""{
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/TemplateEntityMetadata"
-  }, {
-    "$ref" : "#/components/schemas/SimplifiedGraph"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "replace_template_200_response": _replace_template_200_response_model_schema
-})
-
 _resource_data_injection_model_schema = json.loads(
     r"""{
   "title" : "ResourceDataInjection",
@@ -1322,19 +1259,6 @@ _retry_config_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"RetryConfig": _retry_config_model_schema})
 
-_run_template_log_level_parameter_model_schema = json.loads(
-    r"""{
-  "type" : "string",
-  "default" : "DEBUG",
-  "enum" : [ "DEBUG", "INFO", "WARN", "ERROR" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "run_template_logLevel_parameter": _run_template_log_level_parameter_model_schema
-})
-
 _scheduled_task_setting_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -1342,15 +1266,18 @@ _scheduled_task_setting_model_schema = json.loads(
     "required" : [ "type" ],
     "properties" : {
       "type" : {
-        "$ref" : "#/components/schemas/ScheduledTaskSetting_allOf_type"
+        "$ref" : "#/components/schemas/ScheduledTaskSettingScheduled"
       },
       "timeZone" : {
         "$ref" : "#/components/schemas/TimeZoneId"
       }
     }
   }, {
-    "nullable" : true,
-    "oneOf" : [ ]
+    "oneOf" : [ {
+      "$ref" : "#/components/schemas/RRuleSchedule"
+    }, {
+      "$ref" : "#/components/schemas/CronSchedule"
+    } ]
   } ]
 }
 """,
@@ -1358,9 +1285,9 @@ _scheduled_task_setting_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"ScheduledTaskSetting": _scheduled_task_setting_model_schema})
 
-_scheduled_task_setting_all_of_type_model_schema = json.loads(
+_scheduled_task_setting_scheduled_model_schema = json.loads(
     r"""{
-  "title" : "ScheduledTaskSetting_allOf_type",
+  "title" : "ScheduledTaskSettingScheduled",
   "type" : "string",
   "enum" : [ "scheduled" ]
 }
@@ -1368,7 +1295,7 @@ _scheduled_task_setting_all_of_type_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ScheduledTaskSetting_allOf_type": _scheduled_task_setting_all_of_type_model_schema
+    "ScheduledTaskSettingScheduled": _scheduled_task_setting_scheduled_model_schema
 })
 
 _sensor_execution_result_model_schema = json.loads(
@@ -1552,7 +1479,7 @@ _simplified_graph_model_schema = json.loads(
       "type" : "array",
       "description" : "List of conditions under which actuators/sensors get executed.",
       "items" : {
-        "$ref" : "#/components/schemas/SimplifiedGraph_triggers_inner"
+        "$ref" : "#/components/schemas/TriggerType"
       }
     }
   },
@@ -1562,24 +1489,6 @@ _simplified_graph_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"SimplifiedGraph": _simplified_graph_model_schema})
-
-_simplified_graph_triggers_inner_model_schema = json.loads(
-    r"""{
-  "title" : "SimplifiedGraph_triggers_inner",
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/StateChangeTrigger"
-  }, {
-    "$ref" : "#/components/schemas/StatesTrigger"
-  }, {
-    "$ref" : "#/components/schemas/ExecutionTrigger"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "SimplifiedGraph_triggers_inner": _simplified_graph_triggers_inner_model_schema
-})
 
 _state_change_trigger_model_schema = json.loads(
     r"""{
@@ -1646,7 +1555,7 @@ _stream_data_model_schema = json.loads(
       "$ref" : "#/components/schemas/ResourceId"
     },
     "data" : {
-      "$ref" : "#/components/schemas/stream_data_data"
+      "$ref" : "#/components/schemas/StreamDataPayload"
     }
   }
 }
@@ -1655,7 +1564,7 @@ _stream_data_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"stream_data": _stream_data_model_schema})
 
-_stream_data_data_model_schema = json.loads(
+_stream_data_payload_model_schema = json.loads(
     r"""{
   "oneOf" : [ {
     "type" : "object",
@@ -1681,7 +1590,7 @@ _stream_data_data_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"stream_data_data": _stream_data_data_model_schema})
+MODEL_DEFINITIONS.update({"StreamDataPayload": _stream_data_payload_model_schema})
 
 _success_operation_result_value_model_schema = json.loads(
     r"""{
@@ -1703,6 +1612,50 @@ _success_operation_result_value_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "SuccessOperationResult_value": _success_operation_result_value_model_schema
 })
+
+_task_created_model_schema = json.loads(
+    r"""{
+  "required" : [ "ID" ],
+  "type" : "object",
+  "properties" : {
+    "ID" : {
+      "$ref" : "#/components/schemas/TaskId"
+    },
+    "warnings" : {
+      "type" : "array",
+      "description" : "List of task warning issues. Will only be there if query parameter `returnWarnings` was set to `true`",
+      "items" : {
+        "$ref" : "#/components/schemas/ValidationIssue"
+      }
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TaskCreated": _task_created_model_schema})
+
+_task_creation_settings_model_schema = json.loads(
+    r"""{
+  "title" : "TaskCreationSettings",
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TaskSettings"
+  }, {
+    "required" : [ "name" ],
+    "type" : "object",
+    "properties" : {
+      "start" : {
+        "title" : "boolean to indicate whether task must be started after creation",
+        "type" : "boolean",
+        "default" : true
+      }
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TaskCreationSettings": _task_creation_settings_model_schema})
 
 _task_defaults_element_model_schema = json.loads(
     r"""{
@@ -1795,7 +1748,7 @@ _task_entity_paging_result_model_schema = json.loads(
       "values" : {
         "type" : "array",
         "items" : {
-          "$ref" : "#/components/schemas/TaskEntityPagingResult_allOf_values"
+          "$ref" : "#/components/schemas/TaskWithRuntimeInfo"
         }
       }
     }
@@ -1808,22 +1761,6 @@ _task_entity_paging_result_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "TaskEntityPagingResult": _task_entity_paging_result_model_schema
-})
-
-_task_entity_paging_result_all_of_values_model_schema = json.loads(
-    r"""{
-  "title" : "TaskEntityPagingResult_allOf_values",
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/TaskEntity"
-  }, {
-    "$ref" : "#/components/schemas/TaskRuntimeInformation"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "TaskEntityPagingResult_allOf_values": _task_entity_paging_result_all_of_values_model_schema
 })
 
 _task_from_template_model_schema = json.loads(
@@ -1855,18 +1792,31 @@ _task_from_template_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"TaskFromTemplate": _task_from_template_model_schema})
 
-_task_listing_inner_model_schema = json.loads(
+_task_health_model_schema = json.loads(
     r"""{
-  "allOf" : [ {
-    "$ref" : "#/components/schemas/TaskEntity"
-  }, {
-    "$ref" : "#/components/schemas/TaskRuntimeInformation"
-  } ]
+  "title" : "TaskHealth",
+  "required" : [ "errorsCount", "errorsRate" ],
+  "type" : "object",
+  "properties" : {
+    "errorsCount" : {
+      "title" : "errorsCount",
+      "type" : "integer",
+      "description" : "Number of errors during last 64 task invocations",
+      "format" : "int32"
+    },
+    "errorsRate" : {
+      "title" : "errorsRate",
+      "type" : "number",
+      "description" : "Error rate during last 64 task invocations. 0.0 means no errors, 1.0 means all errors",
+      "format" : "float"
+    }
+  },
+  "description" : "Health of the task"
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"Task_listing_inner": _task_listing_inner_model_schema})
+MODEL_DEFINITIONS.update({"TaskHealth": _task_health_model_schema})
 
 _task_runtime_information_model_schema = json.loads(
     r"""{
@@ -1890,7 +1840,7 @@ _task_runtime_information_model_schema = json.loads(
         "$ref" : "#/components/schemas/UnixEpochMillis"
       },
       "health" : {
-        "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_health"
+        "$ref" : "#/components/schemas/TaskHealth"
       },
       "pendingNodes" : {
         "$ref" : "#/components/schemas/TaskRuntimeInformation_allOf_pendingNodes"
@@ -1903,34 +1853,6 @@ _task_runtime_information_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "TaskRuntimeInformation": _task_runtime_information_model_schema
-})
-
-_task_runtime_information_all_of_health_model_schema = json.loads(
-    r"""{
-  "title" : "TaskRuntimeInformation_allOf_health",
-  "required" : [ "errorsCount", "errorsRate" ],
-  "type" : "object",
-  "properties" : {
-    "errorsCount" : {
-      "title" : "errorsCount",
-      "type" : "integer",
-      "description" : "Number of errors during last 64 task invocations",
-      "format" : "int32"
-    },
-    "errorsRate" : {
-      "title" : "errorsRate",
-      "type" : "number",
-      "description" : "Error rate during last 64 task invocations. 0.0 means no errors, 1.0 means all errors",
-      "format" : "float"
-    }
-  },
-  "description" : "Health of the task"
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "TaskRuntimeInformation_allOf_health": _task_runtime_information_all_of_health_model_schema
 })
 
 _task_scenario_type_model_schema = json.loads(
@@ -2027,7 +1949,7 @@ _task_with_rule_model_schema = json.loads(
         }
       },
       "task" : {
-        "$ref" : "#/components/schemas/TaskWithRule_allOf_task"
+        "$ref" : "#/components/schemas/TaskCreationSettings"
       }
     }
   } ]
@@ -2037,29 +1959,56 @@ _task_with_rule_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"TaskWithRule": _task_with_rule_model_schema})
 
-_task_with_rule_all_of_task_model_schema = json.loads(
+_task_with_runtime_info_model_schema = json.loads(
     r"""{
-  "title" : "TaskWithRule_allOf_task",
+  "title" : "TaskWithRuntimeInfo",
   "allOf" : [ {
-    "$ref" : "#/components/schemas/TaskSettings"
+    "$ref" : "#/components/schemas/TaskEntity"
   }, {
-    "required" : [ "name" ],
-    "type" : "object",
-    "properties" : {
-      "start" : {
-        "title" : "boolean to indicate whether task must be started after creation",
-        "type" : "boolean",
-        "default" : true
-      }
-    }
+    "$ref" : "#/components/schemas/TaskRuntimeInformation"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "TaskWithRule_allOf_task": _task_with_rule_all_of_task_model_schema
-})
+MODEL_DEFINITIONS.update({"TaskWithRuntimeInfo": _task_with_runtime_info_model_schema})
+
+_template_copied_model_schema = json.loads(
+    r"""{
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TemplateEntityMetadata"
+  }, {
+    "$ref" : "#/components/schemas/SimplifiedGraph"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TemplateCopied": _template_copied_model_schema})
+
+_template_created_model_schema = json.loads(
+    r"""{
+  "required" : [ "entity", "statusCode", "uri" ],
+  "type" : "object",
+  "properties" : {
+    "statusCode" : {
+      "type" : "integer",
+      "example" : 201
+    },
+    "uri" : {
+      "type" : "string",
+      "format" : "uri",
+      "example" : "/rules/v1/templates/internet.json"
+    },
+    "entity" : {
+      "$ref" : "#/components/schemas/TemplateEntity"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TemplateCreated": _template_created_model_schema})
 
 _template_details_model_schema = json.loads(
     r"""{
@@ -2179,6 +2128,19 @@ MODEL_DEFINITIONS.update({
     "TemplateEntityMetadata": _template_entity_metadata_model_schema
 })
 
+_template_listing_model_schema = json.loads(
+    r"""{
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/TemplateEntityMetadata"
+  }, {
+    "$ref" : "#/components/schemas/TemplateDetails"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TemplateListing": _template_listing_model_schema})
+
 _template_modification_model_schema = json.loads(
     r"""{
   "required" : [ "operation", "updates" ],
@@ -2217,6 +2179,25 @@ _template_modification_operation_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "TemplateModification_operation": _template_modification_operation_model_schema
+})
+
+_template_plugins_upgraded_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "successful" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/TemplateId"
+      }
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "TemplatePluginsUpgraded": _template_plugins_upgraded_model_schema
 })
 
 _template_run_actuator_result_model_schema = json.loads(
@@ -2333,7 +2314,7 @@ _template_run_invocation_model_schema = json.loads(
       "title" : "Logs",
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/Logs_inner"
+        "$ref" : "#/components/schemas/LogEntry"
       }
     },
     "taskOutput" : {
@@ -2352,6 +2333,17 @@ _template_run_invocation_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "TemplateRunInvocation": _template_run_invocation_model_schema
 })
+
+_template_run_log_level_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "default" : "DEBUG",
+  "enum" : [ "DEBUG", "INFO", "WARN", "ERROR" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TemplateRunLogLevel": _template_run_log_level_model_schema})
 
 _template_run_sensor_result_model_schema = json.loads(
     r"""{
@@ -2473,6 +2465,19 @@ MODEL_DEFINITIONS.update({
     "TemplateRunWithGraphSpecification": _template_run_with_graph_specification_model_schema
 })
 
+_template_updated_model_schema = json.loads(
+    r"""{
+  "allOf" : [ {
+    "$ref" : "#/components/schemas/TemplateEntityMetadata"
+  }, {
+    "$ref" : "#/components/schemas/SimplifiedGraph"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TemplateUpdated": _template_updated_model_schema})
+
 _transformer_execution_result_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -2524,24 +2529,21 @@ _trigger_state_change_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"TriggerStateChange": _trigger_state_change_model_schema})
 
-_upgrade_plugins_templates_200_response_model_schema = json.loads(
+_trigger_type_model_schema = json.loads(
     r"""{
-  "type" : "object",
-  "properties" : {
-    "successful" : {
-      "type" : "array",
-      "items" : {
-        "$ref" : "#/components/schemas/TemplateId"
-      }
-    }
-  }
+  "title" : "TriggerType",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/StateChangeTrigger"
+  }, {
+    "$ref" : "#/components/schemas/StatesTrigger"
+  }, {
+    "$ref" : "#/components/schemas/ExecutionTrigger"
+  } ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "upgradePlugins_templates_200_response": _upgrade_plugins_templates_200_response_model_schema
-})
+MODEL_DEFINITIONS.update({"TriggerType": _trigger_type_model_schema})
 
 _validation_issue_model_schema = json.loads(
     r"""{
@@ -2689,7 +2691,7 @@ _variable_format_model_schema = json.loads(
       "title" : "Possible values (enum declaration)",
       "type" : "array",
       "items" : {
-        "$ref" : "#/components/schemas/Possible_values__enum_declaration__inner"
+        "$ref" : "#/components/schemas/VariableFormatValue"
       }
     }
   },
@@ -2699,6 +2701,22 @@ _variable_format_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"VariableFormat": _variable_format_model_schema})
+
+_variable_format_value_model_schema = json.loads(
+    r"""{
+  "title" : "VariableFormatValue",
+  "oneOf" : [ {
+    "type" : "string"
+  }, {
+    "type" : "number"
+  }, {
+    "type" : "object"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"VariableFormatValue": _variable_format_value_model_schema})
 
 _variable_type_model_schema = json.loads(
     r"""{

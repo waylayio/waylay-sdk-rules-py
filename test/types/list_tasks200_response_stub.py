@@ -1,4 +1,3 @@
-# coding: utf-8
 """Waylay rules engine model tests.
 
 This code was generated from the OpenAPI documentation of 'Waylay rules engine'
@@ -20,7 +19,7 @@ try:
 
     ListTasks200ResponseAdapter = TypeAdapter(ListTasks200Response)
     MODELS_AVAILABLE = True
-except ImportError as exc:
+except ImportError:
     MODELS_AVAILABLE = False
 
 list_tasks_200_response_model_schema = json.loads(

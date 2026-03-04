@@ -1,4 +1,3 @@
-# coding: utf-8
 """Waylay rules engine model tests.
 
 This code was generated from the OpenAPI documentation of 'Waylay rules engine'
@@ -22,7 +21,7 @@ try:
 
     PatchTaskNodeRequestAdapter = TypeAdapter(PatchTaskNodeRequest)
     MODELS_AVAILABLE = True
-except ImportError as exc:
+except ImportError:
     MODELS_AVAILABLE = False
 
 patch_task_node_request_model_schema = json.loads(

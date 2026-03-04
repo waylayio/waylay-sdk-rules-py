@@ -1,6 +1,11 @@
 # TaskEntity
 
 
+**Source:** `waylay.services.rules.models.task_entity`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -14,23 +19,34 @@ Name | Type | Description | Notes
 **network** | **object** | The graph, either from the template or from the task definition. Depending on the &#x60;format&#x60; query parameter either BN or simplified format | 
 **resource_ids** | **List[str]** | List of resources that are used in the task | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.task_entity import TaskEntity
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TaskEntity from a JSON string
-task_entity_instance = TaskEntity.from_json(json)
-# print the JSON string representation of the object
-print TaskEntity.to_json()
+task_entity = TaskEntity(
+    id=...,
+    name=...,
+    status=...,
+    user=...,
+    create_time=...,
+    template=...,
+    network=...,
+    resource_ids=...,
+)
 
-# convert the object into a dict
-task_entity_dict = task_entity_instance.to_dict()
-# create an instance of TaskEntity from a dict
-task_entity_form_dict = task_entity.from_dict(task_entity_dict)
+# Create from JSON
+task_entity = TaskEntity.from_json(
+    '{ "ID": ..., "name": ..., "status": ..., "user": ..., "createTime": ..., "template": ..., "network": ..., "resourceIds": ... }'
+)
+
+# Export to dictionary
+task_entity_dict = task_entity.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

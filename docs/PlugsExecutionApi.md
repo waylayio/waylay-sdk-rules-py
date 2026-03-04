@@ -24,8 +24,6 @@ Execute latest version of an actuator.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -34,18 +32,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.actuator_execution_result import ActuatorExecutionResult
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
+from waylay.services.rules.models.actuator_execution_result import (
+    ActuatorExecutionResult,
+)
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
+
 try:
     # Execute Latest Actuator Version
     # calls `POST /rules/v1/actions/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_actuator(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
     )
-    print("The response of rules.plugs_execution.execute_actuator:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.plugs_execution.execute_actuator: %s\n" % e)
 ```
@@ -99,8 +101,6 @@ Execute specified version of an actuator.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -109,21 +109,28 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.actuator_execution_result import ActuatorExecutionResult
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
+from waylay.services.rules.models.actuator_execution_result import (
+    ActuatorExecutionResult,
+)
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
+
 try:
     # Execute Specified Actuator Version
     # calls `POST /rules/v1/actions/{name}/versions/{version}`
     api_response = await waylay_client.rules.plugs_execution.execute_actuator_version(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
     )
-    print("The response of rules.plugs_execution.execute_actuator_version:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling rules.plugs_execution.execute_actuator_version: %s\n" % e)
+    print(
+        "Exception when calling rules.plugs_execution.execute_actuator_version: %s\n"
+        % e
+    )
 ```
 
 ### Endpoint
@@ -175,8 +182,6 @@ Execute latest version of a sensor.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -185,18 +190,20 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
 from waylay.services.rules.models.sensor_execution_result import SensorExecutionResult
+
 try:
     # Execute Latest Sensor Version
     # calls `POST /rules/v1/sensors/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_sensor(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
     )
-    print("The response of rules.plugs_execution.execute_sensor:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.plugs_execution.execute_sensor: %s\n" % e)
 ```
@@ -250,8 +257,6 @@ Execute the specified version of a sensor.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -260,24 +265,28 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
 from waylay.services.rules.models.sensor_execution_result import SensorExecutionResult
+
 try:
     # Execute Specified Sensor Version
     # calls `POST /rules/v1/sensors/{name}/versions/{version}`
     api_response = await waylay_client.rules.plugs_execution.execute_sensor_version(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
-        headers = {
-            'x-waylay-revision': 'x_waylay_revision_example',
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
+        headers={
+            "x-waylay-revision": "x_waylay_revision_example",
         },
     )
-    print("The response of rules.plugs_execution.execute_sensor_version:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling rules.plugs_execution.execute_sensor_version: %s\n" % e)
+    print(
+        "Exception when calling rules.plugs_execution.execute_sensor_version: %s\n" % e
+    )
 ```
 
 ### Endpoint
@@ -330,8 +339,6 @@ Execute the latest transformer version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -340,18 +347,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
-from waylay.services.rules.models.transformer_execution_result import TransformerExecutionResult
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
+from waylay.services.rules.models.transformer_execution_result import (
+    TransformerExecutionResult,
+)
+
 try:
     # Execute Latest Transformer Version
     # calls `POST /rules/v1/transformers/{name}`
     api_response = await waylay_client.rules.plugs_execution.execute_transformer(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
     )
-    print("The response of rules.plugs_execution.execute_transformer:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.plugs_execution.execute_transformer: %s\n" % e)
 ```
@@ -405,8 +416,6 @@ Execute specified version of a transformer.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -415,21 +424,28 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.execute_plugs_specification import ExecutePlugsSpecification
-from waylay.services.rules.models.transformer_execution_result import TransformerExecutionResult
+from waylay.services.rules.models.execute_plugs_specification import (
+    ExecutePlugsSpecification,
+)
+from waylay.services.rules.models.transformer_execution_result import (
+    TransformerExecutionResult,
+)
+
 try:
     # Execute Specified Transformer Version
     # calls `POST /rules/v1/transformers/{name}/versions/{version}`
     api_response = await waylay_client.rules.plugs_execution.execute_transformer_version(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.ExecutePlugsSpecification() # ExecutePlugsSpecification | Specification to execute a plug.
+        json=waylay.services.rules.ExecutePlugsSpecification(),  # ExecutePlugsSpecification | Specification to execute a plug.
     )
-    print("The response of rules.plugs_execution.execute_transformer_version:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling rules.plugs_execution.execute_transformer_version: %s\n" % e)
+    print(
+        "Exception when calling rules.plugs_execution.execute_transformer_version: %s\n"
+        % e
+    )
 ```
 
 ### Endpoint

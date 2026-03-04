@@ -1,6 +1,11 @@
 # ErrorResponse
 
 
+**Source:** `waylay.services.rules.models.error_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,25 @@ Name | Type | Description | Notes
 **error** | **str** |  | 
 **code** | **str** | Optional error code | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.error_response import ErrorResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ErrorResponse from a JSON string
-error_response_instance = ErrorResponse.from_json(json)
-# print the JSON string representation of the object
-print ErrorResponse.to_json()
+error_response = ErrorResponse(status_code=..., error=..., code=...)
 
-# convert the object into a dict
-error_response_dict = error_response_instance.to_dict()
-# create an instance of ErrorResponse from a dict
-error_response_form_dict = error_response.from_dict(error_response_dict)
+# Create from JSON
+error_response = ErrorResponse.from_json(
+    '{ "statusCode": ..., "error": ..., "code": ... }'
+)
+
+# Export to dictionary
+error_response_dict = error_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 
