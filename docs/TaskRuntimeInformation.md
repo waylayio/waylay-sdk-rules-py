@@ -1,6 +1,11 @@
 # TaskRuntimeInformation
 
 
+**Source:** `waylay.services.rules.models.task_runtime_information`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -18,26 +23,44 @@ Name | Type | Description | Notes
 **invocation_count** | **int** | Number of times the task has been invoked | [optional] 
 **raw_data** | **object** | rawData of the task | [optional] 
 **last_execution_time** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | [optional] 
-**health** | [**TaskRuntimeInformationAllOfHealth**](TaskRuntimeInformationAllOfHealth.md) |  | [optional] 
+**health** | [**TaskHealth**](TaskHealth.md) |  | [optional] 
 **pending_nodes** | **object** | returns the nodes that are pending to be resumed. Every key in the object is the node name. Can be multiple pending nodes in the task. | [optional] 
+
 
 ## Example
 
 ```python
 from waylay.services.rules.models.task_runtime_information import TaskRuntimeInformation
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TaskRuntimeInformation from a JSON string
-task_runtime_information_instance = TaskRuntimeInformation.from_json(json)
-# print the JSON string representation of the object
-print TaskRuntimeInformation.to_json()
+task_runtime_information = TaskRuntimeInformation(
+    tags=...,
+    type=...,
+    reset_observations=...,
+    parallel=...,
+    gates_need_full_observation=...,
+    cron=...,
+    rrule=...,
+    time_zone=...,
+    frequency=...,
+    finished_time=...,
+    invocation_count=...,
+    raw_data=...,
+    last_execution_time=...,
+    health=...,
+    pending_nodes=...,
+)
 
-# convert the object into a dict
-task_runtime_information_dict = task_runtime_information_instance.to_dict()
-# create an instance of TaskRuntimeInformation from a dict
-task_runtime_information_form_dict = task_runtime_information.from_dict(task_runtime_information_dict)
+# Create from JSON
+task_runtime_information = TaskRuntimeInformation.from_json(
+    '{ "tags": ..., "type": ..., "resetObservations": ..., "parallel": ..., "gatesNeedFullObservation": ..., "cron": ..., "rrule": ..., "timeZone": ..., "frequency": ..., "finishedTime": ..., "invocationCount": ..., "rawData": ..., "lastExecutionTime": ..., "health": ..., "pendingNodes": ... }'
+)
+
+# Export to dictionary
+task_runtime_information_dict = task_runtime_information.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

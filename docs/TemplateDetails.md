@@ -1,6 +1,11 @@
 # TemplateDetails
 
 
+**Source:** `waylay.services.rules.models.template_details`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -20,27 +25,48 @@ Name | Type | Description | Notes
 **sensors** | [**List[SensorNode]**](SensorNode.md) | List of sensors with required properties | [optional] 
 **actuators** | [**List[ActuatorNode]**](ActuatorNode.md) | List of actuators with required properties | [optional] 
 **relations** | [**List[RelationNode]**](RelationNode.md) | List of relations (gates) between sensors | [optional] 
-**triggers** | [**List[SimplifiedGraphTriggersInner]**](SimplifiedGraphTriggersInner.md) | List of conditions under which actuators/sensors get executed. | [optional] 
+**triggers** | [**List[TriggerType]**](TriggerType.md) | List of conditions under which actuators/sensors get executed. | [optional] 
 **nodes** | **List[object]** |  | [optional] 
 **posterior** | **List[object]** |  | [optional] 
+
 
 ## Example
 
 ```python
 from waylay.services.rules.models.template_details import TemplateDetails
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TemplateDetails from a JSON string
-template_details_instance = TemplateDetails.from_json(json)
-# print the JSON string representation of the object
-print TemplateDetails.to_json()
+template_details = TemplateDetails(
+    name=...,
+    discovery_template=...,
+    tags=...,
+    variables=...,
+    task_defaults=...,
+    description=...,
+    icon_url=...,
+    protected=...,
+    notes=...,
+    user=...,
+    create_time=...,
+    last_update_time=...,
+    sensors=...,
+    actuators=...,
+    relations=...,
+    triggers=...,
+    nodes=...,
+    posterior=...,
+)
 
-# convert the object into a dict
-template_details_dict = template_details_instance.to_dict()
-# create an instance of TemplateDetails from a dict
-template_details_form_dict = template_details.from_dict(template_details_dict)
+# Create from JSON
+template_details = TemplateDetails.from_json(
+    '{ "name": ..., "discoveryTemplate": ..., "tags": ..., "variables": ..., "taskDefaults": ..., "description": ..., "iconURL": ..., "protected": ..., "notes": ..., "user": ..., "createTime": ..., "lastUpdateTime": ..., "sensors": ..., "actuators": ..., "relations": ..., "triggers": ..., "nodes": ..., "posterior": ... }'
+)
+
+# Export to dictionary
+template_details_dict = template_details.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

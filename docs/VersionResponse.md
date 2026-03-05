@@ -1,6 +1,11 @@
 # VersionResponse
 
 
+**Source:** `waylay.services.rules.models.version_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,27 @@ Name | Type | Description | Notes
 **uptime** | **int** |  | [optional] 
 **status** | [**VersionResponseStatus**](VersionResponseStatus.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.version_response import VersionResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of VersionResponse from a JSON string
-version_response_instance = VersionResponse.from_json(json)
-# print the JSON string representation of the object
-print VersionResponse.to_json()
+version_response = VersionResponse(
+    version=..., name=..., start_time=..., uptime=..., status=...
+)
 
-# convert the object into a dict
-version_response_dict = version_response_instance.to_dict()
-# create an instance of VersionResponse from a dict
-version_response_form_dict = version_response.from_dict(version_response_dict)
+# Create from JSON
+version_response = VersionResponse.from_json(
+    '{ "version": ..., "name": ..., "startTime": ..., "uptime": ..., "status": ... }'
+)
+
+# Export to dictionary
+version_response_dict = version_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

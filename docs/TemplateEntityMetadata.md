@@ -1,6 +1,11 @@
 # TemplateEntityMetadata
 
 
+**Source:** `waylay.services.rules.models.template_entity_metadata`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -18,23 +23,38 @@ Name | Type | Description | Notes
 **create_time** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | 
 **last_update_time** | **int** | Timestamp expressed as milliseconds since 00:00:00 UTC on 1 January 1970, not counting leap seconds. | 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.template_entity_metadata import TemplateEntityMetadata
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TemplateEntityMetadata from a JSON string
-template_entity_metadata_instance = TemplateEntityMetadata.from_json(json)
-# print the JSON string representation of the object
-print TemplateEntityMetadata.to_json()
+template_entity_metadata = TemplateEntityMetadata(
+    name=...,
+    discovery_template=...,
+    tags=...,
+    variables=...,
+    task_defaults=...,
+    description=...,
+    icon_url=...,
+    protected=...,
+    notes=...,
+    user=...,
+    create_time=...,
+    last_update_time=...,
+)
 
-# convert the object into a dict
-template_entity_metadata_dict = template_entity_metadata_instance.to_dict()
-# create an instance of TemplateEntityMetadata from a dict
-template_entity_metadata_form_dict = template_entity_metadata.from_dict(template_entity_metadata_dict)
+# Create from JSON
+template_entity_metadata = TemplateEntityMetadata.from_json(
+    '{ "name": ..., "discoveryTemplate": ..., "tags": ..., "variables": ..., "taskDefaults": ..., "description": ..., "iconURL": ..., "protected": ..., "notes": ..., "user": ..., "createTime": ..., "lastUpdateTime": ... }'
+)
+
+# Export to dictionary
+template_entity_metadata_dict = template_entity_metadata.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,6 +2,11 @@
 
 default task settings that will be applied when creating a task from the template
 
+**Source:** `waylay.services.rules.models.task_defaults_element`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -16,23 +21,35 @@ Name | Type | Description | Notes
 **time_zone** | **str** | Optional identifier of the time zone in which the schedule expression is to be interpreted | [optional] 
 **frequency** | **int** | polling frequency in milliseconds | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.task_defaults_element import TaskDefaultsElement
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TaskDefaultsElement from a JSON string
-task_defaults_element_instance = TaskDefaultsElement.from_json(json)
-# print the JSON string representation of the object
-print TaskDefaultsElement.to_json()
+task_defaults_element = TaskDefaultsElement(
+    tags=...,
+    type=...,
+    reset_observations=...,
+    parallel=...,
+    gates_need_full_observation=...,
+    cron=...,
+    rrule=...,
+    time_zone=...,
+    frequency=...,
+)
 
-# convert the object into a dict
-task_defaults_element_dict = task_defaults_element_instance.to_dict()
-# create an instance of TaskDefaultsElement from a dict
-task_defaults_element_form_dict = task_defaults_element.from_dict(task_defaults_element_dict)
+# Create from JSON
+task_defaults_element = TaskDefaultsElement.from_json(
+    '{ "tags": ..., "type": ..., "resetObservations": ..., "parallel": ..., "gatesNeedFullObservation": ..., "cron": ..., "rrule": ..., "timeZone": ..., "frequency": ... }'
+)
+
+# Export to dictionary
+task_defaults_element_dict = task_defaults_element.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

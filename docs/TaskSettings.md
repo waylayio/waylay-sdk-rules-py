@@ -1,6 +1,11 @@
 # TaskSettings
 
 
+**Source:** `waylay.services.rules.models.task_settings`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -15,25 +20,43 @@ Name | Type | Description | Notes
 **variables** | **object** | set of variables which will be used when starting a task and will automatically be injected in the template before starting a task. | [optional] 
 **type** | [**ReactiveTaskSettingType**](ReactiveTaskSettingType.md) |  | 
 **time_zone** | **str** | Optional identifier of the time zone in which the schedule expression is to be interpreted | [optional] 
+**rrule** | **str** | RRule expression as defined in [RFC5545 3.8.5.3](https://www.rfc-editor.org/rfc/rfc5545#section-3.8.5.3) | 
+**cron** | **str** | cron expression as defined in [Cron format](https://www.quartz-scheduler.org/documentation/quartz-1.8.6/tutorials/TutorialLesson06) | 
 **frequency** | **int** | polling frequency in milliseconds | 
+
 
 ## Example
 
 ```python
 from waylay.services.rules.models.task_settings import TaskSettings
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TaskSettings from a JSON string
-task_settings_instance = TaskSettings.from_json(json)
-# print the JSON string representation of the object
-print TaskSettings.to_json()
+task_settings = TaskSettings(
+    name=...,
+    resource=...,
+    reset_observations=...,
+    parallel=...,
+    gates_need_full_observation=...,
+    protected=...,
+    tags=...,
+    variables=...,
+    type=...,
+    time_zone=...,
+    rrule=...,
+    cron=...,
+    frequency=...,
+)
 
-# convert the object into a dict
-task_settings_dict = task_settings_instance.to_dict()
-# create an instance of TaskSettings from a dict
-task_settings_form_dict = task_settings.from_dict(task_settings_dict)
+# Create from JSON
+task_settings = TaskSettings.from_json(
+    '{ "name": ..., "resource": ..., "resetObservations": ..., "parallel": ..., "gatesNeedFullObservation": ..., "protected": ..., "tags": ..., "variables": ..., "type": ..., "timeZone": ..., "rrule": ..., "cron": ..., "frequency": ... }'
+)
+
+# Export to dictionary
+task_settings_dict = task_settings.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

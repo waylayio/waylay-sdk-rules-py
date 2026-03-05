@@ -1,6 +1,11 @@
 # ValidationIssue
 
 
+**Source:** `waylay.services.rules.models.validation_issue`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,27 @@ Name | Type | Description | Notes
 **details** | **object** | Object containing identifying information on what gives the issue | [optional] 
 **suggestion** | **str** | Suggestion on how to change the object to get the issue fixed | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.validation_issue import ValidationIssue
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ValidationIssue from a JSON string
-validation_issue_instance = ValidationIssue.from_json(json)
-# print the JSON string representation of the object
-print ValidationIssue.to_json()
+validation_issue = ValidationIssue(
+    type=..., message=..., severity=..., details=..., suggestion=...
+)
 
-# convert the object into a dict
-validation_issue_dict = validation_issue_instance.to_dict()
-# create an instance of ValidationIssue from a dict
-validation_issue_form_dict = validation_issue.from_dict(validation_issue_dict)
+# Create from JSON
+validation_issue = ValidationIssue.from_json(
+    '{ "type": ..., "message": ..., "severity": ..., "details": ..., "suggestion": ... }'
+)
+
+# Export to dictionary
+validation_issue_dict = validation_issue.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

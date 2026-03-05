@@ -11,7 +11,7 @@ Method | HTTP request | Description
 > get(
 > batch_id: str,
 > headers
-> ) -> GetBatchOperation200Response
+> ) -> BatchOperationStatus
 
 Get Tasks Batch Operation Status
 
@@ -20,8 +20,6 @@ Get the results of the Tasks Batch Operation.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -30,15 +28,15 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.get_batch_operation200_response import GetBatchOperation200Response
+from waylay.services.rules.models.batch_operation_status import BatchOperationStatus
+
 try:
     # Get Tasks Batch Operation Status
     # calls `GET /rules/v1/batch/{batchId}`
     api_response = await waylay_client.rules.tasks_batch_operations.get(
-        'batch_id_example', # batch_id | path param "batchId"
+        "batch_id_example",  # batch_id | path param "batchId"
     )
-    print("The response of rules.tasks_batch_operations.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks_batch_operations.get: %s\n" % e)
 ```
@@ -58,7 +56,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`GetBatchOperation200Response`** |  | [GetBatchOperation200Response](GetBatchOperation200Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`BatchOperationStatus`** |  | [BatchOperationStatus](BatchOperationStatus.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -88,8 +86,6 @@ Start a batch operation.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -100,15 +96,23 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.batch_operation_enqueued import BatchOperationEnqueued
 from waylay.services.rules.models.batch_task_spec import BatchTaskSpec
+
 try:
     # Start Batch Operations
     # calls `POST /rules/v1/batch`
     api_response = await waylay_client.rules.tasks_batch_operations.start(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = {"entity":"task","action":"delete","query":{"type":"onetime","status":"stopped","finishedBefore":1648738809733}} # BatchTaskSpec | Tasks Batch Operation
+        json={
+            "entity": "task",
+            "action": "delete",
+            "query": {
+                "type": "onetime",
+                "status": "stopped",
+                "finishedBefore": 1648738809733,
+            },
+        },  # BatchTaskSpec | Tasks Batch Operation
     )
-    print("The response of rules.tasks_batch_operations.start:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.tasks_batch_operations.start: %s\n" % e)
 ```

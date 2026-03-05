@@ -243,6 +243,7 @@ paths:
                 title: Task listing
                 type: array
                 items:
+                  x-classname: TaskWithRuntimeInfo
                   allOf:
                   - $ref: '#/components/schemas/TaskEntity'
                   - $ref: '#/components/schemas/TaskRuntimeInformation'
@@ -269,6 +270,8 @@ paths:
           content:
             application/json:
               schema:
+                title: Task Details
+                x-classname: TaskWithRuntimeInfo
                 allOf:
                 - $ref: '#/components/schemas/TaskEntity'
                 - $ref: '#/components/schemas/TaskRuntimeInformation'
@@ -685,6 +688,7 @@ paths:
               schema:
                 type: array
                 items:
+                  x-classname: TemplateListing
                   oneOf:
                   - $ref: '#/components/schemas/TemplateEntityMetadata'
                   - $ref: '#/components/schemas/TemplateDetails'
@@ -746,6 +750,7 @@ paths:
             application/json:
               schema:
                 type: object
+                x-classname: TemplatePluginsUpgraded
                 properties:
                   successful:
                     type: array
@@ -823,6 +828,8 @@ paths:
           content:
             application/json:
               schema:
+                title: Template Copy Result
+                x-classname: TemplateCopied
                 allOf:
                 - $ref: '#/components/schemas/TemplateEntityMetadata'
                 - $ref: '#/components/schemas/SimplifiedGraph'
@@ -861,6 +868,8 @@ paths:
           content:
             application/json:
               schema:
+                title: Template Updated
+                x-classname: TemplateUpdated
                 allOf:
                 - $ref: '#/components/schemas/TemplateEntityMetadata'
                 - $ref: '#/components/schemas/SimplifiedGraph'
@@ -1192,6 +1201,8 @@ paths:
           content:
             application/json:
               schema:
+                title: Batch Operation Status
+                x-classname: BatchOperationStatus
                 oneOf:
                 - $ref: '#/components/schemas/BatchOperationResult'
                 - title: Result of a running Batch Operation
@@ -2202,6 +2213,7 @@ components:
           title: Possible values (enum declaration)
           type: array
           items:
+            x-classname: VariableFormatValue
             oneOf:
             - type: string
             - type: number
@@ -2464,10 +2476,12 @@ components:
           type: array
           items:
             type: object
+            x-classname: LogEntry
             properties:
               time:
                 $ref: '#/components/schemas/ISO8601Timestamp'
               level:
+                x-classname: LogEntryLevel
                 type: string
                 enum:
                 - DEBUG
@@ -2589,6 +2603,7 @@ components:
       - $ref: '#/components/schemas/BatchTask'
       - properties:
           action:
+            x-classname: BatchTaskCommandAction
             enum:
             - delete
             - start
@@ -2622,6 +2637,7 @@ components:
       - $ref: '#/components/schemas/BatchTask'
       - properties:
           action:
+            x-classname: BatchUpdatePluginAction
             type: string
             enum:
             - updatePlugins
@@ -2640,6 +2656,7 @@ components:
       - $ref: '#/components/schemas/BatchTask'
       - properties:
           action:
+            x-classname: BatchUpdatePropertiesAction
             type: string
             enum:
             - updateProperties
@@ -2662,6 +2679,7 @@ components:
           example: user/22f6dfdf-a50c-4eab-953e-8d2e56891dbe
         operation:
           type: object
+          x-classname: BatchOperationSummary
           description: Summary of the batch operation
           properties:
             entity:
@@ -2669,6 +2687,7 @@ components:
               enum:
               - task
             action:
+              x-classname: BatchOperationAction
               type: string
               enum:
               - updatePlugins
@@ -2735,6 +2754,7 @@ components:
           $ref: '#/components/schemas/UnixEpochMillis'
         results:
           type: object
+          x-classname: BatchOperationResults
           properties:
             success:
               $ref: '#/components/schemas/SuccessOperationResult'
@@ -2795,6 +2815,7 @@ components:
           description: List of conditions under which actuators/sensors get executed.
           type: array
           items:
+            x-classname: TriggerType
             anyOf:
             - $ref: '#/components/schemas/StateChangeTrigger'
             - $ref: '#/components/schemas/StatesTrigger'
@@ -2829,6 +2850,7 @@ components:
             items:
               $ref: '#/components/schemas/NoteElement'
           task:
+            x-classname: TaskCreationSettings
             allOf:
             - $ref: '#/components/schemas/TaskSettings'
             - type: object
@@ -2893,12 +2915,16 @@ components:
         required:
         - type
       - oneOf:
-        - properties:
+        - type: object
+          x-classname: RRuleSchedule
+          properties:
             rrule:
               $ref: '#/components/schemas/RRuleExpression'
           required:
           - rrule
-        - properties:
+        - type: object
+          x-classname: CronSchedule
+          properties:
             cron:
               $ref: '#/components/schemas/CronExpression'
           required:
@@ -3133,6 +3159,7 @@ components:
             $ref: '#/components/schemas/UnixEpochMillis'
           health:
             type: object
+            x-classname: TaskHealth
             description: Health of the task
             properties:
               errorsCount:
@@ -3165,6 +3192,7 @@ components:
           values:
             type: array
             items:
+              x-classname: TaskWithRuntimeInfo
               allOf:
               - $ref: '#/components/schemas/TaskEntity'
               - $ref: '#/components/schemas/TaskRuntimeInformation'
@@ -3334,6 +3362,7 @@ components:
               resource:
                 $ref: '#/components/schemas/ResourceId'
               data:
+                x-classname: StreamDataPayload
                 oneOf:
                 - type: object
                   example:
@@ -3384,6 +3413,7 @@ components:
       required: false
       schema:
         type: string
+        x-classname: TemplateRunLogLevel
         enum:
         - DEBUG
         - INFO
@@ -3474,6 +3504,7 @@ components:
       description: Format of the graph definition
       schema:
         type: string
+        x-classname: GraphFormat
         enum:
         - bn
         - simplified
@@ -3509,6 +3540,7 @@ components:
         application/json:
           schema:
             type: object
+            x-classname: TaskCreated
             properties:
               ID:
                 $ref: '#/components/schemas/TaskId'
@@ -3540,6 +3572,7 @@ components:
         application/json:
           schema:
             type: object
+            x-classname: TemplateCreated
             properties:
               statusCode:
                 type: integer

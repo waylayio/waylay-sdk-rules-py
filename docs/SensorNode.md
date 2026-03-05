@@ -2,6 +2,11 @@
 
 Representation of a sensor in a Rule Template.
 
+**Source:** `waylay.services.rules.models.sensor_node`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -27,23 +32,46 @@ Name | Type | Description | Notes
 **pause_execution_timeout** | **str** |  | [optional] [default to 'PT1H']
 **description** | **str** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.sensor_node import SensorNode
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of SensorNode from a JSON string
-sensor_node_instance = SensorNode.from_json(json)
-# print the JSON string representation of the object
-print SensorNode.to_json()
+sensor_node = SensorNode(
+    label=...,
+    name=...,
+    version=...,
+    icon_url=...,
+    properties=...,
+    resource=...,
+    sequence=...,
+    position=...,
+    data_trigger=...,
+    tick_trigger=...,
+    eviction_time=...,
+    polling_period=...,
+    schedule=...,
+    timeout=...,
+    timeout_state=...,
+    loop_def=...,
+    retry_config=...,
+    pause_execution=...,
+    pause_execution_timeout=...,
+    description=...,
+)
 
-# convert the object into a dict
-sensor_node_dict = sensor_node_instance.to_dict()
-# create an instance of SensorNode from a dict
-sensor_node_form_dict = sensor_node.from_dict(sensor_node_dict)
+# Create from JSON
+sensor_node = SensorNode.from_json(
+    '{ "label": ..., "name": ..., "version": ..., "iconURL": ..., "properties": ..., "resource": ..., "sequence": ..., "position": ..., "dataTrigger": ..., "tickTrigger": ..., "evictionTime": ..., "pollingPeriod": ..., "schedule": ..., "timeout": ..., "timeoutState": ..., "loopDef": ..., "retryConfig": ..., "pauseExecution": ..., "pauseExecutionTimeout": ..., "description": ... }'
+)
+
+# Export to dictionary
+sensor_node_dict = sensor_node.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

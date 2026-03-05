@@ -19,7 +19,7 @@ Method | HTTP request | Description
 > name: str,
 > query: CopyQuery,
 > headers
-> ) -> ReplaceTemplate200Response
+> ) -> TemplateCopied
 
 Copy Template
 
@@ -28,8 +28,6 @@ Copy a template. The creationtime and lastmodifiedtime will be updated.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -38,21 +36,21 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.replace_template200_response import ReplaceTemplate200Response
+from waylay.services.rules.models.template_copied import TemplateCopied
+
 try:
     # Copy Template
     # calls `PATCH /rules/v1/templates/{name}`
     api_response = await waylay_client.rules.templates.copy(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'newName': 'new_name_example'
+        query={
+            "newName": "new_name_example",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = None # object |  (optional)
+        json=None,  # object |  (optional)
     )
-    print("The response of rules.templates.copy:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.copy: %s\n" % e)
 ```
@@ -75,7 +73,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`ReplaceTemplate200Response`** |  | [ReplaceTemplate200Response](ReplaceTemplate200Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`TemplateCopied`** |  | [TemplateCopied](TemplateCopied.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -97,7 +95,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 # **create**
 > create(
 > headers
-> ) -> CreateTemplate201Response
+> ) -> TemplateCreated
 
 Create Template
 
@@ -106,8 +104,6 @@ Create a template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -116,17 +112,17 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.create_template201_response import CreateTemplate201Response
+from waylay.services.rules.models.template_created import TemplateCreated
 from waylay.services.rules.models.template_entity import TemplateEntity
+
 try:
     # Create Template
     # calls `POST /rules/v1/templates`
     api_response = await waylay_client.rules.templates.create(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateEntity() # TemplateEntity | Template Specification
+        json=waylay.services.rules.TemplateEntity(),  # TemplateEntity | Template Specification
     )
-    print("The response of rules.templates.create:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.create: %s\n" % e)
 ```
@@ -146,7 +142,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`CreateTemplate201Response`** |  | [CreateTemplate201Response](CreateTemplate201Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`TemplateCreated`** |  | [TemplateCreated](TemplateCreated.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -177,8 +173,6 @@ Delete a template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -191,7 +185,7 @@ try:
     # Delete Template
     # calls `DELETE /rules/v1/templates/{name}`
     await waylay_client.rules.templates.delete(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
     )
 except ApiError as e:
     print("Exception when calling rules.templates.delete: %s\n" % e)
@@ -243,8 +237,6 @@ Get the discovery template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -254,13 +246,12 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.template_details import TemplateDetails
+
 try:
     # Retrieve Discovery Template
     # calls `GET /rules/v1/discoveryTemplate`
-    api_response = await waylay_client.rules.templates.get_discovery(
-    )
-    print("The response of rules.templates.get_discovery:\n")
-    pprint(api_response)
+    api_response = await waylay_client.rules.templates.get_discovery()
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.get_discovery: %s\n" % e)
 ```
@@ -310,8 +301,6 @@ Retrieve the details of a template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -320,19 +309,18 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
+from waylay.services.rules.models.graph_format import GraphFormat
 from waylay.services.rules.models.template_details import TemplateDetails
+
 try:
     # Retrieve Template Details
     # calls `GET /rules/v1/templates/{name}`
     api_response = await waylay_client.rules.templates.get(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-        },
+        query={},
     )
-    print("The response of rules.templates.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.get: %s\n" % e)
 ```
@@ -347,7 +335,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | Unique Template identifier | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
+**query['format']** (dict) <br> **query.format** (Query) | [**GraphFormat**](GraphFormat.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -376,7 +364,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > list(
 > query: ListQuery,
 > headers
-> ) -> List[ListTemplates200ResponseInner]
+> ) -> List[TemplateListing]
 
 List Templates
 
@@ -385,8 +373,6 @@ Query templates.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -395,22 +381,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.list_tasks_format_parameter import ListTasksFormatParameter
-from waylay.services.rules.models.list_templates200_response_inner import ListTemplates200ResponseInner
+from waylay.services.rules.models.graph_format import GraphFormat
+from waylay.services.rules.models.template_listing import TemplateListing
+
 try:
     # List Templates
     # calls `GET /rules/v1/templates`
     api_response = await waylay_client.rules.templates.list(
         # query parameters:
-        query = {
-            'id': 'id_example'
-            'plugin': 'mySensor:1.0.3'
-            'tags.X': 'tags.myref: 3904859080956'
-            'includegraph': False
+        query={
+            "id": "id_example",
+            "plugin": "mySensor:1.0.3",
+            "tags.X": "tags.myref: 3904859080956",
+            "includegraph": False,
         },
     )
-    print("The response of rules.templates.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.list: %s\n" % e)
 ```
@@ -426,13 +412,13 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['hits']** (dict) <br> **query.hits** (Query) | **int** | query parameter `"hits"` | (Paging) maximal number of items returned | [optional] [default 10]
 **query['startIndex']** (dict) <br> **query.start_index** (Query) | **int** | query parameter `"startIndex"` | (Paging) items to skip in the listing | [optional] [default 0]
-**query['format']** (dict) <br> **query.format** (Query) | [**ListTasksFormatParameter**](.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
+**query['format']** (dict) <br> **query.format** (Query) | [**GraphFormat**](GraphFormat.md) | query parameter `"format"` | Format of the graph definition | [optional] [default bn]
 **query['filter']** (dict) <br> **query.filter** (Query) | **str** | query parameter `"filter"` | fuzzy search on multiple properties | [optional] 
-**query['ids']** (dict) <br> **query.ids** (Query) | [**List[str]**](str.md) | query parameter `"ids"` | comma separated string of template names | [optional] 
+**query['ids']** (dict) <br> **query.ids** (Query) | **List[str]** | query parameter `"ids"` | comma separated string of template names | [optional] 
 **query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | filter on template name | [optional] 
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` | either name of a plugin (e.g. &#x60;mySensor&#x60;), or full version specification of the plug (e.g &#x60;mySensor:1.0.3&#x60;) | [optional] 
 **query['tags.X']** (dict) <br> **query.tags_x** (Query) | **str** | query parameter `"tags.X"` |  | [optional] 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**List[str]**](str.md) | query parameter `"tags"` | Filter templates that have one of the tag keys in the array | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | **List[str]** | query parameter `"tags"` | Filter templates that have one of the tag keys in the array | [optional] 
 **query['includegraph']** (dict) <br> **query.includegraph** (Query) | **bool** | query parameter `"includegraph"` | If &#x60;true&#x60;, the response will include the graph of the template. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -440,7 +426,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`List[ListTemplates200ResponseInner]`** |  | [List[ListTemplates200ResponseInner]](ListTemplates200ResponseInner.md)
+Literal[""] _(default)_  | False _(default)_ | **`List[TemplateListing]`** |  | [List[TemplateListing]](TemplateListing.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -461,7 +447,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > replace(
 > name: str,
 > headers
-> ) -> ReplaceTemplate200Response
+> ) -> TemplateUpdated
 
 Update Template
 
@@ -470,8 +456,6 @@ Update a template. Note that this will not update any tasks using the template. 
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -480,18 +464,18 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.replace_template200_response import ReplaceTemplate200Response
 from waylay.services.rules.models.template_entity import TemplateEntity
+from waylay.services.rules.models.template_updated import TemplateUpdated
+
 try:
     # Update Template
     # calls `PUT /rules/v1/templates/{name}`
     api_response = await waylay_client.rules.templates.replace(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateEntity() # TemplateEntity | Template Specification
+        json=waylay.services.rules.TemplateEntity(),  # TemplateEntity | Template Specification
     )
-    print("The response of rules.templates.replace:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.replace: %s\n" % e)
 ```
@@ -512,7 +496,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`ReplaceTemplate200Response`** |  | [ReplaceTemplate200Response](ReplaceTemplate200Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`TemplateUpdated`** |  | [TemplateUpdated](TemplateUpdated.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -544,8 +528,6 @@ Set the discovery template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -555,17 +537,17 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.template_details import TemplateDetails
+
 try:
     # Set Discovery Template
     # calls `PUT /rules/v1/discoveryTemplate`
     api_response = await waylay_client.rules.templates.set(
         # query parameters:
-        query = {
-            'name': 'discoverResourceType'
+        query={
+            "name": "discoverResourceType",
         },
     )
-    print("The response of rules.templates.set:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.set: %s\n" % e)
 ```
@@ -609,7 +591,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > upgrade_plugins(
 > query: UpgradePluginsQuery,
 > headers
-> ) -> UpgradePluginsTemplates200Response
+> ) -> TemplatePluginsUpgraded
 
 Upgrade Plugins
 
@@ -618,8 +600,6 @@ Upgrade plugins on multiple templates.  The plugin upgrades specified in the bod
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -629,21 +609,23 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
 from waylay.services.rules.models.template_modification import TemplateModification
-from waylay.services.rules.models.upgrade_plugins_templates200_response import UpgradePluginsTemplates200Response
+from waylay.services.rules.models.template_plugins_upgraded import (
+    TemplatePluginsUpgraded,
+)
+
 try:
     # Upgrade Plugins
     # calls `PATCH /rules/v1/templates`
     api_response = await waylay_client.rules.templates.upgrade_plugins(
         # query parameters:
-        query = {
-            'id': 'id_example'
-            'plugin': '{\"plugin\":\"mySensor:1.0.3\"}'
+        query={
+            "id": "id_example",
+            "plugin": '{"plugin":"mySensor:1.0.3"}',
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateModification() # TemplateModification | Plugin Update Specifications
+        json=waylay.services.rules.TemplateModification(),  # TemplateModification | Plugin Update Specifications
     )
-    print("The response of rules.templates.upgrade_plugins:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.templates.upgrade_plugins: %s\n" % e)
 ```
@@ -658,7 +640,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **json** | [**TemplateModification**](TemplateModification.md) | json request body | Plugin Update Specifications | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ids']** (dict) <br> **query.ids** (Query) | [**List[str]**](str.md) | query parameter `"ids"` | comma separated string of template names | [optional] 
+**query['ids']** (dict) <br> **query.ids** (Query) | **List[str]** | query parameter `"ids"` | comma separated string of template names | [optional] 
 **query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | filter on template name | [optional] 
 **query['plugin']** (dict) <br> **query.plugin** (Query) | **str** | query parameter `"plugin"` | either name of a plugin (e.g. &#x60;mySensor&#x60;), or full version specification of the plug (e.g &#x60;mySensor:1.0.3&#x60;) | [optional] 
 **query['tags.X']** (dict) <br> **query.tags_x** (Query) | **str** | query parameter `"tags.X"` |  | [optional] 
@@ -668,7 +650,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`UpgradePluginsTemplates200Response`** |  | [UpgradePluginsTemplates200Response](UpgradePluginsTemplates200Response.md)
+Literal[""] _(default)_  | False _(default)_ | **`TemplatePluginsUpgraded`** |  | [TemplatePluginsUpgraded](TemplatePluginsUpgraded.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 

@@ -1,6 +1,11 @@
 # SensorExecutionResult
 
 
+**Source:** `waylay.services.rules.models.sensor_execution_result`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,27 @@ Name | Type | Description | Notes
 **raw_data** | **object** | the rawData returned by the sensor execution | [optional] 
 **log** | **List[object]** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.sensor_execution_result import SensorExecutionResult
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of SensorExecutionResult from a JSON string
-sensor_execution_result_instance = SensorExecutionResult.from_json(json)
-# print the JSON string representation of the object
-print SensorExecutionResult.to_json()
+sensor_execution_result = SensorExecutionResult(
+    result=..., state=..., error=..., raw_data=..., log=...
+)
 
-# convert the object into a dict
-sensor_execution_result_dict = sensor_execution_result_instance.to_dict()
-# create an instance of SensorExecutionResult from a dict
-sensor_execution_result_form_dict = sensor_execution_result.from_dict(sensor_execution_result_dict)
+# Create from JSON
+sensor_execution_result = SensorExecutionResult.from_json(
+    '{ "result": ..., "state": ..., "error": ..., "rawData": ..., "log": ... }'
+)
+
+# Export to dictionary
+sensor_execution_result_dict = sensor_execution_result.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

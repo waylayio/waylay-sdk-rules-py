@@ -1,6 +1,11 @@
 # TemplateRunSpecification
 
 
+**Source:** `waylay.services.rules.models.template_run_specification`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,29 @@ Name | Type | Description | Notes
 **nodes_raw_data** | **object** | The input data for the template execution. The data is used to inject the actual data into the template execution nodes map. | [optional] 
 **resource_meta_data** | **Dict[str, object]** | Metadata for any of the resources used in the template.  The current metadata for all resources used in the template is fetched at the start of the template run. This provided metadata is used to overwrite this current metadata | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.rules.models.template_run_specification import TemplateRunSpecification
+from waylay.services.rules.models.template_run_specification import (
+    TemplateRunSpecification,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TemplateRunSpecification from a JSON string
-template_run_specification_instance = TemplateRunSpecification.from_json(json)
-# print the JSON string representation of the object
-print TemplateRunSpecification.to_json()
+template_run_specification = TemplateRunSpecification(
+    data=..., conf=..., variables=..., nodes_raw_data=..., resource_meta_data=...
+)
 
-# convert the object into a dict
-template_run_specification_dict = template_run_specification_instance.to_dict()
-# create an instance of TemplateRunSpecification from a dict
-template_run_specification_form_dict = template_run_specification.from_dict(template_run_specification_dict)
+# Create from JSON
+template_run_specification = TemplateRunSpecification.from_json(
+    '{ "data": ..., "conf": ..., "variables": ..., "nodesRawData": ..., "resourceMetaData": ... }'
+)
+
+# Export to dictionary
+template_run_specification_dict = template_run_specification.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

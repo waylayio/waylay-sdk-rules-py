@@ -2,6 +2,11 @@
 
 Template run configurations
 
+**Source:** `waylay.services.rules.models.template_run_configuration`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,32 @@ Name | Type | Description | Notes
 **reset_observations** | **bool** | reset observations before injecting data | [optional] [default to True]
 **gates_need_full_observation** | **bool** | Only evaluate gates when all inputs are observed | [optional] [default to False]
 
+
 ## Example
 
 ```python
-from waylay.services.rules.models.template_run_configuration import TemplateRunConfiguration
+from waylay.services.rules.models.template_run_configuration import (
+    TemplateRunConfiguration,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TemplateRunConfiguration from a JSON string
-template_run_configuration_instance = TemplateRunConfiguration.from_json(json)
-# print the JSON string representation of the object
-print TemplateRunConfiguration.to_json()
+template_run_configuration = TemplateRunConfiguration(
+    execute_actuators=...,
+    resource=...,
+    reset_observations=...,
+    gates_need_full_observation=...,
+)
 
-# convert the object into a dict
-template_run_configuration_dict = template_run_configuration_instance.to_dict()
-# create an instance of TemplateRunConfiguration from a dict
-template_run_configuration_form_dict = template_run_configuration.from_dict(template_run_configuration_dict)
+# Create from JSON
+template_run_configuration = TemplateRunConfiguration.from_json(
+    '{ "executeActuators": ..., "resource": ..., "resetObservations": ..., "gatesNeedFullObservation": ... }'
+)
+
+# Export to dictionary
+template_run_configuration_dict = template_run_configuration.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

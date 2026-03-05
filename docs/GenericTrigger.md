@@ -1,6 +1,11 @@
 # GenericTrigger
 
 
+**Source:** `waylay.services.rules.models.generic_trigger`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,27 @@ Name | Type | Description | Notes
 **destination_label** | **str** | Unique node label | [optional] 
 **invocation_policy** | **int** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.rules.models.generic_trigger import GenericTrigger
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of GenericTrigger from a JSON string
-generic_trigger_instance = GenericTrigger.from_json(json)
-# print the JSON string representation of the object
-print GenericTrigger.to_json()
+generic_trigger = GenericTrigger(
+    source_label=..., destination_label=..., invocation_policy=...
+)
 
-# convert the object into a dict
-generic_trigger_dict = generic_trigger_instance.to_dict()
-# create an instance of GenericTrigger from a dict
-generic_trigger_form_dict = generic_trigger.from_dict(generic_trigger_dict)
+# Create from JSON
+generic_trigger = GenericTrigger.from_json(
+    '{ "sourceLabel": ..., "destinationLabel": ..., "invocationPolicy": ... }'
+)
+
+# Export to dictionary
+generic_trigger_dict = generic_trigger.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

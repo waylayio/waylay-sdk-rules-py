@@ -22,8 +22,6 @@ Debug a node in a graph or Bayesian Network.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -32,21 +30,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
 from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
-from waylay.services.rules.models.template_run_with_graph_specification import TemplateRunWithGraphSpecification
+from waylay.services.rules.models.template_run_log_level import TemplateRunLogLevel
+from waylay.services.rules.models.template_run_with_graph_specification import (
+    TemplateRunWithGraphSpecification,
+)
+
 try:
     # Debug Graph Or Bayesian Network
     # calls `POST /rules/v1/templates/debug`
     api_response = await waylay_client.rules.template_runs.debug_graph(
         # query parameters:
-        query = {
-        },
+        query={},
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateRunWithGraphSpecification() # TemplateRunWithGraphSpecification | Specification to run template through graph/BN.
+        json=waylay.services.rules.TemplateRunWithGraphSpecification(),  # TemplateRunWithGraphSpecification | Specification to run template through graph/BN.
     )
-    print("The response of rules.template_runs.debug_graph:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.template_runs.debug_graph: %s\n" % e)
 ```
@@ -61,7 +60,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **json** | [**TemplateRunWithGraphSpecification**](TemplateRunWithGraphSpecification.md) | json request body | Specification to run template through graph/BN. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**TemplateRunLogLevel**](TemplateRunLogLevel.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
 **query['nodeToDebug']** (dict) <br> **query.node_to_debug** (Query) | **str** | query parameter `"nodeToDebug"` | node to debug inside template or graph | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -101,8 +100,6 @@ Debug a node in template.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -111,22 +108,23 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
 from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
-from waylay.services.rules.models.template_run_specification import TemplateRunSpecification
+from waylay.services.rules.models.template_run_log_level import TemplateRunLogLevel
+from waylay.services.rules.models.template_run_specification import (
+    TemplateRunSpecification,
+)
+
 try:
     # Debug Template
     # calls `POST /rules/v1/templates/{name}/debug`
     api_response = await waylay_client.rules.template_runs.debug(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-        },
+        query={},
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateRunSpecification() # TemplateRunSpecification | Specification to run template
+        json=waylay.services.rules.TemplateRunSpecification(),  # TemplateRunSpecification | Specification to run template
     )
-    print("The response of rules.template_runs.debug:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.template_runs.debug: %s\n" % e)
 ```
@@ -142,7 +140,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | Unique Template identifier | 
 **json** | [**TemplateRunSpecification**](TemplateRunSpecification.md) | json request body | Specification to run template | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**TemplateRunLogLevel**](TemplateRunLogLevel.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
 **query['nodeToDebug']** (dict) <br> **query.node_to_debug** (Query) | **str** | query parameter `"nodeToDebug"` | node to debug inside template or graph | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -182,8 +180,6 @@ Run a graph or Bayesian Network. If `data` is specified, template will be run as
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -192,21 +188,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
 from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
-from waylay.services.rules.models.template_run_with_graph_specification import TemplateRunWithGraphSpecification
+from waylay.services.rules.models.template_run_log_level import TemplateRunLogLevel
+from waylay.services.rules.models.template_run_with_graph_specification import (
+    TemplateRunWithGraphSpecification,
+)
+
 try:
     # Run Graph Or Bayesian Network
     # calls `POST /rules/v1/templates/run`
     api_response = await waylay_client.rules.template_runs.run_graph(
         # query parameters:
-        query = {
-        },
+        query={},
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateRunWithGraphSpecification() # TemplateRunWithGraphSpecification | Specification to run template through graph/BN.
+        json=waylay.services.rules.TemplateRunWithGraphSpecification(),  # TemplateRunWithGraphSpecification | Specification to run template through graph/BN.
     )
-    print("The response of rules.template_runs.run_graph:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.template_runs.run_graph: %s\n" % e)
 ```
@@ -221,8 +218,8 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **json** | [**TemplateRunWithGraphSpecification**](TemplateRunWithGraphSpecification.md) | json request body | Specification to run template through graph/BN. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
-**query['targetNode']** (dict) <br> **query.target_node** (Query) | [**List[str]**](str.md) | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**TemplateRunLogLevel**](TemplateRunLogLevel.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['targetNode']** (dict) <br> **query.target_node** (Query) | **List[str]** | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
 **query['maxTps']** (dict) <br> **query.max_tps** (Query) | **float** | query parameter `"maxTps"` | Maximum number of transactions/invocations per seconds. When specified (and &gt; 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -262,8 +259,6 @@ Run a template. If `data` is specified, template will be run as reactive templat
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -272,22 +267,23 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-rules-types` is installed
-from waylay.services.rules.models.run_template_log_level_parameter import RunTemplateLogLevelParameter
 from waylay.services.rules.models.template_run_invocation import TemplateRunInvocation
-from waylay.services.rules.models.template_run_specification import TemplateRunSpecification
+from waylay.services.rules.models.template_run_log_level import TemplateRunLogLevel
+from waylay.services.rules.models.template_run_specification import (
+    TemplateRunSpecification,
+)
+
 try:
     # Run Template
     # calls `POST /rules/v1/templates/{name}/run`
     api_response = await waylay_client.rules.template_runs.run(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-        },
+        query={},
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.rules.TemplateRunSpecification() # TemplateRunSpecification | Specification to run template
+        json=waylay.services.rules.TemplateRunSpecification(),  # TemplateRunSpecification | Specification to run template
     )
-    print("The response of rules.template_runs.run:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling rules.template_runs.run: %s\n" % e)
 ```
@@ -303,8 +299,8 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | Unique Template identifier | 
 **json** | [**TemplateRunSpecification**](TemplateRunSpecification.md) | json request body | Specification to run template | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**RunTemplateLogLevelParameter**](.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
-**query['targetNode']** (dict) <br> **query.target_node** (Query) | [**List[str]**](str.md) | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
+**query['logLevel']** (dict) <br> **query.log_level** (Query) | [**TemplateRunLogLevel**](TemplateRunLogLevel.md) | query parameter `"logLevel"` | sets the log level for filtering out logs to requested log level or higher from the template run output. Value &#x60;NONE&#x60; will disable all logs. If not specified all logs will be returned. | [optional] [default DEBUG]
+**query['targetNode']** (dict) <br> **query.target_node** (Query) | **List[str]** | query parameter `"targetNode"` | The sensors and actuators part of response will contain only elements related to the asked node of the graph. The returned logs also will be filtered and contain only logs related to the asked node(s). | [optional] 
 **query['maxTps']** (dict) <br> **query.max_tps** (Query) | **float** | query parameter `"maxTps"` | Maximum number of transactions/invocations per seconds. When specified (and &gt; 0), data will not be injected faster, and thus template will not be run faster. Can be used for limiting load on external systems accessed in the template | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
